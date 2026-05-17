@@ -1,7 +1,7 @@
 name: Docker
 on:
   push:
-    branches: [main, prod]
+    branches: [test, prod]
 
 jobs:
   build:
@@ -16,11 +16,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 10m
           script: |
+            BRANCH="${{ github.ref_name }}"
+            ENV_NAME="$( [ "$BRANCH" = "prod" ] && echo "prod" || echo "test" )"
+            TAG="${ENV_NAME}-latest"
+
             cd /home/admin/twomice
             mkdir -p deploy services
             if [ ! -f deploy/.env ]; then
-              echo "ENV=test-latest" > deploy/.env
-              echo "APP_ENV=test" >> deploy/.env
+              echo "ENV=${TAG}" > deploy/.env
+              echo "APP_ENV=${ENV_NAME}" >> deploy/.env
               echo "AUTH_DB_PASSWORD=${{ secrets.AUTH_DB_PASSWORD }}" >> deploy/.env
               echo "POST_DB_PASSWORD=${{ secrets.POST_DB_PASSWORD }}" >> deploy/.env
               echo "MODERATION_DB_PASSWORD=${{ secrets.MODERATION_DB_PASSWORD }}" >> deploy/.env
@@ -33,14 +37,16 @@ jobs:
               echo "FEED_DATABASE_URL=postgresql://twomice:${{ secrets.FEED_DB_PASSWORD }}@social-feed-db:5432/social_feed" >> deploy/.env
             fi
             if [ -d "services/frontend" ]; then
-              cd services/frontend && git pull origin main
+              cd services/frontend
+              git fetch origin
+              git checkout "$BRANCH"
+              git pull origin "$BRANCH"
             else
               mkdir -p services && cd services
-              git clone https://github.com/MouseBurrow/twomice-frontend.git frontend
+              git clone --branch "$BRANCH" https://github.com/MouseBurrow/twomice-frontend.git frontend
               cd frontend
             fi
-            TAG="${{ github.ref_name == 'prod' && 'prod-latest' || 'test-latest' }}"
             docker build -t ghcr.io/mouseburrow/twomice-frontend:$TAG .
             docker push ghcr.io/mouseburrow/twomice-frontend:$TAG
             cd /home/admin/twomice/deploy
-            docker compose -f docker-compose.${{ github.ref_name == 'prod' && 'prod' || 'test' }}.yaml up -d frontend
+            docker compose -f docker-compose.${ENV_NAME}.yaml up -d frontend

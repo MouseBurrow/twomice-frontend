@@ -1,0 +1,110 @@
+.profile-page {
+  padding: 24px 16px 48px;
+}
+
+.profile-board {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  padding: 24px 28px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0 16px 16px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--stripe-top), var(--stripe-bottom));
+  }
+}
+
+.profile-avatar-lg {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.profile-handle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  color: var(--accent);
+  margin: 0 0 4px;
+}
+
+.profile-since {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Tabs ── */
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.profile-tab {
+  padding: 6px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+
+  &.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff; /* #fff intentional: text on --accent bg */
+  }
+}
+
+/* ── Empty state ── */
+.profile-empty {
+  padding: 32px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-faint);
+  background: var(--bg-surface);
+  border: 1px dashed var(--border);
+  border-radius: 0 12px 12px 12px;
+}
+
+/* ── Guest gate ── */
+.profile-guest {
+  padding: 48px;
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0 16px 16px 16px;
+
+  p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 16px;
+  }
+
+  a {
+    padding: 8px 20px;
+    background: var(--accent);
+    color: #fff; /* #fff intentional: text on --accent bg */
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+}

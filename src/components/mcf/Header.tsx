@@ -1,16 +1,8 @@
-import AuthStatus from "../AuthStatus.tsx";
-
-export default function Header() {
+export default function HomeBanner() {
     return (
-        <div className="mcf-header">
-            <div className="mcf-header-row">
-                <span>
-                    <h1>🐭 Mischief Board</h1>
-                    <p>Plots, schemes, and small disasters</p>
-                </span>
-
-                <AuthStatus/>
-            </div>
+        <div className="mcf-banner">
+            <h1 className="mcf-banner-title">🐭 Mischief Board</h1>
+            <p className="mcf-banner-sub">Plots, schemes, and small disasters</p>
         </div>
     );
 }

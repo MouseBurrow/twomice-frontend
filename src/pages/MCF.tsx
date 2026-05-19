@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import type { ApiError } from "../apiError";
+import HomeBanner from "../components/mcf/Header";
 import CreateTopicCard from "../components/mcf/CreateTopicCard";
-import Header from "../components/mcf/Header";
 import TopicGrid from "../components/mcf/TopicGrid";
 import type { TopicData } from "../types";
 import "../assets/MCF.scss";
@@ -26,18 +26,15 @@ export default function MCF() {
     useEffect(() => {
         let cancelled = false;
         load(() => cancelled);
-        return () => {
-            cancelled = true;
-        };
+        return () => { cancelled = true; };
     }, []);
 
     return (
         <div className="mcf-page">
-            <div className="mcf-board">
-                <Header/>
-                <CreateTopicCard onCreated={load} error={error}/>
-                <TopicGrid topics={topics}/>
-            </div>
+            <HomeBanner/>
+            <CreateTopicCard onCreated={load}/>
+            {error && <p style={{ color: "var(--accent)", textAlign: "center" }}>Failed to load boards.</p>}
+            <TopicGrid topics={topics}/>
         </div>
     );
 }

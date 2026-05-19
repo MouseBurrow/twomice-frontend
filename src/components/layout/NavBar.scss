@@ -67,7 +67,7 @@
 .navbar-signin {
   padding: 4px 14px;
   background: var(--accent);
-  color: #fff;
+  color: #fff; /* #fff intentional: text on --accent bg */
   border-radius: 99px;
   font-size: 12px;
   font-weight: 600;
@@ -114,7 +114,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--text-primary) 12%, transparent);
 
   a, button {
     display: block;
@@ -182,6 +182,6 @@
   &.active {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff;
+    color: #fff; /* #fff intentional: text on --accent bg */
   }
 }

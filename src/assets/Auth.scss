@@ -1,11 +1,5 @@
 @use "variables" as *;
 
-$card-bg: #fff;
-
-$stone: #a8a29e;
-$dark-stone: #34302e;
-$faded-text: #44403c;
-
 @keyframes spin {
     to {
         transform: rotate(360deg);
@@ -18,9 +12,19 @@ $faded-text: #44403c;
 
     text-align: center;
 
-    background: $card-bg;
-    border-radius: 1.5rem;
-    box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 20%);
+    background: var(--bg-surface);
+    border-radius: 0 1.5rem 1.5rem 1.5rem;
+    box-shadow: 0 1.5rem 3rem color-mix(in srgb, var(--text-primary) 12%, transparent);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--stripe-top), var(--stripe-bottom));
+    }
 
     .tm-header {
         margin-bottom: 0.75rem;
@@ -29,14 +33,15 @@ $faded-text: #44403c;
         h1 {
             margin: 0.75rem 0 0.25rem;
 
+            font-family: 'Fredoka One', cursive;
             font-size: 1.6rem;
             font-weight: 600;
-            color: $dark-stone;
+            color: var(--text-primary);
         }
 
         p {
             font-size: 0.9rem;
-            color: $faded-text;
+            color: var(--text-muted);
         }
 
         // Background of mice
@@ -53,7 +58,7 @@ $faded-text: #44403c;
 
             margin: 0 auto;
 
-            background: #e7e5e4;
+            background: var(--accent-bg);
             border-radius: 999rem;
 
             .tm-mouse {
@@ -103,13 +108,15 @@ $faded-text: #44403c;
             padding: 0.8rem;
 
             border-radius: 1rem;
-            border: 1px solid $stone;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
 
             font-size: 0.975rem;
 
             &:focus {
                 outline: none;
-                border-color: $dark-stone;
+                border-color: var(--accent);
             }
         }
     }
@@ -125,26 +132,26 @@ $faded-text: #44403c;
         margin-top: 0.5rem;
         padding: 0.75rem;
 
-        background: #292524;
+        background: var(--accent);
         border-radius: 1rem;
-        box-shadow: 0.25rem 0.25rem 1rem rgb(0 0 0 / 25%);
+        box-shadow: 0.25rem 0.25rem 1rem color-mix(in srgb, var(--text-primary) 25%, transparent);
         border: none;
 
         font-size: 0.95rem;
         font-weight: 600;
-        color: white;
+        color: #fff; /* #fff intentional: text on --accent bg */
 
         transition: 0.2s ease;
         cursor: pointer;
 
         &:hover {
             transform: translateY(-1px);
-            box-shadow: 0.25rem 0.5rem 1.5rem rgb(0 0 0 / 27%);
+            box-shadow: 0.25rem 0.5rem 1.5rem color-mix(in srgb, var(--text-primary) 27%, transparent);
         }
 
         &:active {
             transform: translateY(0);
-            box-shadow: 0.25rem 0.25rem 1rem rgb(0 0 0 / 25%);
+            box-shadow: 0.25rem 0.25rem 1rem color-mix(in srgb, var(--text-primary) 25%, transparent);
         }
 
         .tm-submit-text {
@@ -173,7 +180,7 @@ $faded-text: #44403c;
         margin-top: 1rem;
 
         font-size: 0.85rem;
-        color: $faded-text;
+        color: var(--text-muted);
 
         button {
             padding: 0;
@@ -181,7 +188,7 @@ $faded-text: #44403c;
             background: none;
             border: none;
 
-            color: $dark-stone;
+            color: var(--accent);
             font-weight: 600;
 
             cursor: pointer;

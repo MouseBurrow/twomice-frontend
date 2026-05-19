@@ -32,7 +32,7 @@ export default function Auth() {
             }
 
             await refresh();
-            nav("/mcf")
+            nav("/")
         } catch (e) {
             setError(e as ApiError);
         } finally {
@@ -42,7 +42,7 @@ export default function Auth() {
 
     useEffect(() => {
         if (auth.status === "user" || auth.status === "admin") {
-            nav("/mcf");
+            nav("/");
         }
     }, [auth, nav]);
 

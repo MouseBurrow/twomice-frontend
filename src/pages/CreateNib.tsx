@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
+import type { ApiError } from "../apiError";
 import { useAuth } from "../contexts/AuthContext";
+import ErrorMessage from "../components/ErrorMessage";
 import "../assets/CreateNib.scss";
 
 export default function CreateNib() {
@@ -12,6 +14,7 @@ export default function CreateNib() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<ApiError | undefined>(undefined);
 
     if (auth.status === "unknown" || auth.status === "guest") {
         return (
@@ -26,12 +29,17 @@ export default function CreateNib() {
         );
     }
 
+    if (!board) return null;
+
     async function handleSubmit() {
-        if (!board || !title.trim() || loading) return;
+        if (!title.trim() || loading) return;
+        setError(undefined);
         setLoading(true);
         try {
-            await api.createPost(board, { title: title.trim(), content: content.trim() });
+            await api.createPost(board!, { title: title.trim(), content: content.trim() });
             navigate(`/b/${board}`);
+        } catch (e) {
+            setError(e as ApiError);
         } finally {
             setLoading(false);
         }
@@ -42,7 +50,7 @@ export default function CreateNib() {
             <div className="create-nib-board">
                 <div className="create-nib-header">
                     <h1>New Nib</h1>
-                    <p>Posting to /b/{board}</p>
+                    <p>b/{board}</p>
                 </div>
 
                 <div className="create-nib-form">
@@ -73,13 +81,15 @@ export default function CreateNib() {
                             disabled={!title.trim() || loading}
                             onClick={handleSubmit}
                         >
-                            {loading && <span className="create-nib-spinner"/>}
-                            Post Nib
+                            {loading && <span className="create-nib-spinner" aria-hidden="true"/>}
+                            {loading ? "Posting…" : "Post Nib"}
                         </button>
                         <Link to={`/b/${board}`} className="create-nib-cancel">
                             Cancel
                         </Link>
                     </div>
+
+                    <ErrorMessage error={error}/>
                 </div>
             </div>
         </div>

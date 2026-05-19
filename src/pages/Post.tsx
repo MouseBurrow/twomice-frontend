@@ -9,8 +9,7 @@ import type { CommentData, PostData } from "../types";
 import "../assets/Post.scss";
 
 export default function Post() {
-    const { topic, post } = useParams();
-
+    const { board, post } = useParams<{ board: string; post: string }>();
     const [postData, setPostData] = useState<PostData>();
     const [comments, setComments] = useState<CommentData[]>([]);
     const [error, setError] = useState<ApiError>();
@@ -18,14 +17,11 @@ export default function Post() {
     async function load(cancelled?: () => boolean) {
         try {
             setError(undefined);
-
             const [p, c] = await Promise.all([
-                api.getPost(topic!, post!),
-                api.getAllComments(topic!, post!)
+                api.getPost(board!, post!),
+                api.getAllComments(board!, post!)
             ]);
-
             if (cancelled?.()) return;
-
             setPostData(p);
             setComments(c.filter(x => !x.deleted));
         } catch (e) {
@@ -37,37 +33,23 @@ export default function Post() {
     useEffect(() => {
         let cancelled = false;
         load(() => cancelled);
-        return () => {
-            cancelled = true;
-        };
-    }, []);
+        return () => { cancelled = true; };
+    }, [board, post]);
 
     return (
         <div className="post-page">
             <div className="post-board">
-                <PostHeader title={postData?.title ?? "Loading..."} content={postData?.content ?? "Loading..."}/>
-
+                <PostHeader
+                    title={postData?.title ?? "Loading…"}
+                    content={postData?.content ?? ""}
+                />
                 {postData && (
                     <>
-                        <CreateCommentCard
-                            topic={topic!}
-                            post={post!}
-                            onCreated={load}
-                        />
-
-                        <CommentGrid
-                            topic={topic!}
-                            post={post!}
-                            comments={comments}
-                        />
+                        <CreateCommentCard topic={board!} post={post!} onCreated={load}/>
+                        <CommentGrid topic={board!} post={post!} comments={comments}/>
                     </>
                 )}
-
-                {error && (
-                    <p className="post-error">
-                        Failed to load comments.
-                    </p>
-                )}
+                {error && <p className="post-error">Failed to load comments.</p>}
             </div>
         </div>
     );

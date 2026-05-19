@@ -1,21 +1,10 @@
-import AuthStatus from "../AuthStatus.tsx";
-
-type Props = {
-    name: string;
-    description: string;
-}
+type Props = { name: string; description: string };
 
 export default function TopicHeader({ name, description }: Props) {
     return (
         <div className="topic-header">
-            <div className="topic-header-row">
-                <span>
-                    <h1>{name}</h1>
-                    <p>{description}</p>
-                </span>
-
-                <AuthStatus/>
-            </div>
+            <h1 className="topic-header-name">b/{name}</h1>
+            <p className="topic-header-desc">{description}</p>
         </div>
     );
 }

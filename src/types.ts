@@ -9,7 +9,7 @@ export type AccountData = {
     is_admin: boolean;
     created_at: string;
     updated_at: string;
-}
+};
 
 export type TopicData = {
     name: string;
@@ -25,6 +25,7 @@ export type PostData = {
     image_url: string;
     created_at: string;
     deleted: boolean;
+    vote_count?: number;
 };
 
 export type CommentData = {
@@ -32,7 +33,8 @@ export type CommentData = {
     content: string;
     created_at: string;
     deleted: boolean;
-}
+    vote_count?: number;
+};
 
 export type ReplyData = {
     hash: string;

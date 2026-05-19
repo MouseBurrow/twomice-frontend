@@ -5,30 +5,21 @@ import type { ApiError } from "../../apiError";
 import { useAuth } from "../../contexts/AuthContext";
 import ErrorMessage from "../ErrorMessage";
 
-type Props = {
-    topic: string;
-    post: string;
-    onCreated: () => Promise<void>;
-};
+type Props = { topic: string; post: string; onCreated: () => Promise<void> };
 
 export default function CreateCommentCard({ topic, post, onCreated }: Props) {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError>();
-
     const { auth } = useAuth();
     const navigate = useNavigate();
-
-    const unAuthorized =
-        auth.status === "unknown" || auth.status === "guest";
+    const isGuest = auth.status === "unknown" || auth.status === "guest";
 
     async function submit() {
         try {
             setError(undefined);
             setLoading(true);
-
             await api.createComment(topic, post, { content });
-
             setContent("");
             await onCreated();
         } catch (e) {
@@ -40,50 +31,30 @@ export default function CreateCommentCard({ topic, post, onCreated }: Props) {
 
     return (
         <section className="comment-create">
-            <h2>Add a comment</h2>
+            <h2>+ Squeak</h2>
 
-            {!unAuthorized && (
+            {isGuest ? (
+                <div className="comment-auth-cta">
+                    Sign in to squeak.
+                    <button onClick={() => navigate("/auth")}>Sign in</button>
+                </div>
+            ) : (
                 <>
                     <textarea
-                        placeholder="Share your thoughts"
+                        placeholder="What's your squeak?"
                         value={content}
                         onChange={e => setContent(e.target.value)}
                         rows={3}
                     />
-
                     <button
                         className="comment-submit"
                         onClick={submit}
                         disabled={!content || loading}
                     >
-                        <span className="comment-submit-text">
-                            {loading ? "Scurrying…" : "Comment"}
-                        </span>
-
-                        {loading && (
-                            <span
-                                className="comment-spinner"
-                                aria-hidden
-                            />
-                        )}
+                        {loading && <span className="comment-spinner"/>}
+                        {loading ? "Squeaking…" : "Squeak"}
                     </button>
                 </>
-            )}
-
-            {unAuthorized && (
-                <div className="comment-auth-cta">
-                    <p>
-                        You need to be signed in to comment.
-                    </p>
-
-                    <button
-                        type="button"
-                        className="comment-login"
-                        onClick={() => navigate("/auth")}
-                    >
-                        Sign in
-                    </button>
-                </div>
             )}
 
             <ErrorMessage error={error}/>

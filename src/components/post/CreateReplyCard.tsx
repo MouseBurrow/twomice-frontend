@@ -12,29 +12,19 @@ type Props = {
     onCreated: () => Promise<void>;
 };
 
-export default function CreateReplyCard({
-                                            topic,
-                                            post,
-                                            commentHash,
-                                            onCreated
-                                        }: Props) {
+export default function CreateReplyCard({ topic, post, commentHash, onCreated }: Props) {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError>();
-
     const { auth } = useAuth();
     const navigate = useNavigate();
-
-    const unAuthorized =
-        auth.status === "unknown" || auth.status === "guest";
+    const isGuest = auth.status === "unknown" || auth.status === "guest";
 
     async function submit() {
         try {
             setError(undefined);
             setLoading(true);
-
             await api.createReply(topic, post, commentHash, { content });
-
             setContent("");
             await onCreated();
         } catch (e) {
@@ -44,15 +34,10 @@ export default function CreateReplyCard({
         }
     }
 
-    if (unAuthorized) {
+    if (isGuest) {
         return (
             <div className="reply-auth-cta">
-                <button
-                    type="button"
-                    onClick={() => navigate("/auth")}
-                >
-                    Sign in to reply
-                </button>
+                <button onClick={() => navigate("/auth")}>Sign in to echo</button>
             </div>
         );
     }
@@ -60,19 +45,14 @@ export default function CreateReplyCard({
     return (
         <div className="reply-create">
             <textarea
-                placeholder="Write a reply"
+                placeholder="↩ echo…"
                 value={content}
                 onChange={e => setContent(e.target.value)}
                 rows={2}
             />
-
-            <button
-                onClick={submit}
-                disabled={!content || loading}
-            >
-                {loading ? "Scurrying…" : "Reply"}
+            <button onClick={submit} disabled={!content || loading}>
+                {loading ? "Echoing…" : "Echo"}
             </button>
-
             <ErrorMessage error={error}/>
         </div>
     );

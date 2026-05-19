@@ -20,6 +20,16 @@ const MODES: { value: Mode; label: string }[] = [
 
 const SINGLE_MODE: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
 
+function loadPinned(): string[] {
+    try {
+        const raw = localStorage.getItem("twomice_pinned");
+        const parsed = JSON.parse(raw ?? "[]");
+        return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+    } catch {
+        return [];
+    }
+}
+
 export default function Settings() {
     const { theme, mode, setTheme, setMode } = useTheme();
 
@@ -28,9 +38,7 @@ export default function Settings() {
     );
 
     const [pinInput, setPinInput] = useState("");
-    const [pinned, setPinned] = useState<string[]>(
-        () => JSON.parse(localStorage.getItem("twomice_pinned") ?? "[]")
-    );
+    const [pinned, setPinned] = useState<string[]>(loadPinned);
 
     function saveHandle() {
         localStorage.setItem("twomice_handle", handle.trim());
@@ -62,8 +70,9 @@ export default function Settings() {
                 <section className="settings-section">
                     <h2>Appearance</h2>
                     <div className="settings-row">
-                        <label>Theme</label>
+                        <label htmlFor="settings-theme">Theme</label>
                         <select
+                            id="settings-theme"
                             className="settings-select"
                             value={theme}
                             onChange={e => setTheme(e.target.value as Theme)}
@@ -75,8 +84,9 @@ export default function Settings() {
                     </div>
                     {!SINGLE_MODE.includes(theme) && (
                         <div className="settings-row">
-                            <label>Mode</label>
+                            <label htmlFor="settings-mode">Mode</label>
                             <select
+                                id="settings-mode"
                                 className="settings-select"
                                 value={mode}
                                 onChange={e => setMode(e.target.value as Mode)}
@@ -93,8 +103,9 @@ export default function Settings() {
                 <section className="settings-section">
                     <h2>Anonymous handle</h2>
                     <div className="settings-row">
-                        <label>Handle</label>
+                        <label htmlFor="settings-handle">Handle</label>
                         <input
+                            id="settings-handle"
                             className="settings-input"
                             value={handle}
                             onChange={e => setHandle(e.target.value)}
@@ -102,7 +113,7 @@ export default function Settings() {
                             maxLength={24}
                         />
                     </div>
-                    <button className="settings-save" onClick={saveHandle}>Save</button>
+                    <button type="button" className="settings-save" onClick={saveHandle}>Save</button>
                 </section>
 
                 {/* Pinned boards */}
@@ -112,18 +123,19 @@ export default function Settings() {
                         {pinned.map(b => (
                             <span key={b} className="settings-chip">
                                 b/{b}
-                                <button onClick={() => removePin(b)} aria-label={`Unpin ${b}`}>✕</button>
+                                <button type="button" onClick={() => removePin(b)} aria-label={`Unpin ${b}`}>✕</button>
                             </span>
                         ))}
                     </div>
                     <div className="settings-pin-input">
                         <input
+                            aria-label="Board name to pin"
                             placeholder="board name"
                             value={pinInput}
                             onChange={e => setPinInput(e.target.value)}
                             onKeyDown={e => e.key === "Enter" && addPin()}
                         />
-                        <button onClick={addPin}>Pin</button>
+                        <button type="button" onClick={addPin} aria-label="Pin board">Pin</button>
                     </div>
                 </section>
             </div>

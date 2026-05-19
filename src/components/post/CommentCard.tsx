@@ -29,7 +29,7 @@ export default function CommentCard({ topic, post, comment }: Props) {
 
     async function toggleReplies() {
         if (open) { setOpen(false); return; }
-        if (replies.length === 0) await loadReplies();
+        await loadReplies();
         setOpen(true);
     }
 
@@ -42,7 +42,11 @@ export default function CommentCard({ topic, post, comment }: Props) {
 
                 <div className="comment-meta">
                     <span>{new Date(comment.created_at).toLocaleDateString()}</span>
-                    <button className="comment-replies-toggle" onClick={toggleReplies}>
+                    <button
+                        className="comment-replies-toggle"
+                        onClick={toggleReplies}
+                        aria-label={open ? "Hide echoes for this comment" : "Show echoes for this comment"}
+                    >
                         {open ? "hide echoes" : "echoes"}
                     </button>
                 </div>

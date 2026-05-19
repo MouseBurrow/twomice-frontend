@@ -119,7 +119,7 @@
 .comment-spinner {
   width: 10px;
   height: 10px;
-  border: 2px solid rgba(255,255,255,0.4);
+  border: 2px solid rgba(255,255,255,0.4); /* intentional: translucent white track on --accent bg */
   border-top-color: #fff; /* #fff intentional */
   border-radius: 50%;
   animation: spin 0.7s linear infinite;

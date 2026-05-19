@@ -42,6 +42,7 @@ export default function Post() {
                 <PostHeader
                     title={postData?.title ?? "Loading…"}
                     content={postData?.content ?? ""}
+                    createdAt={postData?.created_at}
                 />
                 {postData && (
                     <>

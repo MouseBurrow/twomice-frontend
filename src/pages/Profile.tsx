@@ -5,14 +5,23 @@ import "../assets/Profile.scss";
 
 type Tab = "nibs" | "squeaks" | "saved";
 
+const TAB_LABELS: Record<Tab, string> = {
+    nibs: "My Nibs",
+    squeaks: "My Squeaks",
+    saved: "Saved",
+};
+
+const TAB_EMPTY: Record<Tab, string> = {
+    nibs: "Your nibs will appear here. (Requires backend support)",
+    squeaks: "Your squeaks will appear here. (Requires backend support)",
+    saved: "Saved items stored in localStorage will appear here.",
+};
+
 export default function Profile() {
     const { auth } = useAuth();
     const [tab, setTab] = useState<Tab>("nibs");
 
-    const handle = localStorage.getItem("twomice_handle") ??
-        (auth.status === "user" || auth.status === "admin"
-            ? `anon_${auth.info.username.slice(-4)}`
-            : "guest");
+    if (auth.status === "unknown") return null;
 
     if (auth.status === "guest") {
         return (
@@ -27,11 +36,10 @@ export default function Profile() {
         );
     }
 
-    if (auth.status === "unknown") return null;
-
-    const since = auth.status === "user" || auth.status === "admin"
-        ? new Date(auth.info.created_at).toLocaleDateString()
-        : "";
+    // auth is narrowed to user | admin here
+    const handle = localStorage.getItem("twomice_handle") ??
+        `anon_${auth.info.username.slice(-4)}`;
+    const since = new Date(auth.info.created_at).toLocaleDateString();
 
     return (
         <div className="profile-page">
@@ -53,15 +61,13 @@ export default function Profile() {
                             onClick={() => setTab(t)}
                             aria-pressed={tab === t}
                         >
-                            {t === "nibs" ? "My Nibs" : t === "squeaks" ? "My Squeaks" : "Saved"}
+                            {TAB_LABELS[t]}
                         </button>
                     ))}
                 </div>
 
                 <div className="profile-empty">
-                    {tab === "nibs" && "Your nibs will appear here. (Requires backend support)"}
-                    {tab === "squeaks" && "Your squeaks will appear here. (Requires backend support)"}
-                    {tab === "saved" && "Saved items stored in localStorage will appear here."}
+                    {TAB_EMPTY[tab]}
                 </div>
             </div>
         </div>

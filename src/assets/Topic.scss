@@ -158,17 +158,34 @@
 }
 
 .post-auth-cta {
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 10px 0 2px;
+  padding: 20px;
+  background: var(--accent-bg);
+  border: 1px solid var(--border);
+  border-radius: 0 10px 10px 10px;
+  text-align: center;
+
+  .post-auth-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+
+  p {
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    color: var(--accent);
+    margin: 0 0 4px;
+  }
+
+  span {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 12px;
+  }
 
   button {
-    margin-left: 8px;
-    padding: 4px 12px;
+    padding: 6px 18px;
     background: var(--accent);
-    color: #fff; /* #fff intentional */
+    color: #fff; /* #fff intentional: text on --accent bg */
     border-radius: 99px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     border: none;
     cursor: pointer;

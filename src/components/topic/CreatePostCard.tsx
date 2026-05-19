@@ -37,8 +37,10 @@ export default function CreatePostCard({ topicName, onCreated }: Props) {
 
             {isGuest ? (
                 <div className="post-auth-cta">
-                    Sign in to post.
-                    <button onClick={() => navigate("/auth")}>Sign in</button>
+                    <span className="post-auth-icon">🐾</span>
+                    <p>Post a nib</p>
+                    <span>Sign in to leave your mark on this board.</span>
+                    <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
                 </div>
             ) : (
                 <>

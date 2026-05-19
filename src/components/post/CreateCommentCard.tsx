@@ -35,8 +35,10 @@ export default function CreateCommentCard({ topic, post, onCreated }: Props) {
 
             {isGuest ? (
                 <div className="comment-auth-cta">
-                    Sign in to squeak.
-                    <button onClick={() => navigate("/auth")}>Sign in</button>
+                    <span className="comment-auth-icon">🐭</span>
+                    <p>Add your squeak</p>
+                    <span>Sign in to join the mischief.</span>
+                    <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
                 </div>
             ) : (
                 <>

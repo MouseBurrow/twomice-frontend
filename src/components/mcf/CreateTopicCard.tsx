@@ -37,8 +37,10 @@ export default function CreateTopicCard({ onCreated }: Props) {
 
             {isGuest ? (
                 <div className="mcf-auth-cta">
-                    Sign in to create a board.
-                    <button onClick={() => navigate("/auth")}>Sign in</button>
+                    <span className="mcf-auth-icon">🏡</span>
+                    <p>Start a new board</p>
+                    <span>Sign in to create your own corner of the mischief.</span>
+                    <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
                 </div>
             ) : (
                 <>

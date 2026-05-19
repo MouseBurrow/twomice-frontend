@@ -5,10 +5,9 @@ import Topic from "./pages/Topic";
 import Post from "./pages/Post";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import CreateNib from "./pages/CreateNib";
 import Layout from "./components/layout/Layout";
 import "./assets/App.scss";
-
-// import CreateNib from "./pages/CreateNib";
 
 export default function App() {
     return (
@@ -18,9 +17,9 @@ export default function App() {
                 <Route path="/" element={<MCF/>}/>
                 <Route path="/b/:board" element={<Topic/>}/>
                 <Route path="/b/:board/nib/:post" element={<Post/>}/>
+                <Route path="/b/:board/new" element={<CreateNib/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/profile" element={<Profile/>}/>
-                {/* <Route path="/b/:board/new" element={<CreateNib/>}/> */}
             </Route>
             <Route path="*" element={<Navigate to="/" replace/>}/>
         </Routes>

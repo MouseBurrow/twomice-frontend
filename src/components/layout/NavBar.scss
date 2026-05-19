@@ -89,6 +89,16 @@
   position: relative;
 
   &:hover .navbar-dropdown { display: flex; }
+
+  /* Invisible bridge that keeps hover active while moving mouse to dropdown */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 10px;
+  }
 }
 
 .navbar-avatar {
@@ -151,7 +161,15 @@
   align-items: center;
   gap: 5px;
 
-  a { color: var(--text-muted); text-decoration: none; }
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover { background: var(--accent-bg); color: var(--accent); }
+  }
 }
 
 .navbar-sep { color: var(--text-faint); }

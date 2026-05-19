@@ -5,6 +5,7 @@ import type { ApiError } from "../apiError";
 import CommentGrid from "../components/post/CommentGrid";
 import CreateCommentCard from "../components/post/CreateCommentCard";
 import PostHeader from "../components/post/PostHeader.tsx";
+import VoteColumn from "../components/shared/VoteColumn";
 import type { CommentData, PostData } from "../types";
 import "../assets/Post.scss";
 
@@ -39,11 +40,14 @@ export default function Post() {
     return (
         <div className="post-page">
             <div className="post-board">
-                <PostHeader
-                    title={postData?.title ?? "Loading…"}
-                    content={postData?.content ?? ""}
-                    createdAt={postData?.created_at}
-                />
+                <div className="post-vote-row">
+                    <VoteColumn initialScore={postData?.vote_count ?? 0}/>
+                    <PostHeader
+                        title={postData?.title ?? "Loading…"}
+                        content={postData?.content ?? ""}
+                        createdAt={postData?.created_at}
+                    />
+                </div>
                 {postData && (
                     <>
                         <CreateCommentCard topic={board!} post={post!} onCreated={load}/>

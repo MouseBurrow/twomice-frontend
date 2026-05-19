@@ -7,13 +7,21 @@
   margin: 0 auto;
 }
 
+/* ── Post header row (VoteColumn + card) ── */
+.post-vote-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
 /* ── Post header ── */
 .post-header {
+  flex: 1;
   padding: 24px 28px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 0 16px 16px 16px;
-  margin-bottom: 20px;
   position: relative;
   overflow: hidden;
 

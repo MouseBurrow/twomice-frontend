@@ -3,10 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import "./NavBar.scss";
 
-function parseBreadcrumb(pathname: string): { board?: string; isNib?: boolean } {
+function parseBreadcrumb(pathname: string): { board?: string; isNib?: boolean; page?: string } {
     const m = pathname.match(/^\/b\/([^/]+)(\/nib\/)?/);
-    if (!m) return {};
-    return { board: m[1], isNib: Boolean(m[2]) };
+    if (m) return { board: m[1], isNib: Boolean(m[2]) };
+    if (pathname === "/profile") return { page: "profile" };
+    if (pathname === "/settings") return { page: "settings" };
+    return {};
 }
 
 export default function NavBar() {
@@ -15,7 +17,7 @@ export default function NavBar() {
     const location = useLocation();
     const [search, setSearch] = useState("");
 
-    const { board, isNib } = parseBreadcrumb(location.pathname);
+    const { board, isNib, page } = parseBreadcrumb(location.pathname);
     const handle = localStorage.getItem("twomice_handle") ??
         (auth.status === "user" || auth.status === "admin"
             ? `anon_${auth.info.username.slice(-4)}`
@@ -81,6 +83,12 @@ export default function NavBar() {
                         <>
                             <span className="navbar-sep">/</span>
                             <span className="navbar-crumb-nib">nib</span>
+                        </>
+                    )}
+                    {page && (
+                        <>
+                            <span className="navbar-sep">/</span>
+                            <span className="navbar-crumb-nib">{page}</span>
                         </>
                     )}
                 </div>

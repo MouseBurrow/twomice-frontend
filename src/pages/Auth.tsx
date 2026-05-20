@@ -9,10 +9,11 @@ import "../assets/Auth.scss";
 
 export default function Auth() {
     const [mode, setMode] = useState<"login" | "signup">("login");
-    const [lookingAway, setLookingAway] = useState(false);
     const [peek, setPeek] = useState(false);
+    const [confirmPeek, setConfirmPeek] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [direction, setDirection] = useState<1 | -1>(1);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(false);
@@ -21,6 +22,11 @@ export default function Auth() {
     const { auth, refresh } = useAuth();
 
     async function handleSubmit() {
+        if (mode === "signup" && password !== confirmPassword) {
+            setError({ message: "Passwords don't match" } as ApiError);
+            return;
+        }
+
         try {
             setError(undefined);
             setLoading(true);
@@ -32,7 +38,7 @@ export default function Auth() {
             }
 
             await refresh();
-            nav("/")
+            nav("/");
         } catch (e) {
             setError(e as ApiError);
         } finally {
@@ -46,169 +52,192 @@ export default function Auth() {
         }
     }, [auth, nav]);
 
-    async function switchMode(next: "login" | "signup") {
+    function switchMode(next: "login" | "signup") {
+        setDirection(next === "signup" ? 1 : -1);
         setMode(next);
-        setTimeout(() => {
-            setDirection(next === "signup" ? -1 : 1);
-        }, 500);
     }
 
     useEffect(() => {
         setError(undefined);
+        setUsername("");
+        setPassword("");
+        setConfirmPassword("");
+        setPeek(false);
+        setConfirmPeek(false);
     }, [mode]);
 
-    const mouseShake = useAnimationControls();
+    const mascotShake = useAnimationControls();
 
     useEffect(() => {
         if (!error) return;
-
-        mouseShake.start({
+        mascotShake.start({
             x: [0, -6, 6, -4, 4, 0],
-            transition: {
-                duration: 0.25,
-                ease: "easeOut",
-            },
+            transition: { duration: 0.4, ease: "easeOut" },
         });
-    }, [error, mouseShake]);
+    }, [error, mascotShake]);
 
     const mouseVariants: Variants = {
         idle: (custom: { right?: boolean }) => ({
             y: [3, -3],
             rotate: custom.right ? 40 : -40,
             transition: {
-                y: {
-                    duration: 1.5,
-                    repeat: Infinity,
-                    repeatType: "mirror",
-                    ease: "easeInOut",
-                    delay: custom.right ? 0.5 : 0
-                },
+                y: { duration: 1.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: custom.right ? 0.5 : 0 },
                 rotate: { duration: 0.35 },
-            },
-        }),
-        peek: (custom: { right?: boolean }) => ({
-            y: [3, -3],
-            rotate: custom.right ? 100 : -100,
-            transition: {
-                y: { duration: 1.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
-                rotate: { duration: 0.3, ease: "easeInOut" },
-            },
-        }),
-        away: (custom: { right?: boolean }) => ({
-            y: [3, -3],
-            rotate: custom.right ? 160 : -160,
-            transition: {
-                y: { duration: 1.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
-                rotate: { duration: 0.4, ease: "easeInOut" },
             },
         }),
     };
 
-    const cardVariants: Variants = {
-        initial: (dir: number) => ({ y: 200 * dir, opacity: 0 }),
-        animate: { y: 0, opacity: 1 },
-        exit: (dir: number) => ({ y: -200 * dir, opacity: 0 }),
+    const formVariants: Variants = {
+        initial: (dir: number) => ({ x: 60 * dir, opacity: 0 }),
+        animate: { x: 0, opacity: 1 },
+        exit: (dir: number) => ({ x: -60 * dir, opacity: 0 }),
     };
 
     return (
         <div className="auth-page">
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={mode}
-                    className="auth-card"
-                    custom={direction}
-                    variants={cardVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                >
-                    {/* Mascot */}
-                    <div className="tm-header">
-                        <motion.div className="tm-mascot" animate={mouseShake}>
-                            <motion.span
-                                className="tm-mouse"
-                                variants={mouseVariants}
-                                custom={{ right: false }}
-                                animate={peek ? "peek" : lookingAway ? "away" : "idle"}
-                            >
-                                🐭
-                            </motion.span>
+            <div className="auth-card">
+                {/* Left panel — brand + reasons + guest */}
+                <div className="auth-panel-left">
+                    <motion.div className="tm-mascot" animate={mascotShake}>
+                        <motion.span
+                            className="tm-mouse"
+                            variants={mouseVariants}
+                            custom={{ right: false }}
+                            animate="idle"
+                        >
+                            🐭
+                        </motion.span>
+                        <motion.span
+                            className="tm-mouse"
+                            variants={mouseVariants}
+                            custom={{ right: true }}
+                            animate="idle"
+                        >
+                            🐭
+                        </motion.span>
+                    </motion.div>
 
+                    <h1 className="tm-brand">TwoMice</h1>
 
-                            <motion.span
-                                className="tm-mouse"
-                                variants={mouseVariants}
-                                custom={{ right: true }}
-                                animate={peek ? "peek" : lookingAway ? "away" : "idle"}
-                            >
-                                🐭
-                            </motion.span>
-                        </motion.div>
-                        <h1>TwoMice</h1>
-                        <p>{mode === "login" ? "Welcome back to the mischief" : "Join the mischief"}</p>
-                    </div>
+                    <div className="tm-divider" />
 
-                    {/* Form */}
-                    <div className="tm-form">
-                        <input placeholder="Mouse name" onChange={e => setUsername(e.target.value)}/>
-                        <div className="tm-password">
-                            <input
-                                type={peek ? "text" : "password"}
-                                placeholder="Secret stash"
-                                value={password}
-                                onFocus={() => !peek && setLookingAway(true)}
-                                onBlur={() => setLookingAway(false)}
-                                onChange={e => setPassword(e.target.value)}
-                            />
+                    <ul className="tm-reasons">
+                        <li>Post nibs &amp; start conversations</li>
+                        <li>Squeak on anything that moves you</li>
+                        <li>Build your burrow over time</li>
+                    </ul>
 
-                            <button
-                                type="button"
-                                className="tm-peek"
-                                onClick={() => {
-                                    setPeek(p => !p);
-                                    setLookingAway(false);
-                                }}
-                                aria-label={peek ? "Hide password" : "Show password"}
-                            >
-                                {peek ? "👀" : "🙈"}
+                    <div className="tm-divider" />
+
+                    <button type="button" className="tm-guest" onClick={() => nav("/")}>
+                        Not ready? Browse as guest →
+                    </button>
+                </div>
+
+                {/* Right panel — form */}
+                <div className="auth-panel-right">
+                    <AnimatePresence mode="wait" custom={direction}>
+                        <motion.div
+                            key={mode}
+                            className="tm-form-wrap"
+                            custom={direction}
+                            variants={formVariants}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                            transition={{ duration: 0.2, ease: "easeInOut" }}
+                        >
+                            <h2 className="tm-form-heading">
+                                {mode === "login" ? "Welcome back" : "Join the mischief"}
+                            </h2>
+
+                            <div className="tm-form">
+                                <input
+                                    placeholder="Mouse name"
+                                    autoFocus
+                                    value={username}
+                                    onChange={e => setUsername(e.target.value)}
+                                    onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                                />
+
+                                <div className="tm-password">
+                                    <input
+                                        type={peek ? "text" : "password"}
+                                        placeholder="Secret stash"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="tm-peek"
+                                        onClick={() => { setPeek(p => !p); setLookingAway(false); }}
+                                        aria-label={peek ? "Hide password" : "Show password"}
+                                    >
+                                        {peek ? "👀" : "🙈"}
+                                    </button>
+                                </div>
+
+                                {mode === "signup" && (
+                                    <div className="tm-password">
+                                        <input
+                                            type={confirmPeek ? "text" : "password"}
+                                            placeholder="Confirm secret stash"
+                                            value={confirmPassword}
+                                            onChange={e => setConfirmPassword(e.target.value)}
+                                            onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="tm-peek"
+                                            onClick={() => setConfirmPeek(p => !p)}
+                                            aria-label={confirmPeek ? "Hide password" : "Show password"}
+                                        >
+                                            {confirmPeek ? "👀" : "🙈"}
+                                        </button>
+                                    </div>
+                                )}
+
+                                <button
+                                    type="button"
+                                    className="tm-submit"
+                                    onClick={handleSubmit}
+                                    disabled={loading}
+                                >
+                                    <span className="tm-submit-text">
+                                        {mode === "login" ? "Scurry In →" : "Build your burrow →"}
+                                    </span>
+                                    {loading && <span className="tm-spinner" aria-hidden />}
+                                </button>
+
+                                <ErrorMessage error={error} />
+                            </div>
+
+                            <div className="tm-footer">
+                                {mode === "login" ? (
+                                    <>
+                                        New mouse?{" "}
+                                        <button type="button" onClick={() => switchMode("signup")}>
+                                            Build a burrow →
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        Already in the mischief?{" "}
+                                        <button type="button" onClick={() => switchMode("login")}>
+                                            Scurry in →
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+
+                            <button type="button" className="tm-guest tm-guest-mobile" onClick={() => nav("/")}>
+                                Not ready? Browse as guest →
                             </button>
-                        </div>
-
-                        <button className="tm-submit" onClick={handleSubmit}>
-                            <span className="tm-submit-text">
-                                {mode === "login" ? "Scurry In" : "Create Burrow"}
-                            </span>
-
-                            {loading && (
-                                <span className="tm-spinner" aria-hidden/>
-                            )}
-                        </button>
-
-                        {/* Error message */}
-                        <ErrorMessage error={error}/>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="tm-footer">
-                        {mode === "login" ? (
-                            <>
-                                New mouse?{" "}
-                                <button type="button" onClick={() => switchMode("signup")}>
-                                    Build a burrow
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                Already squeaking around?{" "}
-                                <button type="button" onClick={() => switchMode("login")}>
-                                    Scurry back in
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </motion.div>
-            </AnimatePresence>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
+            </div>
         </div>
     );
 }

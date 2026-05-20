@@ -96,7 +96,7 @@
 .create-nib-submit {
   padding: 9px 24px;
   background: var(--accent);
-  color: #fff; /* #fff intentional: text on --accent bg */
+  color: var(--text-on-accent);
   border: none;
   border-radius: 99px;
   font-size: 13px;
@@ -112,8 +112,8 @@
 .create-nib-spinner {
   width: 11px;
   height: 11px;
-  border: 2px solid rgba(255,255,255,0.4); /* intentional: translucent white track on --accent bg */
-  border-top-color: #fff; /* #fff intentional: text on --accent bg */
+  border: 2px solid color-mix(in srgb, var(--text-on-accent) 40%, transparent);
+  border-top-color: var(--text-on-accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -144,7 +144,7 @@
   a {
     padding: 8px 20px;
     background: var(--accent);
-    color: #fff; /* #fff intentional: text on --accent bg */
+    color: var(--text-on-accent);
     border-radius: 99px;
     font-size: 13px;
     font-weight: 600;

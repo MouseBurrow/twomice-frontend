@@ -133,7 +133,7 @@
 .post-submit {
   padding: 8px 20px;
   background: var(--accent);
-  color: #fff; /* #fff intentional: text on --accent bg */
+  color: var(--text-on-accent);
   border: none;
   border-radius: 99px;
   font-size: 12px;
@@ -151,8 +151,8 @@
 .post-spinner {
   width: 10px;
   height: 10px;
-  border: 2px solid rgba(255,255,255,0.4); /* intentional: translucent white track on --accent bg */
-  border-top-color: #fff; /* #fff intentional: text on --accent bg */
+  border: 2px solid color-mix(in srgb, var(--text-on-accent) 40%, transparent);
+  border-top-color: var(--text-on-accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -183,7 +183,7 @@
   button {
     padding: 6px 18px;
     background: var(--accent);
-    color: #fff; /* #fff intentional: text on --accent bg */
+    color: var(--text-on-accent);
     border-radius: 99px;
     font-size: 12px;
     font-weight: 600;

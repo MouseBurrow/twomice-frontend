@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "../assets/Profile.scss";
 
@@ -19,6 +19,7 @@ const TAB_EMPTY: Record<Tab, string> = {
 
 export default function Profile() {
     const { auth } = useAuth();
+    const navigate = useNavigate();
     const [tab, setTab] = useState<Tab>("nibs");
 
     if (auth.status === "unknown") return null;
@@ -28,8 +29,10 @@ export default function Profile() {
             <div className="profile-page">
                 <div className="profile-board">
                     <div className="profile-guest">
-                        <p>Sign in to view your profile.</p>
-                        <Link to="/auth">Sign in</Link>
+                        <span className="profile-guest-icon" aria-hidden="true">🐭</span>
+                        <p>You need a burrow to see this</p>
+                        <span>Sign in to view your profile, nibs, and saved items.</span>
+                        <button type="button" onClick={() => navigate("/auth")}>Sign in to the mischief</button>
                     </div>
                 </div>
             </div>

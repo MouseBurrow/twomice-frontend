@@ -69,7 +69,7 @@
   &.active {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff; /* #fff intentional: text on --accent bg */
+    color: var(--text-on-accent);
   }
 }
 
@@ -86,25 +86,44 @@
 
 /* ── Guest gate ── */
 .profile-guest {
-  padding: 48px;
+  padding: 32px 24px;
   text-align: center;
-  background: var(--bg-surface);
+  background: var(--accent-bg);
   border: 1px solid var(--border);
   border-radius: 0 16px 16px 16px;
 
-  p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin: 0 0 16px;
+  .profile-guest-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
   }
 
-  a {
+  p {
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    color: var(--accent);
+    margin: 0 0 4px;
+  }
+
+  span:not([class]) {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  button {
     padding: 8px 20px;
     background: var(--accent);
-    color: #fff; /* #fff intentional: text on --accent bg */
+    color: var(--text-on-accent);
     border-radius: 99px;
     font-size: 13px;
     font-weight: 600;
-    text-decoration: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.85;
+    }
   }
 }

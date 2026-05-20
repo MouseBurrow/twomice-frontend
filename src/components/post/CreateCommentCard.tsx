@@ -35,7 +35,7 @@ export default function CreateCommentCard({ topic, post, onCreated }: Props) {
 
             {isGuest ? (
                 <div className="comment-auth-cta">
-                    <span className="comment-auth-icon">🐭</span>
+                    <span className="comment-auth-icon" aria-hidden="true">🐭</span>
                     <p>Add your squeak</p>
                     <span>Sign in to join the mischief.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
@@ -49,6 +49,7 @@ export default function CreateCommentCard({ topic, post, onCreated }: Props) {
                         rows={3}
                     />
                     <button
+                        type="button"
                         className="comment-submit"
                         onClick={submit}
                         disabled={!content || loading}

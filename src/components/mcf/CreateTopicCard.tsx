@@ -37,7 +37,7 @@ export default function CreateTopicCard({ onCreated }: Props) {
 
             {isGuest ? (
                 <div className="mcf-auth-cta">
-                    <span className="mcf-auth-icon">🏡</span>
+                    <span className="mcf-auth-icon" aria-hidden="true">🏡</span>
                     <p>Start a new board</p>
                     <span>Sign in to create your own corner of the mischief.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
@@ -56,6 +56,7 @@ export default function CreateTopicCard({ onCreated }: Props) {
                         rows={2}
                     />
                     <button
+                        type="button"
                         className="mcf-submit"
                         onClick={submit}
                         disabled={!name || loading}

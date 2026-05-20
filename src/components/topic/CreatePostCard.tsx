@@ -37,7 +37,7 @@ export default function CreatePostCard({ topicName, onCreated }: Props) {
 
             {isGuest ? (
                 <div className="post-auth-cta">
-                    <span className="post-auth-icon">🐾</span>
+                    <span className="post-auth-icon" aria-hidden="true">🐾</span>
                     <p>Post a nib</p>
                     <span>Sign in to leave your mark on this board.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
@@ -56,6 +56,7 @@ export default function CreatePostCard({ topicName, onCreated }: Props) {
                         rows={3}
                     />
                     <button
+                        type="button"
                         className="post-submit"
                         onClick={submit}
                         disabled={!title || loading}

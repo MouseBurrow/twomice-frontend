@@ -151,8 +151,8 @@
 .post-spinner {
   width: 10px;
   height: 10px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-top-color: #fff; /* #fff intentional */
+  border: 2px solid rgba(255,255,255,0.4); /* intentional: translucent white track on --accent bg */
+  border-top-color: #fff; /* #fff intentional: text on --accent bg */
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -173,7 +173,7 @@
     margin: 0 0 4px;
   }
 
-  span {
+  span:not([class]) {
     font-size: 11px;
     color: var(--text-muted);
     display: block;

@@ -1,7 +1,8 @@
 name: Docker
 on:
   push:
-    branches: [test, prod]
+    branches: [test]
+    tags: ['*']
 
 jobs:
   build:
@@ -17,7 +18,11 @@ jobs:
           command_timeout: 10m
           script: |
             BRANCH="${{ github.ref_name }}"
-            ENV_NAME="$( [ "$BRANCH" = "prod" ] && echo "prod" || echo "test" )"
+            if [[ "${{ github.ref_type }}" == "tag" ]]; then
+              ENV_NAME="prod"
+            else
+              ENV_NAME="test"
+            fi
             TAG="${ENV_NAME}-latest"
 
             cd /home/admin/twomice

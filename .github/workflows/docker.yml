@@ -45,7 +45,9 @@ jobs:
               cd services/frontend
               git fetch origin
               git checkout "$BRANCH"
-              git pull origin "$BRANCH"
+              if [[ "${{ github.ref_type }}" != "tag" ]]; then
+                git pull origin "$BRANCH"
+              fi
             else
               mkdir -p services && cd services
               git clone --branch "$BRANCH" https://github.com/MouseBurrow/twomice-frontend.git frontend
@@ -54,4 +56,5 @@ jobs:
             docker build -t ghcr.io/mouseburrow/twomice-frontend:$TAG .
             docker push ghcr.io/mouseburrow/twomice-frontend:$TAG
             cd /home/admin/twomice/deploy
+            docker compose -f docker-compose.${ENV_NAME}.yaml pull frontend
             docker compose -f docker-compose.${ENV_NAME}.yaml up -d frontend

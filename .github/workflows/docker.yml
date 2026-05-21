@@ -57,4 +57,4 @@ jobs:
             docker push ghcr.io/mouseburrow/twomice-frontend:$TAG
             cd /home/admin/twomice/deploy
             docker compose -f docker-compose.${ENV_NAME}.yaml pull frontend
-            docker compose -f docker-compose.${ENV_NAME}.yaml up -d frontend
+            docker compose -f docker-compose.${ENV_NAME}.yaml up -d --force-recreate frontend

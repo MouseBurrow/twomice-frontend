@@ -171,7 +171,7 @@ export default function Auth() {
                                     <button
                                         type="button"
                                         className="tm-peek"
-                                        onClick={() => { setPeek(p => !p); setLookingAway(false); }}
+                                        onClick={() => setPeek(p => !p)}
                                         aria-label={peek ? "Hide password" : "Show password"}
                                     >
                                         {peek ? "👀" : "🙈"}

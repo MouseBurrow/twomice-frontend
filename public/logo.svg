@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 23 92 60">
+  <!-- Back mouse (right, green) -->
+  <circle cx="62" cy="37" r="11" fill="#3fb950"/>
+  <circle cx="82" cy="37" r="11" fill="#3fb950"/>
+  <circle cx="72" cy="60" r="20" fill="#3fb950"/>
+  <circle cx="63" cy="55" r="3.8" fill="#ffffff"/>
+  <circle cx="81" cy="55" r="3.8" fill="#ffffff"/>
+  <!-- Front mouse (left, pink) -->
+  <circle cx="18" cy="37" r="11" fill="#f778ba"/>
+  <circle cx="38" cy="37" r="11" fill="#f778ba"/>
+  <circle cx="28" cy="60" r="20" fill="#f778ba"/>
+  <circle cx="19" cy="55" r="3.8" fill="#ffffff"/>
+  <circle cx="37" cy="55" r="3.8" fill="#ffffff"/>
+</svg>

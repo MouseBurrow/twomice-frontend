@@ -16,6 +16,9 @@
 }
 
 .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-family: 'Fredoka One', cursive;
   font-size: 17px;
   color: var(--accent);

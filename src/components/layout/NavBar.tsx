@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import Logo from "../shared/Logo";
 import "./NavBar.scss";
 
 function parseBreadcrumb(pathname: string): { board?: string; isNib?: boolean; page?: string } {
@@ -34,7 +35,10 @@ export default function NavBar() {
     return (
         <nav className="navbar">
             <div className="navbar-primary">
-                <Link to="/" className="navbar-brand">🐭 TwoMice</Link>
+                <Link to="/" className="navbar-brand">
+                    <Logo size={42} />
+                    TwoMice
+                </Link>
 
                 <form className="navbar-search" onSubmit={handleSearch}>
                     <input

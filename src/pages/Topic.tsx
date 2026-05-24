@@ -5,6 +5,8 @@ import type { ApiError } from "../apiError";
 import CreatePostCard from "../components/topic/CreatePostCard.tsx";
 import PostGrid from "../components/topic/PostGrid";
 import TopicHeader from "../components/topic/TopicHeader.tsx";
+import SkeletonTopicHeader from "../components/skeleton/SkeletonTopicHeader";
+import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import type { PostData, TopicData } from "../types";
 import "../assets/Topic.scss";
 
@@ -13,6 +15,7 @@ export default function Topic() {
     const [topicData, setTopicData] = useState<TopicData>();
     const [posts, setPosts] = useState<PostData[]>([]);
     const [error, setError] = useState<ApiError>();
+    const [loading, setLoading] = useState(true);
 
     async function load(cancelled?: () => boolean) {
         try {
@@ -24,14 +27,17 @@ export default function Topic() {
             if (cancelled?.()) return;
             setTopicData(t);
             setPosts(p.filter(post => !post.deleted));
+            setLoading(false);
         } catch (e) {
             if (cancelled?.()) return;
             setError(e as ApiError);
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         let cancelled = false;
+        setLoading(true);
         load(() => cancelled);
         return () => { cancelled = true; };
     }, [board]);
@@ -39,17 +45,25 @@ export default function Topic() {
     return (
         <div className="topic-page">
             <div className="topic-board">
-                <TopicHeader
-                    name={topicData?.name ?? "Loading…"}
-                    description={topicData?.description ?? ""}
-                />
-                {topicData && (
+                {loading ? (
                     <>
-                        <CreatePostCard topicName={topicData.name} onCreated={load}/>
-                        <PostGrid board={topicData.name} posts={posts}/>
+                        <SkeletonTopicHeader/>
+                        <div className="topic-posts">
+                            {Array.from({ length: 5 }, (_, i) => <SkeletonPostCard key={i}/>)}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {topicData && <TopicHeader name={topicData.name} description={topicData.description}/>}
+                        {topicData && (
+                            <>
+                                <CreatePostCard topicName={topicData.name} onCreated={load}/>
+                                <PostGrid board={topicData.name} posts={posts}/>
+                            </>
+                        )}
+                        {error && <p className="topic-error">Failed to load posts.</p>}
                     </>
                 )}
-                {error && <p className="topic-error">Failed to load posts.</p>}
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import type { TopicData } from "../../types";
+import type { BoardData } from "../../types";
 
-export default function TopicCard({ topic }: { topic: TopicData }) {
+export default function BoardCard({ topic }: { topic: BoardData }) {
     return (
         <div className="mcf-board-card">
             <Link to={`/b/${topic.name}`}>

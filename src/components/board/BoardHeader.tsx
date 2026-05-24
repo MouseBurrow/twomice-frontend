@@ -1,6 +1,6 @@
 type Props = { name: string; description: string };
 
-export default function TopicHeader({ name, description }: Props) {
+export default function BoardHeader({ name, description }: Props) {
     return (
         <div className="topic-header">
             <h1 className="topic-header-name">b/{name}</h1>

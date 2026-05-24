@@ -1,7 +1,7 @@
 import SkeletonVoteColumn from "./SkeletonVoteColumn";
 import "../../assets/Skeleton.scss";
 
-export default function SkeletonCommentCard() {
+export default function SkeletonSqueakCard() {
     return (
         <article className="comment-card">
             <SkeletonVoteColumn />

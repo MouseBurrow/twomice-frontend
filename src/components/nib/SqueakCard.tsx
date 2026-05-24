@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
-import type { CommentData, ReplyData } from "../../types";
+import type { SqueakData, EchoData } from "../../types";
 import ErrorMessage from "../ErrorMessage";
 import VoteColumn from "../shared/VoteColumn";
-import CreateReplyCard from "./CreateReplyCard";
+import CreateEchoCard from "./CreateEchoCard";
 
-type Props = { topic: string; post: string; comment: CommentData };
+type Props = { topic: string; post: string; comment: SqueakData };
 
-export default function CommentCard({ topic, post, comment }: Props) {
+export default function SqueakCard({ topic, post, comment }: Props) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [replies, setReplies] = useState<ReplyData[]>([]);
+    const [echoes, setEchoes] = useState<EchoData[]>([]);
     const [error, setError] = useState<ApiError>();
 
-    async function loadReplies() {
+    async function loadEchoes() {
         try {
             setLoading(true);
             setError(undefined);
-            const data = await api.getReplies(topic, post, comment.hash);
-            setReplies(data.filter(r => !r.deleted));
+            const data = await api.getEchoes(topic, post, comment.hash);
+            setEchoes(data.filter(r => !r.deleted));
         } catch (e) {
             setError(e as ApiError);
         } finally {
@@ -27,9 +27,9 @@ export default function CommentCard({ topic, post, comment }: Props) {
         }
     }
 
-    async function toggleReplies() {
+    async function toggleEchoes() {
         if (open) { setOpen(false); return; }
-        await loadReplies();
+        await loadEchoes();
         setOpen(true);
     }
 
@@ -44,7 +44,7 @@ export default function CommentCard({ topic, post, comment }: Props) {
                     <span>{new Date(comment.created_at).toLocaleDateString()}</span>
                     <button
                         className="comment-replies-toggle"
-                        onClick={toggleReplies}
+                        onClick={toggleEchoes}
                         aria-label={open ? "Hide echoes for this comment" : "Show echoes for this comment"}
                     >
                         {open ? "hide echoes" : "echoes"}
@@ -55,7 +55,7 @@ export default function CommentCard({ topic, post, comment }: Props) {
 
                 {open && (
                     <div className="comment-replies">
-                        {replies.map(r => (
+                        {echoes.map(r => (
                             <div key={r.hash} className="comment-reply">
                                 <p className="comment-reply-content">{r.content}</p>
                                 <span className="comment-reply-meta">
@@ -63,11 +63,11 @@ export default function CommentCard({ topic, post, comment }: Props) {
                                 </span>
                             </div>
                         ))}
-                        <CreateReplyCard
+                        <CreateEchoCard
                             topic={topic}
                             post={post}
                             commentHash={comment.hash}
-                            onCreated={loadReplies}
+                            onCreated={loadEchoes}
                         />
                     </div>
                 )}

@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth.tsx";
-import MCF from "./pages/MCF";
-import Topic from "./pages/Topic";
-import Post from "./pages/Post";
+import Home from "./pages/Home";
+import Board from "./pages/Board";
+import Nib from "./pages/Nib";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import CreateNib from "./pages/CreateNib";
@@ -14,9 +14,9 @@ export default function App() {
         <Routes>
             <Route path="/auth" element={<Auth/>}/>
             <Route element={<Layout/>}>
-                <Route path="/" element={<MCF/>}/>
-                <Route path="/b/:board" element={<Topic/>}/>
-                <Route path="/b/:board/nib/:post" element={<Post/>}/>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/b/:board" element={<Board/>}/>
+                <Route path="/b/:board/nib/:post" element={<Nib/>}/>
                 <Route path="/b/:board/new" element={<CreateNib/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/profile" element={<Profile/>}/>

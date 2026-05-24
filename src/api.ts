@@ -1,5 +1,5 @@
 import { ApiError } from "./apiError.ts";
-import type { AccountData, CommentData, PostData, ReplyData, TopicData } from "./types.ts";
+import type { AccountData, SqueakData, NibData, EchoData, BoardData } from "./types.ts";
 
 export const API_BASE = "/api";
 
@@ -70,33 +70,33 @@ export const api = {
             method: "GET",
         }),
 
-    createTopic: (body: { name: string, description: string }) =>
+    createBoard: (body: { name: string, description: string }) =>
         request<void>("/mcf", {
             method: "POST",
             body: JSON.stringify(body),
         }),
 
-    getTopic: (topic: string) =>
-        request<TopicData>(`/mcf/${topic}`, {
+    getBoard: (topic: string) =>
+        request<BoardData>(`/mcf/${topic}`, {
             method: "GET",
         }),
 
-    createPost: (topic: string, body: { title: string, content: string }) =>
+    createNib: (topic: string, body: { title: string, content: string }) =>
         request<void>(`/mcf/${topic}/nib`, {
             method: "POST",
             body: JSON.stringify(body),
         }),
 
-    getPost: (topic: string, postId: string) =>
-        request<PostData>(`/mcf/${topic}/nib/${postId}`),
+    getNib: (topic: string, postId: string) =>
+        request<NibData>(`/mcf/${topic}/nib/${postId}`),
 
-    createComment: (topic: string, post: string, body: { content: string }) =>
+    createSqueak: (topic: string, post: string, body: { content: string }) =>
         request<void>(`/mcf/${topic}/nib/${post}/sqk`, {
             method: "POST",
             body: JSON.stringify(body),
         }),
 
-    createReply: (
+    createEcho: (
         topic: string,
         post: string,
         comment: string,
@@ -107,21 +107,21 @@ export const api = {
             body: JSON.stringify(body),
         }),
 
-    getReplies: (topic: string, post: string, comment: string) =>
-        request<ReplyData[]>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`),
+    getEchoes: (topic: string, post: string, comment: string) =>
+        request<EchoData[]>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`),
 
-    getAllTopics: () =>
-        request<TopicData[]>("/mcf", {
+    getAllBoards: () =>
+        request<BoardData[]>("/mcf", {
             method: "GET",
         }),
 
-    getAllPosts: (topic: string) =>
-        request<PostData[]>(`/mcf/${topic}/nib`, {
+    getAllNibs: (topic: string) =>
+        request<NibData[]>(`/mcf/${topic}/nib`, {
             method: "GET",
         }),
 
-    getAllComments: (topic: string, post: string) =>
-        request<CommentData[]>(
+    getAllSqueaks: (topic: string, post: string) =>
+        request<SqueakData[]>(
             `/mcf/${topic}/nib/${post}/sqk`, {
                 method: "GET",
             }

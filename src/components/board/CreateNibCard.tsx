@@ -5,9 +5,10 @@ import type { ApiError } from "../../apiError";
 import { useAuth } from "../../contexts/AuthContext";
 import ErrorMessage from "../ErrorMessage";
 
-type Props = { topic: string; post: string; onCreated: () => Promise<void> };
+type Props = { topicName: string; onCreated: () => Promise<void> };
 
-export default function CreateCommentCard({ topic, post, onCreated }: Props) {
+export default function CreateNibCard({ topicName, onCreated }: Props) {
+    const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError>();
@@ -19,7 +20,8 @@ export default function CreateCommentCard({ topic, post, onCreated }: Props) {
         try {
             setError(undefined);
             setLoading(true);
-            await api.createComment(topic, post, { content });
+            await api.createNib(topicName, { title, content });
+            setTitle("");
             setContent("");
             await onCreated();
         } catch (e) {
@@ -30,32 +32,37 @@ export default function CreateCommentCard({ topic, post, onCreated }: Props) {
     }
 
     return (
-        <section className="comment-create">
-            <h2>+ Squeak</h2>
+        <section className="post-create">
+            <h2>Post a nib</h2>
 
             {isGuest ? (
-                <div className="comment-auth-cta">
-                    <span className="comment-auth-icon" aria-hidden="true">🐭</span>
-                    <p>Add your squeak</p>
-                    <span>Sign in to join the mischief.</span>
+                <div className="post-auth-cta">
+                    <span className="post-auth-icon" aria-hidden="true">🐾</span>
+                    <p>Post a nib</p>
+                    <span>Sign in to leave your mark on this board.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
                 </div>
             ) : (
                 <>
+                    <input
+                        placeholder="Title"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                    />
                     <textarea
-                        placeholder="What's your squeak?"
+                        placeholder="What's the nibble?"
                         value={content}
                         onChange={e => setContent(e.target.value)}
                         rows={3}
                     />
                     <button
                         type="button"
-                        className="comment-submit"
+                        className="post-submit"
                         onClick={submit}
-                        disabled={!content || loading}
+                        disabled={!title || loading}
                     >
-                        {loading && <span className="comment-spinner"/>}
-                        {loading ? "Squeaking…" : "Squeak"}
+                        {loading && <span className="post-spinner"/>}
+                        {loading ? "Posting…" : "Post nib"}
                     </button>
                 </>
             )}

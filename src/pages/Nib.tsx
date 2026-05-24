@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../api";
 import type { ApiError } from "../apiError";
-import CommentGrid from "../components/post/CommentGrid";
-import CreateCommentCard from "../components/post/CreateCommentCard";
-import PostHeader from "../components/post/PostHeader.tsx";
+import SqueakGrid from "../components/nib/SqueakGrid";
+import CreateSqueakCard from "../components/nib/CreateSqueakCard";
+import NibHeader from "../components/nib/NibHeader.tsx";
 import VoteColumn from "../components/shared/VoteColumn";
-import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
-import SkeletonCommentCard from "../components/skeleton/SkeletonCommentCard";
-import type { CommentData, PostData } from "../types";
-import "../assets/Post.scss";
+import SkeletonNibHeader from "../components/skeleton/SkeletonNibHeader";
+import SkeletonSqueakCard from "../components/skeleton/SkeletonSqueakCard";
+import type { SqueakData, NibData } from "../types";
+import "../assets/Nib.scss";
 
-export default function Post() {
+export default function Nib() {
     const { board, post } = useParams<{ board: string; post: string }>();
-    const [postData, setPostData] = useState<PostData>();
-    const [comments, setComments] = useState<CommentData[]>([]);
+    const [postData, setNibData] = useState<NibData>();
+    const [comments, setComments] = useState<SqueakData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
 
@@ -22,11 +22,11 @@ export default function Post() {
         try {
             setError(undefined);
             const [p, c] = await Promise.all([
-                api.getPost(board!, post!),
-                api.getAllComments(board!, post!)
+                api.getNib(board!, post!),
+                api.getAllSqueaks(board!, post!)
             ]);
             if (cancelled?.()) return;
-            setPostData(p);
+            setNibData(p);
             setComments(c.filter(x => !x.deleted));
             setLoading(false);
         } catch (e) {
@@ -48,16 +48,16 @@ export default function Post() {
             <div className="post-board">
                 {loading ? (
                     <>
-                        <SkeletonPostHeader/>
+                        <SkeletonNibHeader/>
                         <div className="comment-list">
-                            {Array.from({ length: 4 }, (_, i) => <SkeletonCommentCard key={i}/>)}
+                            {Array.from({ length: 4 }, (_, i) => <SkeletonSqueakCard key={i}/>)}
                         </div>
                     </>
                 ) : (
                     <>
                         <div className="post-vote-row">
                             <VoteColumn initialScore={postData?.vote_count ?? 0}/>
-                            <PostHeader
+                            <NibHeader
                                 title={postData?.title ?? ""}
                                 content={postData?.content ?? ""}
                                 createdAt={postData?.created_at}
@@ -65,8 +65,8 @@ export default function Post() {
                         </div>
                         {postData && (
                             <>
-                                <CreateCommentCard topic={board!} post={post!} onCreated={load}/>
-                                <CommentGrid topic={board!} post={post!} comments={comments}/>
+                                <CreateSqueakCard topic={board!} post={post!} onCreated={load}/>
+                                <SqueakGrid topic={board!} post={post!} comments={comments}/>
                             </>
                         )}
                         {error && <p className="post-error">Failed to load comments.</p>}

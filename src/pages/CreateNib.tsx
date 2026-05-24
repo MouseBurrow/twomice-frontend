@@ -36,7 +36,7 @@ export default function CreateNib() {
         setError(undefined);
         setLoading(true);
         try {
-            await api.createPost(board!, { title: title.trim(), content: content.trim() });
+            await api.createNib(board!, { title: title.trim(), content: content.trim() });
             navigate(`/b/${board}`);
         } catch (e) {
             setError(e as ApiError);

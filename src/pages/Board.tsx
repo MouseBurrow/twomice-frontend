@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../api";
 import type { ApiError } from "../apiError";
-import CreatePostCard from "../components/topic/CreatePostCard.tsx";
-import PostGrid from "../components/topic/PostGrid";
-import TopicHeader from "../components/topic/TopicHeader.tsx";
-import SkeletonTopicHeader from "../components/skeleton/SkeletonTopicHeader";
-import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
-import type { PostData, TopicData } from "../types";
-import "../assets/Topic.scss";
+import CreateNibCard from "../components/board/CreateNibCard.tsx";
+import NibGrid from "../components/board/NibGrid";
+import BoardHeader from "../components/board/BoardHeader.tsx";
+import SkeletonBoardHeader from "../components/skeleton/SkeletonBoardHeader";
+import SkeletonNibCard from "../components/skeleton/SkeletonNibCard";
+import type { NibData, BoardData } from "../types";
+import "../assets/Board.scss";
 
-export default function Topic() {
+export default function Board() {
     const { board } = useParams<{ board: string }>();
-    const [topicData, setTopicData] = useState<TopicData>();
-    const [posts, setPosts] = useState<PostData[]>([]);
+    const [topicData, setBoardData] = useState<BoardData>();
+    const [posts, setPosts] = useState<NibData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
 
@@ -21,11 +21,11 @@ export default function Topic() {
         try {
             setError(undefined);
             const [t, p] = await Promise.all([
-                api.getTopic(board!),
-                api.getAllPosts(board!)
+                api.getBoard(board!),
+                api.getAllNibs(board!)
             ]);
             if (cancelled?.()) return;
-            setTopicData(t);
+            setBoardData(t);
             setPosts(p.filter(post => !post.deleted));
             setLoading(false);
         } catch (e) {
@@ -47,18 +47,18 @@ export default function Topic() {
             <div className="topic-board">
                 {loading ? (
                     <>
-                        <SkeletonTopicHeader/>
+                        <SkeletonBoardHeader/>
                         <div className="topic-posts">
-                            {Array.from({ length: 5 }, (_, i) => <SkeletonPostCard key={i}/>)}
+                            {Array.from({ length: 5 }, (_, i) => <SkeletonNibCard key={i}/>)}
                         </div>
                     </>
                 ) : (
                     <>
-                        {topicData && <TopicHeader name={topicData.name} description={topicData.description}/>}
+                        {topicData && <BoardHeader name={topicData.name} description={topicData.description}/>}
                         {topicData && (
                             <>
-                                <CreatePostCard topicName={topicData.name} onCreated={load}/>
-                                <PostGrid board={topicData.name} posts={posts}/>
+                                <CreateNibCard topicName={topicData.name} onCreated={load}/>
+                                <NibGrid board={topicData.name} posts={posts}/>
                             </>
                         )}
                         {error && <p className="topic-error">Failed to load posts.</p>}

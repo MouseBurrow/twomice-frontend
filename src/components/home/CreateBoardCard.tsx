@@ -7,7 +7,7 @@ import ErrorMessage from "../ErrorMessage";
 
 type Props = { onCreated: () => Promise<void> };
 
-export default function CreateTopicCard({ onCreated }: Props) {
+export default function CreateBoardCard({ onCreated }: Props) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function CreateTopicCard({ onCreated }: Props) {
         try {
             setError(undefined);
             setLoading(true);
-            await api.createTopic({ name, description });
+            await api.createBoard({ name, description });
             setName("");
             setDescription("");
             await onCreated();

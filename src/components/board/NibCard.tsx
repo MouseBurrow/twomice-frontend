@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import type { PostData } from "../../types";
+import type { NibData } from "../../types";
 import VoteColumn from "../shared/VoteColumn";
 
-type Props = { board: string; post: PostData };
+type Props = { board: string; post: NibData };
 
-export default function PostCard({ board, post }: Props) {
+export default function NibCard({ board, post }: Props) {
     return (
         <article className="topic-post">
             <Link to={`/b/${board}/nib/${post.slug}`}>

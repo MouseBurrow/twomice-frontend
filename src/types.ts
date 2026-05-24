@@ -11,14 +11,14 @@ export type AccountData = {
     updated_at: string;
 };
 
-export type TopicData = {
+export type BoardData = {
     name: string;
     description: string;
     created_at: string;
     deleted: boolean;
 };
 
-export type PostData = {
+export type NibData = {
     title: string;
     slug: string;
     content: string;
@@ -28,7 +28,7 @@ export type PostData = {
     vote_count?: number;
 };
 
-export type CommentData = {
+export type SqueakData = {
     hash: string;
     content: string;
     created_at: string;
@@ -36,7 +36,7 @@ export type CommentData = {
     vote_count?: number;
 };
 
-export type ReplyData = {
+export type EchoData = {
     hash: string;
     content: string;
     created_at: string;

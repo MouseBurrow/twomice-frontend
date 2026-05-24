@@ -1,7 +1,7 @@
 import SkeletonVoteColumn from "./SkeletonVoteColumn";
 import "../../assets/Skeleton.scss";
 
-export default function SkeletonPostHeader() {
+export default function SkeletonNibHeader() {
     return (
         <div className="post-vote-row">
             <SkeletonVoteColumn />

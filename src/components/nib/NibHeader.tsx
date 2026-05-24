@@ -1,6 +1,6 @@
 type Props = { title: string; content: string; createdAt?: string };
 
-export default function PostHeader({ title, content, createdAt }: Props) {
+export default function NibHeader({ title, content, createdAt }: Props) {
     return (
         <div className="post-header">
             {createdAt && (

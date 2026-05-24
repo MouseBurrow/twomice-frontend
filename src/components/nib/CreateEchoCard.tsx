@@ -12,7 +12,7 @@ type Props = {
     onCreated: () => Promise<void>;
 };
 
-export default function CreateReplyCard({ topic, post, commentHash, onCreated }: Props) {
+export default function CreateEchoCard({ topic, post, commentHash, onCreated }: Props) {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError>();
@@ -24,7 +24,7 @@ export default function CreateReplyCard({ topic, post, commentHash, onCreated }:
         try {
             setError(undefined);
             setLoading(true);
-            await api.createReply(topic, post, commentHash, { content });
+            await api.createEcho(topic, post, commentHash, { content });
             setContent("");
             await onCreated();
         } catch (e) {

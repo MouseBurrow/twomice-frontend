@@ -1,7 +1,7 @@
 import SkeletonVoteColumn from "./SkeletonVoteColumn";
 import "../../assets/Skeleton.scss";
 
-export default function SkeletonPostCard() {
+export default function SkeletonNibCard() {
     return (
         <article className="topic-post">
             {/* layout mirrors .topic-post a { display: flex; gap: 12px; padding: 12px 16px } */}

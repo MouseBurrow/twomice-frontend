@@ -36,14 +36,14 @@ export default function CreateEchoCard({ topic, post, commentHash, onCreated }: 
 
     if (isGuest) {
         return (
-            <div className="reply-auth-cta">
+            <div className="echo-auth-cta">
                 <button onClick={() => navigate("/auth")}>Sign in to echo</button>
             </div>
         );
     }
 
     return (
-        <div className="reply-create">
+        <div className="echo-create">
             <textarea
                 placeholder="↩ echo…"
                 value={content}

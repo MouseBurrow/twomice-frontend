@@ -44,18 +44,18 @@ export default function Nib() {
     }, [board, post]);
 
     return (
-        <div className="post-page">
-            <div className="post-board">
+        <div className="nib-page">
+            <div className="nib-content">
                 {loading ? (
                     <>
                         <SkeletonNibHeader/>
-                        <div className="comment-list">
+                        <div className="squeak-list">
                             {Array.from({ length: 4 }, (_, i) => <SkeletonSqueakCard key={i}/>)}
                         </div>
                     </>
                 ) : (
                     <>
-                        <div className="post-vote-row">
+                        <div className="nib-vote-row">
                             <VoteColumn initialScore={postData?.vote_count ?? 0}/>
                             <NibHeader
                                 title={postData?.title ?? ""}
@@ -69,7 +69,7 @@ export default function Nib() {
                                 <SqueakGrid topic={board!} post={post!} comments={comments}/>
                             </>
                         )}
-                        {error && <p className="post-error">Failed to load comments.</p>}
+                        {error && <p className="nib-error">Failed to load comments.</p>}
                     </>
                 )}
             </div>

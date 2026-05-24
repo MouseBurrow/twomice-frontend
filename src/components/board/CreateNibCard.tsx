@@ -32,12 +32,12 @@ export default function CreateNibCard({ topicName, onCreated }: Props) {
     }
 
     return (
-        <section className="post-create">
+        <section className="nib-create">
             <h2>Post a nib</h2>
 
             {isGuest ? (
-                <div className="post-auth-cta">
-                    <span className="post-auth-icon" aria-hidden="true">🐾</span>
+                <div className="nib-auth-cta">
+                    <span className="nib-auth-icon" aria-hidden="true">🐾</span>
                     <p>Post a nib</p>
                     <span>Sign in to leave your mark on this board.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
@@ -57,11 +57,11 @@ export default function CreateNibCard({ topicName, onCreated }: Props) {
                     />
                     <button
                         type="button"
-                        className="post-submit"
+                        className="nib-submit"
                         onClick={submit}
                         disabled={!title || loading}
                     >
-                        {loading && <span className="post-spinner"/>}
+                        {loading && <span className="nib-spinner"/>}
                         {loading ? "Posting…" : "Post nib"}
                     </button>
                 </>

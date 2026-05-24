@@ -5,7 +5,7 @@ type Props = { board: string; posts: NibData[] };
 
 export default function NibGrid({ board, posts }: Props) {
     return (
-        <div className="topic-posts">
+        <div className="board-nibs">
             {posts.map(p => (
                 <NibCard key={p.slug} board={board} post={p}/>
             ))}

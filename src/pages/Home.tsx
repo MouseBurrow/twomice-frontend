@@ -34,11 +34,11 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="mcf-page">
+        <div className="home-page">
             <HomeBanner/>
             <CreateBoardCard onCreated={load}/>
             {loading ? (
-                <div className="mcf-boards">
+                <div className="home-boards">
                     {Array.from({ length: 6 }, (_, i) => <SkeletonBoardCard key={i}/>)}
                 </div>
             ) : (

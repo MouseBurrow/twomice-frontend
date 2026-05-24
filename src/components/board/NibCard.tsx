@@ -6,15 +6,15 @@ type Props = { board: string; post: NibData };
 
 export default function NibCard({ board, post }: Props) {
     return (
-        <article className="topic-post">
+        <article className="nib-card">
             <Link to={`/b/${board}/nib/${post.slug}`}>
                 <VoteColumn initialScore={post.vote_count ?? 0}/>
-                <div className="topic-post-body">
-                    <p className="topic-post-title">{post.title}</p>
-                    <p className="topic-post-preview">
+                <div className="nib-card-body">
+                    <p className="nib-card-title">{post.title}</p>
+                    <p className="nib-card-preview">
                         {post.content.slice(0, 120)}{post.content.length > 120 ? "…" : ""}
                     </p>
-                    <span className="topic-post-meta">
+                    <span className="nib-card-meta">
                         {new Date(post.created_at).toLocaleDateString()}
                     </span>
                 </div>

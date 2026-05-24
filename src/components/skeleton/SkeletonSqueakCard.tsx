@@ -3,14 +3,14 @@ import "../../assets/Skeleton.scss";
 
 export default function SkeletonSqueakCard() {
     return (
-        <article className="comment-card">
+        <article className="squeak-card">
             <SkeletonVoteColumn />
-            <div className="comment-bubble">
-                <p className="comment-content">
+            <div className="squeak-bubble">
+                <p className="squeak-content">
                     <span className="shimmer-line" style={{ width: "92%", marginBottom: "6px" }} />
                     <span className="shimmer-line" style={{ width: "75%" }} />
                 </p>
-                <div className="comment-meta">
+                <div className="squeak-meta">
                     <span className="shimmer-line" style={{ width: "18%" }} />
                 </div>
             </div>

@@ -43,12 +43,12 @@ export default function Board() {
     }, [board]);
 
     return (
-        <div className="topic-page">
-            <div className="topic-board">
+        <div className="board-page">
+            <div className="board-content">
                 {loading ? (
                     <>
                         <SkeletonBoardHeader/>
-                        <div className="topic-posts">
+                        <div className="board-nibs">
                             {Array.from({ length: 5 }, (_, i) => <SkeletonNibCard key={i}/>)}
                         </div>
                     </>
@@ -61,7 +61,7 @@ export default function Board() {
                                 <NibGrid board={topicData.name} posts={posts}/>
                             </>
                         )}
-                        {error && <p className="topic-error">Failed to load posts.</p>}
+                        {error && <p className="board-error">Failed to load posts.</p>}
                     </>
                 )}
             </div>

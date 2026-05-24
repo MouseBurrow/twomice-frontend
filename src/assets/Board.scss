@@ -1,14 +1,14 @@
-.topic-page {
+.board-page {
   padding: 24px 16px 48px;
 }
 
-.topic-board {
+.board-content {
   max-width: 900px;
   margin: 0 auto;
 }
 
 /* ── Board header ── */
-.topic-header {
+.board-header {
   padding: 24px 28px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -26,27 +26,27 @@
   }
 }
 
-.topic-header-name {
+.board-header-name {
   font-family: 'Fredoka One', cursive;
   font-size: 22px;
   color: var(--accent);
   margin: 0 0 4px;
 }
 
-.topic-header-desc {
+.board-header-desc {
   font-size: 13px;
   color: var(--text-muted);
   margin: 0;
 }
 
 /* ── Nib feed ── */
-.topic-posts {
+.board-nibs {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.topic-post {
+.nib-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 0 10px 10px 10px;
@@ -65,12 +65,12 @@
   }
 }
 
-.topic-post-body {
+.nib-card-body {
   flex: 1;
   min-width: 0;
 }
 
-.topic-post-title {
+.nib-card-title {
   font-family: 'Fredoka One', cursive;
   font-size: 15px;
   color: var(--accent);
@@ -80,7 +80,7 @@
   text-overflow: ellipsis;
 }
 
-.topic-post-preview {
+.nib-card-preview {
   font-size: 12px;
   color: var(--text-muted);
   margin: 0 0 6px;
@@ -91,14 +91,14 @@
   overflow: hidden;
 }
 
-.topic-post-meta {
+.nib-card-meta {
   font-size: 10px;
   color: var(--text-faint);
   font-family: 'Space Grotesk', sans-serif;
 }
 
 /* ── Create form ── */
-.post-create {
+.nib-create {
   margin-bottom: 20px;
   padding: 16px 20px;
   background: var(--bg-surface);
@@ -130,7 +130,7 @@
   }
 }
 
-.post-submit {
+.nib-submit {
   padding: 8px 20px;
   background: var(--accent);
   color: var(--text-on-accent);
@@ -148,7 +148,7 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.post-spinner {
+.nib-spinner {
   width: 10px;
   height: 10px;
   border: 2px solid color-mix(in srgb, var(--text-on-accent) 40%, transparent);
@@ -157,14 +157,14 @@
   animation: spin 0.7s linear infinite;
 }
 
-.post-auth-cta {
+.nib-auth-cta {
   padding: 20px;
   background: var(--accent-bg);
   border: 1px solid var(--border);
   border-radius: 0 10px 10px 10px;
   text-align: center;
 
-  .post-auth-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+  .nib-auth-icon { font-size: 28px; display: block; margin-bottom: 6px; }
 
   p {
     font-family: 'Fredoka One', cursive;
@@ -192,7 +192,7 @@
   }
 }
 
-.topic-error {
+.board-error {
   color: var(--accent);
   font-size: 13px;
   text-align: center;

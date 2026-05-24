@@ -30,12 +30,12 @@ export default function CreateSqueakCard({ topic, post, onCreated }: Props) {
     }
 
     return (
-        <section className="comment-create">
+        <section className="squeak-create">
             <h2>+ Squeak</h2>
 
             {isGuest ? (
-                <div className="comment-auth-cta">
-                    <span className="comment-auth-icon" aria-hidden="true">🐭</span>
+                <div className="squeak-auth-cta">
+                    <span className="squeak-auth-icon" aria-hidden="true">🐭</span>
                     <p>Add your squeak</p>
                     <span>Sign in to join the mischief.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
@@ -50,11 +50,11 @@ export default function CreateSqueakCard({ topic, post, onCreated }: Props) {
                     />
                     <button
                         type="button"
-                        className="comment-submit"
+                        className="squeak-submit"
                         onClick={submit}
                         disabled={!content || loading}
                     >
-                        {loading && <span className="comment-spinner"/>}
+                        {loading && <span className="squeak-spinner"/>}
                         {loading ? "Squeaking…" : "Squeak"}
                     </button>
                 </>

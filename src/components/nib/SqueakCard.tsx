@@ -34,16 +34,16 @@ export default function SqueakCard({ topic, post, comment }: Props) {
     }
 
     return (
-        <article className="comment-card">
+        <article className="squeak-card">
             <VoteColumn initialScore={comment.vote_count ?? 0}/>
 
-            <div className="comment-bubble">
-                <p className="comment-content">{comment.content}</p>
+            <div className="squeak-bubble">
+                <p className="squeak-content">{comment.content}</p>
 
-                <div className="comment-meta">
+                <div className="squeak-meta">
                     <span>{new Date(comment.created_at).toLocaleDateString()}</span>
                     <button
-                        className="comment-replies-toggle"
+                        className="squeak-replies-toggle"
                         onClick={toggleEchoes}
                         aria-label={open ? "Hide echoes for this comment" : "Show echoes for this comment"}
                     >
@@ -51,14 +51,14 @@ export default function SqueakCard({ topic, post, comment }: Props) {
                     </button>
                 </div>
 
-                {loading && <p className="comment-loading">Loading echoes…</p>}
+                {loading && <p className="squeak-loading">Loading echoes…</p>}
 
                 {open && (
-                    <div className="comment-replies">
+                    <div className="echo-list">
                         {echoes.map(r => (
-                            <div key={r.hash} className="comment-reply">
-                                <p className="comment-reply-content">{r.content}</p>
-                                <span className="comment-reply-meta">
+                            <div key={r.hash} className="echo-card">
+                                <p className="echo-content">{r.content}</p>
+                                <span className="echo-meta">
                                     {new Date(r.created_at).toLocaleDateString()}
                                 </span>
                             </div>

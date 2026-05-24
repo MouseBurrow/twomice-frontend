@@ -32,12 +32,12 @@ export default function CreateBoardCard({ onCreated }: Props) {
     }
 
     return (
-        <section className="mcf-create">
+        <section className="home-create">
             <h2>Start a new board</h2>
 
             {isGuest ? (
-                <div className="mcf-auth-cta">
-                    <span className="mcf-auth-icon" aria-hidden="true">🏡</span>
+                <div className="home-auth-cta">
+                    <span className="home-auth-icon" aria-hidden="true">🏡</span>
                     <p>Start a new board</p>
                     <span>Sign in to create your own corner of the mischief.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
@@ -57,11 +57,11 @@ export default function CreateBoardCard({ onCreated }: Props) {
                     />
                     <button
                         type="button"
-                        className="mcf-submit"
+                        className="home-submit"
                         onClick={submit}
                         disabled={!name || loading}
                     >
-                        {loading && <span className="mcf-spinner"/>}
+                        {loading && <span className="home-spinner"/>}
                         {loading ? "Creating…" : "Create board"}
                     </button>
                 </>

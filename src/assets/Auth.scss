@@ -8,8 +8,8 @@
 
 .auth-card {
     display: flex;
-    width: 700px;
-    min-height: 460px;
+    width: 43.75rem;
+    min-height: 28.75rem;
 
     background: var(--bg-surface);
     border-radius: 0 1.5rem 1.5rem 1.5rem;
@@ -22,7 +22,7 @@
         content: '';
         position: absolute;
         inset: 0 0 auto 0;
-        height: 3px;
+        height: 0.1875rem;
         background: linear-gradient(90deg, var(--stripe-top), var(--stripe-bottom));
         z-index: 1;
     }
@@ -69,7 +69,7 @@
 
     .tm-divider {
         width: 2.5rem;
-        height: 1px;
+        height: 0.0625rem;
         background: color-mix(in srgb, var(--accent) 25%, transparent);
         margin: 0.9rem 0;
     }
@@ -131,7 +131,7 @@
 
 .tm-form-wrap {
     width: 100%;
-    max-width: 300px;
+    max-width: 18.75rem;
 }
 
 .tm-form-heading {
@@ -176,7 +176,7 @@
         width: 100%;
         padding: 0.8rem;
         border-radius: 1rem;
-        border: 1px solid var(--border);
+        border: 0.0625rem solid var(--border);
         background: var(--bg-primary);
         color: var(--text-primary);
         font-size: 0.975rem;
@@ -214,7 +214,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover:not(:disabled) {
-        transform: translateY(-1px);
+        transform: translateY(-0.0625rem);
         box-shadow: 0.25rem 0.5rem 1.5rem color-mix(in srgb, var(--accent) 40%, transparent);
     }
 
@@ -231,7 +231,7 @@
     .tm-spinner {
         width: 0.9rem;
         height: 0.9rem;
-        border: 2px solid color-mix(in srgb, var(--text-on-accent) 40%, transparent);
+        border: 0.125rem solid color-mix(in srgb, var(--text-on-accent) 40%, transparent);
         border-top-color: var(--text-on-accent);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
@@ -265,7 +265,7 @@
 
 // ── Mobile ────────────────────────────────────────────────────────────────────
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
     .auth-card {
         flex-direction: column;
         width: calc(100vw - 2rem);

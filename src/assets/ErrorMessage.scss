@@ -3,9 +3,9 @@
 //.error-message {
 //    color: #ff4d4f;
 //    background-color: #fff1f0;
-//    border: 1px solid #ffa39e;
+//    border: 0.0625rem solid #ffa39e;
 //    padding: 0.5rem 1rem;
-//    border-radius: 6px;
+//    border-radius: 0.375rem;
 //    margin-top: 0.5rem;
 //    font-size: 0.875rem;
 //    line-height: 1.2;
@@ -19,8 +19,8 @@
     margin-top: 0.75rem;
     padding: 0.6rem 0.75rem;
 
-    border-radius: 8px;
-    border: 1px solid rgba(220, 38, 38, 0.35);
+    border-radius: 0.5rem;
+    border: 0.0625rem solid rgba(220, 38, 38, 0.35);
     background: rgba(220, 38, 38, 0.08);
 
     color: #dc2626;
@@ -43,7 +43,7 @@
 @keyframes error-in {
     from {
         opacity: 0;
-        transform: translateY(-4px);
+        transform: translateY(-0.25rem);
     }
     to {
         opacity: 1;

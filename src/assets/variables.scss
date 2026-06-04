@@ -1,3 +1,9 @@
+/* ── Shadow — computed from current theme's --text-primary, works across all themes ── */
+:root {
+  --shadow: color-mix(in srgb, var(--text-primary) 12%, transparent);
+  --danger: #c0392b;
+}
+
 /* ── Fieldmouse Light (default — also :root fallback) ── */
 :root,
 [data-theme="fieldmouse"][data-mode="light"] {

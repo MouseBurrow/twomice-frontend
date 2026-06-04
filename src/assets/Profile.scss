@@ -3,16 +3,17 @@
 }
 
 .profile-board {
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
-.profile-header {
+/* ── Hero ── */
+.profile-hero {
   padding: 24px 28px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 0 16px 16px 16px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -33,20 +34,84 @@
   height: 52px;
   border-radius: 50%;
   background: var(--accent);
+  color: var(--text-on-accent);
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.profile-hero-info { flex: 1; min-width: 0; }
+
+.profile-hero-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
 }
 
 .profile-handle {
   font-family: 'Fredoka One', cursive;
   font-size: 20px;
   color: var(--accent);
-  margin: 0 0 4px;
+  margin: 0;
+}
+
+.profile-role-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 0 5px 5px 5px;
+  background: color-mix(in srgb, var(--accent2) 20%, transparent);
+  color: var(--accent2);
+  border: 1px solid var(--accent2);
 }
 
 .profile-since {
   font-size: 11px;
   color: var(--text-faint);
   font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Stats ── */
+.profile-stats {
+  display: flex;
+  border: 1px solid var(--border);
+  border-top: none;
+  background: var(--bg-surface);
+  margin-bottom: 20px;
+}
+
+.profile-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border-right: 1px solid var(--border);
+
+  &:last-child { border-right: none; }
+}
+
+.profile-stat-value {
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.profile-stat-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-top: 2px;
 }
 
 /* ── Tabs ── */
@@ -57,7 +122,7 @@
 }
 
 .profile-tab {
-  padding: 6px 16px;
+  padding: 6px 18px;
   border-radius: 99px;
   border: 1px solid var(--border);
   background: var(--bg-surface);
@@ -65,6 +130,7 @@
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
+  transition: all 0.12s ease;
 
   &.active {
     background: var(--accent);
@@ -73,7 +139,14 @@
   }
 }
 
-/* ── Empty state ── */
+/* ── Nib grid ── */
+.profile-nib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+/* ── Empty ── */
 .profile-empty {
   padding: 32px;
   text-align: center;
@@ -84,6 +157,45 @@
   border-radius: 0 12px 12px 12px;
 }
 
+/* ── Following grid ── */
+.profile-following-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.profile-board-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0 10px 10px 10px;
+  gap: 8px;
+}
+
+.profile-board-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.profile-unfollow {
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+
+  &:hover { border-color: var(--accent); color: var(--accent); }
+}
+
 /* ── Guest gate ── */
 .profile-guest {
   padding: 32px 24px;
@@ -92,11 +204,7 @@
   border: 1px solid var(--border);
   border-radius: 0 16px 16px 16px;
 
-  .profile-guest-icon {
-    font-size: 32px;
-    display: block;
-    margin-bottom: 8px;
-  }
+  .profile-guest-icon { font-size: 32px; display: block; margin-bottom: 8px; }
 
   p {
     font-family: 'Fredoka One', cursive;
@@ -121,9 +229,6 @@
     font-weight: 600;
     border: none;
     cursor: pointer;
-
-    &:hover {
-      opacity: 0.85;
-    }
+    &:hover { opacity: 0.85; }
   }
 }

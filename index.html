@@ -5,17 +5,33 @@
   <script>
     (function(){
       var t=localStorage.getItem("twomice_theme")||"fieldmouse";
+      if(t==="pinewood")t="forest";
       var m=localStorage.getItem("twomice_mode")||"light";
       var el=document.documentElement;
       var single=["stark-light","stark-dark","goldenrod"];
+      var twoMode=["rosewood"];
       var isSingle=single.indexOf(t)!==-1;
+      var isTwoMode=twoMode.indexOf(t)!==-1;
+      if(isTwoMode&&m==="mid")m="light";
       el.setAttribute("data-theme",t);
       if(isSingle){el.removeAttribute("data-mode")}
       else{el.setAttribute("data-mode",m)}
-      var C={fieldmouse:{light:{b:"#faf5ee",s:"#ffffff",x:"#1a0e04"},mid:{b:"#e8d8c4",s:"#f0e4d0",x:"#1a0e04"},dark:{b:"#1a1008",s:"#221408",x:"#f0e4d0"}},midnight:{light:{b:"#f0eeff",s:"#ffffff",x:"#0d0820"},mid:{b:"#1e1840",s:"#251e4c",x:"#e4dcff"},dark:{b:"#0d0b18",s:"#120f20",x:"#e8e0ff"}},"urban-rat":{light:{b:"#f5f5f5",s:"#ffffff",x:"#1a1a1a"},mid:{b:"#2a2a2a",s:"#333333",x:"#e8e8e8"},dark:{b:"#0d0d0d",s:"#141414",x:"#f0f0f0"}},pinewood:{light:{b:"#f0f5f0",s:"#ffffff",x:"#0e1a10"},mid:{b:"#2c3e2e",s:"#364a38",x:"#d4eed4"},dark:{b:"#1a2218",s:"#1e2a1e",x:"#e0f0e0"}},"stark-light":{b:"#ffffff",s:"#ffffff",x:"#000000"},"stark-dark":{b:"#000000",s:"#000000",x:"#ffffff"},goldenrod:{b:"#1a1200",s:"#221800",x:"#ffd700"}};
-      var c=isSingle?C[t]:C[t][m];
+      var C={
+        fieldmouse:{light:{b:"#faf5ee",s:"#ffffff",x:"#1a0e04"},mid:{b:"#e8d8c4",s:"#f0e4d0",x:"#1a0e04"},dark:{b:"#1a1008",s:"#221408",x:"#f0e4d0"}},
+        midnight:{light:{b:"#f0eeff",s:"#ffffff",x:"#0d0820"},mid:{b:"#1e1840",s:"#251e4c",x:"#e4dcff"},dark:{b:"#0d0b18",s:"#120f20",x:"#e8e0ff"}},
+        "urban-rat":{light:{b:"#f5f5f5",s:"#ffffff",x:"#1a1a1a"},mid:{b:"#2a2a2a",s:"#333333",x:"#e8e8e8"},dark:{b:"#0d0d0d",s:"#141414",x:"#f0f0f0"}},
+        forest:{light:{b:"#f2f7f0",s:"#ffffff",x:"#0e1e0e"},mid:{b:"#dceede",s:"#e8f4e8",x:"#0e1e0e"},dark:{b:"#0a1c0e",s:"#0e2414",x:"#d0f0d8"}},
+        slate:{light:{b:"#f0f2f8",s:"#ffffff",x:"#0e1428"},mid:{b:"#d8ddf0",s:"#e4e8f8",x:"#0e1428"},dark:{b:"#0a0e1c",s:"#0e1428",x:"#d0d8f0"}},
+        rosewood:{light:{b:"#fdf4f4",s:"#ffffff",x:"#1e0812"},dark:{b:"#180810",s:"#221018",x:"#f0d4e4"}},
+        "stark-light":{b:"#ffffff",s:"#ffffff",x:"#000000"},
+        "stark-dark":{b:"#000000",s:"#000000",x:"#ffffff"},
+        goldenrod:{b:"#1a1200",s:"#221800",x:"#ffd700"}
+      };
+      var entry=C[t]||C["fieldmouse"];
+      var c=isSingle?entry:(entry[m]||entry["light"]);
       var s=document.createElement("style");
-      s.textContent=(isSingle?'[data-theme="'+t+'"]':'[data-theme="'+t+'"][data-mode="'+m+'"]')+"{--bg-primary:"+c.b+";--bg-surface:"+c.s+";--text-primary:"+c.x+"}body{background:"+c.b+"}";
+      var sel=isSingle?'[data-theme="'+t+'"]':'[data-theme="'+t+'"][data-mode="'+m+'"]';
+      s.textContent=sel+"{--bg-primary:"+c.b+";--bg-surface:"+c.s+";--text-primary:"+c.x+"}body{background:"+c.b+"}";
       document.head.appendChild(s);
     })();
   </script>
@@ -25,6 +41,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
 </head>
 <body>
 <div id="root"></div>

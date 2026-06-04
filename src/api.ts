@@ -20,7 +20,8 @@ async function request<T>(
         headers.set("Content-Type", "application/json");
     }
 
-    const res = await fetch(`${API_BASE}${path}?_=${Date.now()}`, {
+    const sep = path.includes("?") ? "&" : "?";
+    const res = await fetch(`${API_BASE}${path}${sep}_=${Date.now()}`, {
         credentials: "include",
         headers,
         ...options,

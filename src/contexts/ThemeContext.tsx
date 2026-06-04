@@ -44,12 +44,22 @@ function migrateTheme(raw: string | null): Theme {
     return valid.includes(raw as Theme) ? (raw as Theme) : "fieldmouse";
 }
 
+function migrateMode(theme: Theme, rawMode: string | null): Mode {
+    const avail = availableModesFor(theme);
+    if (avail.length === 0) return "light";
+    const m = rawMode as Mode;
+    return avail.includes(m) ? m : "light";
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const [theme, setThemeState] = useState<Theme>(
         () => migrateTheme(localStorage.getItem("twomice_theme"))
     );
     const [mode, setModeState] = useState<Mode>(
-        () => (localStorage.getItem("twomice_mode") as Mode) ?? "light"
+        () => migrateMode(
+            migrateTheme(localStorage.getItem("twomice_theme")),
+            localStorage.getItem("twomice_mode")
+        )
     );
 
     function setTheme(t: Theme) {

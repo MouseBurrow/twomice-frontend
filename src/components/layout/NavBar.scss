@@ -5,7 +5,6 @@
   width: 100%;
 }
 
-/* ── Primary row ── */
 .navbar-primary {
   display: flex;
   align-items: center;
@@ -13,6 +12,8 @@
   padding: 7px 16px;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--text-primary) 6%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .navbar-brand {
@@ -29,19 +30,25 @@
 
 .navbar-search {
   flex: 1;
-  max-width: 480px;
+  max-width: 440px;
+  margin: 0 auto;
 
   input {
     width: 100%;
-    padding: 5px 14px;
+    padding: 6px 16px;
     border-radius: 99px;
     border: 1px solid var(--border);
     background: var(--bg-primary);
     color: var(--text-primary);
     font-size: 12px;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
 
     &::placeholder { color: var(--text-faint); }
-    &:focus { outline: none; border-color: var(--accent); }
+    &:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
   }
 }
 
@@ -53,29 +60,38 @@
   flex-shrink: 0;
 }
 
-.navbar-bell {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--accent-bg);
-  color: var(--accent2);
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.navbar-compose {
+  padding: 6px 16px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-radius: 99px;
   border: none;
+  font-family: 'Fredoka One', cursive;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s ease, transform 0.12s ease;
+
+  &:hover {
+    background: var(--accent2);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 520px) { display: none; }
 }
 
 .navbar-signin {
-  padding: 4px 14px;
+  padding: 5px 14px;
   background: var(--accent);
-  color: #fff; /* #fff intentional: text on --accent bg */
+  color: var(--text-on-accent);
   border-radius: 99px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   border: none;
+  transition: background 0.12s ease;
+
+  &:hover { background: var(--accent2); }
 }
 
 .navbar-user-pill {
@@ -90,10 +106,13 @@
   font-size: 11px;
   color: var(--text-primary);
   position: relative;
+  transition: border-color 0.12s ease;
 
-  &:hover .navbar-dropdown { display: flex; }
+  &:hover {
+    border-color: var(--accent);
+    .navbar-dropdown { display: flex; }
+  }
 
-  /* Invisible bridge that keeps hover active while moving mouse to dropdown */
   &::after {
     content: '';
     position: absolute;
@@ -113,7 +132,6 @@
 }
 
 .navbar-handle { font-weight: 600; font-size: 11px; }
-
 .navbar-chevron { font-size: 9px; color: var(--text-muted); }
 
 .navbar-dropdown {
@@ -125,7 +143,7 @@
   min-width: 140px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 0 8px 8px 8px;
   overflow: hidden;
   box-shadow: 0 4px 16px color-mix(in srgb, var(--text-primary) 12%, transparent);
 
@@ -144,65 +162,5 @@
     font-family: 'Inter', sans-serif;
 
     &:hover { background: var(--accent-bg); color: var(--accent); }
-  }
-}
-
-/* ── Secondary row ── */
-.navbar-secondary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 16px;
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-soft);
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.navbar-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
-  a {
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 2px 5px;
-    border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
-
-    &:hover { background: var(--accent-bg); color: var(--accent); }
-  }
-}
-
-.navbar-sep { color: var(--text-faint); }
-
-.navbar-crumb-board {
-  color: var(--accent) !important;
-  font-weight: 600;
-}
-
-.navbar-crumb-nib { color: var(--text-faint); }
-
-.navbar-pinned {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.navbar-pin-chip {
-  padding: 2px 10px;
-  border-radius: 99px;
-  border: 1px solid var(--border);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-muted);
-  background: var(--bg-surface);
-  text-decoration: none;
-
-  &.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff; /* #fff intentional: text on --accent bg */
   }
 }

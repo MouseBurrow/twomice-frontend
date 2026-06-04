@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
 export type Theme =
     | "fieldmouse"
@@ -79,6 +79,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("twomice_mode", m);
     }
 
+    const transitioning = useRef(false);
+
     useEffect(() => {
         const el = document.documentElement;
         const update = () => {
@@ -89,9 +91,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
                 el.dataset.mode = mode;
             }
         };
-        if ("startViewTransition" in document) {
-            document.startViewTransition(() => update());
-        } else {
+        if (transitioning.current || !("startViewTransition" in document)) {
+            update();
+            return;
+        }
+        transitioning.current = true;
+        try {
+            const vt = document.startViewTransition(() => update());
+            vt.finished.then(
+                () => { transitioning.current = false; },
+                () => { transitioning.current = false; }
+            );
+        } catch {
+            transitioning.current = false;
             update();
         }
     }, [theme, mode]);

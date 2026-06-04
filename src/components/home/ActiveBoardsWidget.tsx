@@ -7,7 +7,9 @@ export default function ActiveBoardsWidget() {
     const [boards, setBoards] = useState<BoardSummary[]>([]);
 
     useEffect(() => {
-        api.getActiveBoards(8).then(setBoards).catch(() => {});
+        let cancelled = false;
+        api.getActiveBoards(8).then(data => { if (!cancelled) setBoards(data); }).catch(() => {});
+        return () => { cancelled = true; };
     }, []);
 
     if (boards.length === 0) return null;

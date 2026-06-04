@@ -13,11 +13,15 @@ export default function PostFeed() {
     const [posts, setPosts] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ApiError>();
+    const [prevSort, setPrevSort] = useState(sort);
+    if (prevSort !== sort) {
+        setPrevSort(sort);
+        setLoading(true);
+        setError(undefined);
+    }
 
     useEffect(() => {
         let cancelled = false;
-        setLoading(true);
-        setError(undefined);
         api.getFeed(sort)
             .then(data => {
                 if (cancelled) return;

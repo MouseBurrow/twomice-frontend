@@ -21,7 +21,7 @@ export default function PostCard({ board, post }: Props) {
     const canNavigate = !!resolvedBoard;
 
     const handleClick = () => {
-        if (canNavigate) navigate(`/b/${resolvedBoard}/post/${post.slug}`);
+        if (canNavigate) navigate(`/b/${resolvedBoard}/nib/${post.slug}`);
     };
 
     return (

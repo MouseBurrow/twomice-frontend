@@ -20,6 +20,17 @@ export default function Profile() {
     const [followedBoards, setFollowedBoards] = useState<FollowedBoardInfo[]>([]);
     const [postsLoading, setPostsLoading] = useState(false);
     const [followingLoading, setFollowingLoading] = useState(false);
+    const [unfollowingIds, setUnfollowingIds] = useState<Set<string>>(new Set());
+
+    const [prevTab, setPrevTab] = useState(tab);
+    if (prevTab !== tab) {
+        setPrevTab(tab);
+        if (tab === "posts") {
+            setPostsLoading(true);
+        } else {
+            setFollowingLoading(true);
+        }
+    }
 
     useEffect(() => {
         if (auth.status !== "user" && auth.status !== "admin") return;
@@ -32,12 +43,10 @@ export default function Profile() {
         if (auth.status !== "user" && auth.status !== "admin") return;
         let cancelled = false;
         if (tab === "posts") {
-            setPostsLoading(true);
             api.getUserPosts()
                 .then(data => { if (!cancelled) { setPosts(data.filter(n => !n.deleted)); setPostsLoading(false); } })
                 .catch(() => { if (!cancelled) setPostsLoading(false); });
         } else {
-            setFollowingLoading(true);
             api.getFollowedBoards()
                 .then(data => { if (!cancelled) { setFollowedBoards(data); setFollowingLoading(false); } })
                 .catch(() => { if (!cancelled) setFollowingLoading(false); });
@@ -67,9 +76,15 @@ export default function Profile() {
     const roleColor = isAdmin ? "#e67e22" : "var(--accent2)";
 
     function handleUnfollow(boardId: string) {
+        setUnfollowingIds(prev => new Set(prev).add(boardId));
         api.unfollowBoard(boardId)
             .then(() => setFollowedBoards(prev => prev.filter(b => b.id !== boardId)))
-            .catch(() => {});
+            .catch(() => {})
+            .finally(() => setUnfollowingIds(prev => {
+                const next = new Set(prev);
+                next.delete(boardId);
+                return next;
+            }));
     }
 
     const statItems = [
@@ -102,7 +117,7 @@ export default function Profile() {
                     </div>
                     {stats && (
                         <div className="profile-stats">
-                            {statItems.map(({ label, val }, i) => (
+                            {statItems.map(({ label, val }) => (
                                 <div key={label} className="profile-stat">
                                     <div className="profile-stat-value">{val}</div>
                                     <div className="profile-stat-label">{label}</div>
@@ -116,7 +131,7 @@ export default function Profile() {
             <div className="profile-tabs">
                 <button className={`profile-tab${tab === "posts" ? " active" : ""}`} onClick={() => setTab("posts")}>Posts</button>
                 <button className={`profile-tab${tab === "following" ? " active" : ""}`} onClick={() => setTab("following")}>
-                    Following ({stats?.following_count ?? followedBoards.length})
+                    Following ({followedBoards.length || (stats?.following_count ?? 0)})
                 </button>
             </div>
 
@@ -146,12 +161,13 @@ export default function Profile() {
                     ) : (
                         <div className="profile-following-grid">
                             {followedBoards.map(b => (
-                                <div key={b.id} className="profile-board-card" onClick={() => navigate(`/b/${b.id}`)}>
+                                <div key={b.id} className="profile-board-card" onClick={() => navigate(`/b/${b.name}`)}>
                                     <div className="profile-board-card-name">b/{b.name}</div>
                                     <div className="profile-board-card-desc">{b.description}</div>
                                     <div className="profile-board-card-count">{b.post_count.toLocaleString()} posts</div>
                                     <button className="btn-ghost" style={{ fontSize: "0.6875rem", padding: "0.25rem 0.625rem", marginTop: "0.5rem" }}
-                                        onClick={e => { e.stopPropagation(); handleUnfollow(b.id); }}>Unfollow</button>
+                                        disabled={unfollowingIds.has(b.id)}
+                                        onClick={e => { e.stopPropagation(); handleUnfollow(b.id); }}>{unfollowingIds.has(b.id) ? "…" : "Unfollow"}</button>
                                 </div>
                             ))}
                         </div>

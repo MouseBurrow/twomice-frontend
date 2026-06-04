@@ -1,32 +1,9 @@
 import { useState } from "react";
-import { type Theme, useTheme, availableModesFor } from "../contexts/ThemeContext";
-import { type Density, useDensity } from "../contexts/DensityContext";
+import { useTheme } from "../contexts/ThemeContext";
+import { availableModesFor } from "../utils/themes";
+import { useDensity } from "../contexts/DensityContext";
+import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, applyFont } from "../constants/settings";
 import "../assets/Settings.scss";
-
-const THEMES: { value: Theme; label: string; preview: [string, string, string] }[] = [
-    { value: "fieldmouse", label: "Fieldmouse", preview: ["#faf5ee", "#8b4513", "#c8761a"] },
-    { value: "midnight",   label: "Midnight",   preview: ["#f0eeff", "#7c6fcf", "#a090ef"] },
-    { value: "urban-rat",  label: "Urban Rat",  preview: ["#f5f5f5", "#6b7280", "#9ca3af"] },
-    { value: "forest",     label: "Forest",     preview: ["#f2f7f0", "#2d6a4f", "#52a878"] },
-    { value: "slate",      label: "Slate",      preview: ["#f0f2f8", "#3d5a8a", "#5a7aaa"] },
-    { value: "rosewood",   label: "Rosewood",   preview: ["#fdf4f4", "#8b2252", "#c45482"] },
-    { value: "stark-light",label: "Stark Light",preview: ["#ffffff", "#000000", "#333333"] },
-    { value: "stark-dark", label: "Stark Dark", preview: ["#000000", "#ffffff", "#cccccc"] },
-    { value: "goldenrod",  label: "Goldenrod",  preview: ["#1a1200", "#ffd700", "#ffaa00"] },
-];
-
-const DENSITY_OPTIONS: { value: Density; label: string }[] = [
-    { value: "compact",     label: "Compact" },
-    { value: "comfortable", label: "Comfortable" },
-    { value: "spacious",    label: "Spacious" },
-];
-
-const FONT_OPTIONS: { id: string; label: string; desc: string }[] = [
-    { id: "Inter",                 label: "Inter",                 desc: "Default — clean & modern" },
-    { id: "Space Grotesk",         label: "Space Grotesk",         desc: "Geometric & technical" },
-    { id: "Atkinson Hyperlegible", label: "Atkinson Hyperlegible", desc: "Optimised for readability" },
-    { id: "OpenDyslexic",          label: "OpenDyslexic",          desc: "Dyslexia-friendly" },
-];
 
 export default function Settings() {
     const { theme, mode, setTheme, setMode } = useTheme();
@@ -45,10 +22,7 @@ export default function Settings() {
 
     function setFont(f: string) {
         setFontState(f);
-        localStorage.setItem("twomice_font", f);
-        const fontValue = `'${f}', sans-serif`;
-        document.body.style.fontFamily = fontValue;
-        document.documentElement.style.setProperty("--font-body", fontValue);
+        applyFont(f);
     }
 
     const availModes = availableModesFor(theme);

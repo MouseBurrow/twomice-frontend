@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 type Props = { votes: number; disabled?: boolean };
 
 export default function VoteButtons({ votes, disabled = false }: Props) {
-  const [score, setScore] = useState(votes);
   const [uv, setUv] = useState<1 | -1 | null>(null);
+  const [prevVotes, setPrevVotes] = useState(votes);
 
-  useEffect(() => { setScore(votes); setUv(null); }, [votes]);
+  if (prevVotes !== votes) {
+    setPrevVotes(votes);
+    setUv(null);
+  }
+
+  const score = votes + (uv ?? 0);
 
   const vote = (e: React.MouseEvent, dir: 1 | -1) => {
     e.stopPropagation();
     if (disabled) return;
-    const newUv = uv === dir ? null : dir;
-    setScore(prev => prev - (uv ?? 0) + (newUv ?? 0));
-    setUv(newUv);
+    setUv(uv === dir ? null : dir);
   };
 
   return (

@@ -1,4 +1,5 @@
-import { useDensity, dv } from '../../contexts/DensityContext';
+import { useDensity } from '../../contexts/DensityContext';
+import { dv } from '../../utils/density';
 
 type Props = { onLogin: () => void };
 

@@ -10,9 +10,11 @@ export default function LiveWidget() {
   const { density } = useDensity();
 
   useEffect(() => {
+    let cancelled = false;
     api.getFeed("new").then((feed) => {
-      setItems(feed.slice(0, 6));
+      if (!cancelled) setItems(feed.slice(0, 6));
     }).catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -26,7 +28,7 @@ export default function LiveWidget() {
           <div
             key={`${item.slug}-${idx}`}
             className="live-item"
-            onClick={() => { if (item.board_id) navigate(`/b/${item.board_id}/post/${item.slug}`); }}
+            onClick={() => { if (item.board_id) navigate(`/b/${item.board_id}/nib/${item.slug}`); }}
           >
             <div className={`live-item-dot ${item.is_hot ? "live-item-dot--hot" : "live-item-dot--new"}`} />
             <div className="live-item-body">

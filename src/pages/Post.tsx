@@ -26,31 +26,36 @@ export default function Post() {
     const [comments, setComments] = useState<CommentData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
+    const [reloadVersion, setReloadVersion] = useState(0);
 
-    async function load(cancelled?: () => boolean) {
-        try {
-            setError(undefined);
-            const [p, c] = await Promise.all([
-                api.getPost(board!, post!),
-                api.getAllComments(board!, post!)
-            ]);
-            if (cancelled?.()) return;
-            setPostData(p);
-            setComments(c.filter(x => !x.deleted));
-            setLoading(false);
-        } catch (e) {
-            if (cancelled?.()) return;
-            setError(e as ApiError);
-            setLoading(false);
-        }
+    const prevKey = `${board}/${post}/${reloadVersion}`;
+    const [prevKeySt, setPrevKeySt] = useState(prevKey);
+    if (prevKeySt !== prevKey) {
+        setPrevKeySt(prevKey);
+        setLoading(true);
+        setError(undefined);
     }
 
     useEffect(() => {
         let cancelled = false;
-        setLoading(true);
-        load(() => cancelled);
+        (async () => {
+            try {
+                const [p, c] = await Promise.all([
+                    api.getPost(board!, post!),
+                    api.getAllComments(board!, post!)
+                ]);
+                if (cancelled) return;
+                setPostData(p);
+                setComments(c.filter(x => !x.deleted));
+                setLoading(false);
+            } catch (e) {
+                if (cancelled) return;
+                setError(e as ApiError);
+                setLoading(false);
+            }
+        })();
         return () => { cancelled = true; };
-    }, [board, post]);
+    }, [board, post, reloadVersion]);
 
     const formattedTime = postData?.created_at
         ? new Date(postData.created_at).toLocaleDateString()
@@ -120,7 +125,7 @@ export default function Post() {
                         </div>
                     ) : (
                         <div className="post-reply-box">
-                            <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={load} />
+                            <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
                         </div>
                     )}
 

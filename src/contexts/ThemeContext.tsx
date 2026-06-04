@@ -20,6 +20,7 @@ const SINGLE_MODE_THEMES: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
 const TWO_MODE_THEMES: Theme[] = ["rosewood"];
 
 /** Available modes for a given theme (empty = single-mode, no selector) */
+// eslint-disable-next-line react-refresh/only-export-components
 export function availableModesFor(t: Theme): Mode[] {
     if (SINGLE_MODE_THEMES.includes(t)) return [];
     if (TWO_MODE_THEMES.includes(t)) return ["light", "dark"];

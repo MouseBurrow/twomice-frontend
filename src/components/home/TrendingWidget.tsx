@@ -10,9 +10,11 @@ export default function TrendingWidget({ limit = 4 }: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let cancelled = false;
     api.getFeed("hot").then((feed) => {
-      setTrending(feed.slice(0, limit));
+      if (!cancelled) setTrending(feed.slice(0, limit));
     }).catch(() => {});
+    return () => { cancelled = true; };
   }, [limit]);
 
   if (trending.length === 0) return null;
@@ -25,7 +27,7 @@ export default function TrendingWidget({ limit = 4 }: Props) {
           <div
             key={`${post.slug}-${idx}`}
             className="trending-item"
-            onClick={() => { if (post.board_id) navigate(`/b/${post.board_id}/post/${post.slug}`); }}
+            onClick={() => { if (post.board_id) navigate(`/b/${post.board_id}/nib/${post.slug}`); }}
           >
             {post.board_id && (
               <div className="trending-board-name">b/{post.board_id}</div>

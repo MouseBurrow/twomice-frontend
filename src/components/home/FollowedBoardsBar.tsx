@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import type { FollowedBoardInfo } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
-import { useDensity, dv } from "../../contexts/DensityContext";
+import { useDensity } from "../../contexts/DensityContext";
+import { dv } from "../../utils/density";
 
 export default function FollowedBoardsBar() {
   const [boards, setBoards] = useState<FollowedBoardInfo[]>([]);
@@ -30,7 +31,7 @@ export default function FollowedBoardsBar() {
           <div
             key={board.id}
             className="followed-board-chip"
-            onClick={() => navigate(`/b/${board.id}`)}
+            onClick={() => navigate(`/b/${board.name}`)}
             style={{
               padding: dv(density, "0.375rem 0.625rem", "0.625rem 1rem", "0.8125rem 1.25rem"),
               minWidth: dv(density, "6.875rem", "9.6875rem", "11.5625rem"),

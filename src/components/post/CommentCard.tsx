@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { CommentData, ReplyData } from "../../types";
@@ -7,7 +7,8 @@ import VoteColumn from "../shared/VoteColumn";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
 import CreateReplyCard from "./CreateReplyCard";
-import { useDensity, dv } from "../../contexts/DensityContext";
+import { useDensity } from "../../contexts/DensityContext";
+import { dv } from "../../utils/density";
 
 type Props = {
     topic: string;
@@ -18,6 +19,7 @@ type Props = {
 
 export default function CommentCard({ topic, post, comment, opToken }: Props) {
     const { density } = useDensity();
+    const mountRef = useRef(true);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [replies, setReplies] = useState<ReplyData[]>([]);
@@ -38,6 +40,10 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
             if (!signal?.cancelled) setLoading(false);
         }
     }
+
+    useEffect(() => {
+        return () => { mountRef.current = false; };
+    }, []);
 
     const isOp = !!(opToken && comment.anon_token === opToken);
     const padding = dv(density, "0.5rem 0.75rem", "0.75rem 1rem", "1rem 1.25rem");
@@ -89,8 +95,8 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                         myToken={comment.is_mine ? comment.anon_token : undefined}
                         onCreated={async () => {
                             setReplyOpen(false);
-                            await loadReplies();
-                            setOpen(true);
+                            await loadReplies({ cancelled: !mountRef.current });
+                            if (mountRef.current) setOpen(true);
                         }}
                     />
                 )}

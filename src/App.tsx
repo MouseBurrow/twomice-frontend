@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import Auth from "./pages/Auth.tsx";
 import Home from "./pages/Home";
 import Board from "./pages/Board";
@@ -9,6 +9,11 @@ import CreatePost from "./pages/CreatePost";
 import Layout from "./components/layout/Layout";
 import "./assets/App.scss";
 
+function OldPostRedirect() {
+    const { board, post } = useParams<{ board: string; post: string }>();
+    return <Navigate to={`/b/${board}/nib/${post}`} replace />;
+}
+
 export default function App() {
     return (
         <Routes>
@@ -16,7 +21,8 @@ export default function App() {
             <Route element={<Layout/>}>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/b/:board" element={<Board/>}/>
-                <Route path="/b/:board/post/:post" element={<Post/>}/>
+                <Route path="/b/:board/nib/:post" element={<Post/>}/>
+                <Route path="/b/:board/post/:post" element={<OldPostRedirect/>}/>
                 <Route path="/b/:board/new" element={<CreatePost/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/profile" element={<Profile/>}/>

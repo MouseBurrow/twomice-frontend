@@ -6,6 +6,7 @@ import type { PostData, BoardData } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 import { useDensity } from "../contexts/DensityContext";
 import PostCard from "../components/board/PostCard";
+import CreatePostCard from "../components/board/CreatePostCard";
 import SkeletonBoardHeader from "../components/skeleton/SkeletonBoardHeader";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import Sidebar from "../components/board/Sidebar";
@@ -30,37 +31,45 @@ export default function Board() {
 
     const isGuest = auth.status === "guest" || auth.status === "unknown";
 
-    async function load(cancelled?: () => boolean) {
-        try {
-            setError(undefined);
-            const [b, p] = await Promise.all([
-                api.getBoard(board!),
-                api.getAllPosts(board!),
-            ]);
-            if (cancelled?.()) return;
-            setBoardData(b);
-            setPosts(p.filter(post => !post.deleted));
-            setLoading(false);
-        } catch (e) {
-            if (cancelled?.()) return;
-            setError(e as ApiError);
-            setLoading(false);
-        }
+    const [reloadVersion, setReloadVersion] = useState(0);
+
+    const prevKey = `${board}/${reloadVersion}`;
+    const [prevKeySt, setPrevKeySt] = useState(prevKey);
+    if (prevKeySt !== prevKey) {
+        setPrevKeySt(prevKey);
+        setLoading(true);
+        setError(undefined);
+        setFollowed(false);
+        setFollowError(null);
     }
 
     useEffect(() => {
         let cancelled = false;
-        setLoading(true);
-        load(() => cancelled);
+        (async () => {
+            try {
+                const [b, p] = await Promise.all([
+                    api.getBoard(board!),
+                    api.getAllPosts(board!),
+                ]);
+                if (cancelled) return;
+                setBoardData(b);
+                setPosts(p.filter(post => !post.deleted));
+                setLoading(false);
+            } catch (e) {
+                if (cancelled) return;
+                setError(e as ApiError);
+                setLoading(false);
+            }
+        })();
         return () => { cancelled = true; };
-    }, [board]);
+    }, [board, reloadVersion]);
 
     useEffect(() => {
         if (isGuest || !board) return;
         let cancelled = false;
         api.getFollowedBoards()
             .then(followedBoards => {
-                if (!cancelled) setFollowed(followedBoards.some(b => b.id === board));
+                if (!cancelled) setFollowed(followedBoards.some(b => b.name === board));
             })
             .catch(() => {});
         return () => { cancelled = true; };
@@ -139,6 +148,7 @@ export default function Board() {
 
                             <div className="board-layout">
                                 <div className="board-posts">
+                                    <CreatePostCard topicName={boardData.name} onCreated={async () => { setReloadVersion(v => v + 1); }} />
                                     {sortedPosts.map(post => <PostCard key={post.slug} board={boardData.name} post={post} />)}
                                     {sortedPosts.length === 0 && (
                                         <div className="board-posts-empty">No posts yet on this board.</div>

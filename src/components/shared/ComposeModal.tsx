@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api";
+import { ApiError } from "../../apiError";
 import type { BoardData } from "../../types";
 
 interface Props {
@@ -16,12 +17,16 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     api.getAllBoards()
       .then(b => {
-        setBoards(b);
-        if (!defaultBoard && b.length > 0) setBoard(b[0].name);
+        if (!cancelled) {
+          setBoards(b);
+          if (!defaultBoard && b.length > 0) setBoard(b[0].name);
+        }
       })
-      .catch(() => setBoards([]));
+      .catch(() => { if (!cancelled) setBoards([]); });
+    return () => { cancelled = true; };
   }, [defaultBoard]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,8 +37,8 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
     try {
       await api.createPost(board, { title, content });
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Failed to post");
+    } catch (err: unknown) {
+      setError(err instanceof ApiError ? err.message : "Failed to post");
     } finally {
       setBusy(false);
     }

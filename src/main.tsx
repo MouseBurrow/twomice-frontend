@@ -9,7 +9,9 @@ import { DensityProvider } from "./contexts/DensityContext.tsx";
 
 // Apply saved font on first paint (before React hydrates)
 const savedFont = localStorage.getItem("twomice_font") ?? "Inter";
-document.body.style.fontFamily = `'${savedFont}', sans-serif`;
+const fontValue = `'${savedFont}', sans-serif`;
+document.body.style.fontFamily = fontValue;
+document.documentElement.style.setProperty("--font-body", fontValue);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

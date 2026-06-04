@@ -17,7 +17,7 @@ export type Mode = "light" | "mid" | "dark";
 const SINGLE_MODE_THEMES: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
 
 /** Themes that support only light + dark (no mid) */
-const TWO_MODE_THEMES: Theme[] = ["rosewood"];
+const TWO_MODE_THEMES: Theme[] = [];
 
 /** Available modes for a given theme (empty = single-mode, no selector) */
 // eslint-disable-next-line react-refresh/only-export-components

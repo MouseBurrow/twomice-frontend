@@ -4,7 +4,7 @@ import { type Theme, type Mode } from "../contexts/ThemeContext";
 const SINGLE_MODE_THEMES: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
 
 /** Themes that support only light + dark (no mid) */
-const TWO_MODE_THEMES: Theme[] = ["rosewood"];
+const TWO_MODE_THEMES: Theme[] = [];
 
 /** Available modes for a given theme (empty = single-mode, no selector) */
 export function availableModesFor(t: Theme): Mode[] {

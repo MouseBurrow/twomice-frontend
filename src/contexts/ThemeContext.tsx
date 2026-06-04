@@ -80,11 +80,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const el = document.documentElement;
-        el.dataset.theme = theme;
-        if (SINGLE_MODE_THEMES.includes(theme)) {
-            delete el.dataset.mode;
+        const update = () => {
+            el.dataset.theme = theme;
+            if (SINGLE_MODE_THEMES.includes(theme)) {
+                delete el.dataset.mode;
+            } else {
+                el.dataset.mode = mode;
+            }
+        };
+        if ("startViewTransition" in document) {
+            document.startViewTransition(() => update());
         } else {
-            el.dataset.mode = mode;
+            update();
         }
     }, [theme, mode]);
 

@@ -4,15 +4,27 @@ export type Theme =
     | "fieldmouse"
     | "midnight"
     | "urban-rat"
-    | "pinewood"
+    | "forest"
+    | "slate"
+    | "rosewood"
     | "stark-light"
     | "stark-dark"
     | "goldenrod";
 
 export type Mode = "light" | "mid" | "dark";
 
-// These themes ignore mode — only data-theme is set on <html>
+/** Themes that have no data-mode attribute — CSS targets data-theme only */
 const SINGLE_MODE_THEMES: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
+
+/** Themes that support only light + dark (no mid) */
+const TWO_MODE_THEMES: Theme[] = ["rosewood"];
+
+/** Available modes for a given theme (empty = single-mode, no selector) */
+export function availableModesFor(t: Theme): Mode[] {
+    if (SINGLE_MODE_THEMES.includes(t)) return [];
+    if (TWO_MODE_THEMES.includes(t)) return ["light", "dark"];
+    return ["light", "mid", "dark"];
+}
 
 type ThemeContextValue = {
     theme: Theme;
@@ -23,9 +35,18 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+function migrateTheme(raw: string | null): Theme {
+    if (raw === "pinewood") return "forest"; // renamed in v2
+    const valid: Theme[] = [
+        "fieldmouse","midnight","urban-rat","forest","slate","rosewood",
+        "stark-light","stark-dark","goldenrod",
+    ];
+    return valid.includes(raw as Theme) ? (raw as Theme) : "fieldmouse";
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const [theme, setThemeState] = useState<Theme>(
-        () => (localStorage.getItem("twomice_theme") as Theme) ?? "fieldmouse"
+        () => migrateTheme(localStorage.getItem("twomice_theme"))
     );
     const [mode, setModeState] = useState<Mode>(
         () => (localStorage.getItem("twomice_mode") as Mode) ?? "light"
@@ -34,6 +55,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     function setTheme(t: Theme) {
         setThemeState(t);
         localStorage.setItem("twomice_theme", t);
+        // Clamp mode if new theme doesn't support it
+        const avail = availableModesFor(t);
+        if (avail.length > 0 && !avail.includes(mode)) {
+            setModeState("light");
+            localStorage.setItem("twomice_mode", "light");
+        }
     }
 
     function setMode(m: Mode) {

@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { type Mode, type Theme, useTheme } from "../contexts/ThemeContext";
+import { type Mode, type Theme, useTheme, availableModesFor } from "../contexts/ThemeContext";
 import "../assets/Settings.scss";
 
 const THEMES: { value: Theme; label: string }[] = [
     { value: "fieldmouse", label: "Fieldmouse" },
     { value: "midnight",   label: "Midnight" },
     { value: "urban-rat",  label: "Urban Rat" },
-    { value: "pinewood",   label: "Pinewood" },
+    { value: "forest",     label: "Forest" },
+    { value: "slate",      label: "Slate" },
+    { value: "rosewood",   label: "Rosewood" },
     { value: "stark-light",label: "Stark Light" },
     { value: "stark-dark", label: "Stark Dark" },
     { value: "goldenrod",  label: "Goldenrod" },
@@ -17,8 +19,6 @@ const MODES: { value: Mode; label: string }[] = [
     { value: "mid",   label: "Mid" },
     { value: "dark",  label: "Dark" },
 ];
-
-const SINGLE_MODE: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
 
 function loadPinned(): string[] {
     try {
@@ -82,7 +82,7 @@ export default function Settings() {
                             ))}
                         </select>
                     </div>
-                    {!SINGLE_MODE.includes(theme) && (
+                    {availableModesFor(theme).length > 0 && (
                         <div className="settings-row">
                             <label htmlFor="settings-mode">Mode</label>
                             <select
@@ -91,7 +91,7 @@ export default function Settings() {
                                 value={mode}
                                 onChange={e => setMode(e.target.value as Mode)}
                             >
-                                {MODES.map(m => (
+                                {MODES.filter(m => availableModesFor(theme).includes(m.value)).map(m => (
                                     <option key={m.value} value={m.value}>{m.label}</option>
                                 ))}
                             </select>

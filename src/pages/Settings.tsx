@@ -46,7 +46,9 @@ export default function Settings() {
     function setFont(f: string) {
         setFontState(f);
         localStorage.setItem("twomice_font", f);
-        document.body.style.fontFamily = `'${f}', sans-serif`;
+        const fontValue = `'${f}', sans-serif`;
+        document.body.style.fontFamily = fontValue;
+        document.documentElement.style.setProperty("--font-body", fontValue);
     }
 
     const availModes = availableModesFor(theme);

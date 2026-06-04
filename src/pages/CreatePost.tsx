@@ -4,9 +4,9 @@ import { api } from "../api";
 import type { ApiError } from "../apiError";
 import { useAuth } from "../contexts/AuthContext";
 import ErrorMessage from "../components/ErrorMessage";
-import "../assets/CreateNib.scss";
+import "../assets/CreatePost.scss";
 
-export default function CreateNib() {
+export default function CreatePost() {
     const { board } = useParams<{ board: string }>();
     const { auth } = useAuth();
     const navigate = useNavigate();
@@ -18,10 +18,10 @@ export default function CreateNib() {
 
     if (auth.status === "unknown" || auth.status === "guest") {
         return (
-            <div className="create-nib-page">
-                <div className="create-nib-board">
-                    <div className="create-nib-guest">
-                        <p>You must be signed in to post a nib.</p>
+            <div className="create-post-page">
+                <div className="create-post-board">
+                    <div className="create-post-guest">
+                        <p>You must be signed in to create a post.</p>
                         <Link to="/auth">Sign in</Link>
                     </div>
                 </div>
@@ -36,7 +36,7 @@ export default function CreateNib() {
         setError(undefined);
         setLoading(true);
         try {
-            await api.createNib(board!, { title: title.trim(), content: content.trim() });
+            await api.createPost(board!, { title: title.trim(), content: content.trim() });
             navigate(`/b/${board}`);
         } catch (e) {
             setError(e as ApiError);
@@ -46,45 +46,45 @@ export default function CreateNib() {
     }
 
     return (
-        <div className="create-nib-page">
-            <div className="create-nib-board">
-                <div className="create-nib-header">
-                    <h1>New Nib</h1>
+        <div className="create-post-page">
+            <div className="create-post-board">
+                <div className="create-post-header">
+                    <h1>New Post</h1>
                     <p>b/{board}</p>
                 </div>
 
-                <div className="create-nib-form">
-                    <label htmlFor="nib-title">Title</label>
+                <div className="create-post-form">
+                    <label htmlFor="post-title">Title</label>
                     <input
-                        id="nib-title"
-                        className="create-nib-title"
+                        id="post-title"
+                        className="create-post-title"
                         type="text"
-                        placeholder="Give your nib a title…"
+                        placeholder="Give your post a title…"
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                     />
 
-                    <label htmlFor="nib-content">Content</label>
+                    <label htmlFor="post-content">Content</label>
                     <textarea
-                        id="nib-content"
-                        className="create-nib-body"
+                        id="post-content"
+                        className="create-post-body"
                         placeholder="What's on your mind?"
                         rows={8}
                         value={content}
                         onChange={e => setContent(e.target.value)}
                     />
 
-                    <div className="create-nib-actions">
+                    <div className="create-post-actions">
                         <button
                             type="button"
-                            className="create-nib-submit"
+                            className="create-post-submit"
                             disabled={!title.trim() || loading}
                             onClick={handleSubmit}
                         >
-                            {loading && <span className="create-nib-spinner" aria-hidden="true"/>}
-                            {loading ? "Posting…" : "Post Nib"}
+                            {loading && <span className="create-post-spinner" aria-hidden="true"/>}
+                            {loading ? "Posting…" : "Post"}
                         </button>
-                        <Link to={`/b/${board}`} className="create-nib-cancel">
+                        <Link to={`/b/${board}`} className="create-post-cancel">
                             Cancel
                         </Link>
                     </div>

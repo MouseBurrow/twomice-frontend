@@ -17,8 +17,8 @@ export default function NibCard({ board, post }: Props) {
 
     return (
         <article className="nib-card" data-density={density}>
-            <Link to={`/b/${resolvedBoard}/nib/${post.slug}`}>
-                <VoteColumn initialScore={post.vote_count ?? 0} />
+            <VoteColumn initialScore={post.vote_count ?? 0} />
+            <Link to={`/b/${resolvedBoard}/nib/${post.slug}`} className="nib-card-link">
                 <div className="nib-card-body">
                     <div className="nib-card-top">
                         {post.is_hot && (

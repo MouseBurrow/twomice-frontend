@@ -9,6 +9,7 @@ export default function SortBar({ sort, onSort }: Props) {
                 <button
                     key={s}
                     className={`sort-btn${sort === s ? " active" : ""}`}
+                    aria-pressed={sort === s}
                     onClick={() => onSort(s)}
                 >
                     {s.charAt(0).toUpperCase() + s.slice(1)}

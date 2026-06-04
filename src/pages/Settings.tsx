@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { type Mode, type Theme, useTheme, availableModesFor } from "../contexts/ThemeContext";
+import { type Theme, useTheme, availableModesFor } from "../contexts/ThemeContext";
 import { type Density, useDensity } from "../contexts/DensityContext";
 import "../assets/Settings.scss";
 
@@ -90,7 +90,7 @@ export default function Settings() {
                                         key={m}
                                         type="button"
                                         className={`settings-group-btn${mode === m ? " active" : ""}`}
-                                        onClick={() => setMode(m as Mode)}
+                                        onClick={() => setMode(m)}
                                     >
                                         {m.charAt(0).toUpperCase() + m.slice(1)}
                                     </button>

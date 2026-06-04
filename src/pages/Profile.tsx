@@ -21,22 +21,32 @@ export default function Profile() {
 
     useEffect(() => {
         if (auth.status !== "user" && auth.status !== "admin") return;
-        api.getUserStats().then(setStats).catch(() => {});
+        let cancelled = false;
+        api.getUserStats()
+            .then(data => { if (!cancelled) setStats(data); })
+            .catch(() => {});
+        return () => { cancelled = true; };
     }, [auth.status]);
 
     useEffect(() => {
         if (auth.status !== "user" && auth.status !== "admin") return;
+        let cancelled = false;
         if (tab === "nibs") {
             setNibsLoading(true);
             api.getUserNibs()
-                .then(data => { setNibs(data.filter(n => !n.deleted)); setNibsLoading(false); })
-                .catch(() => setNibsLoading(false));
+                .then(data => {
+                    if (!cancelled) { setNibs(data.filter(n => !n.deleted)); setNibsLoading(false); }
+                })
+                .catch(() => { if (!cancelled) setNibsLoading(false); });
         } else {
             setFollowingLoading(true);
             api.getFollowedBoards()
-                .then(data => { setFollowedBoards(data); setFollowingLoading(false); })
-                .catch(() => setFollowingLoading(false));
+                .then(data => {
+                    if (!cancelled) { setFollowedBoards(data); setFollowingLoading(false); }
+                })
+                .catch(() => { if (!cancelled) setFollowingLoading(false); });
         }
+        return () => { cancelled = true; };
     }, [tab, auth.status]);
 
     function handleUnfollow(boardId: string) {
@@ -111,11 +121,13 @@ export default function Profile() {
                 )}
 
                 {/* Tabs */}
-                <div className="profile-tabs">
+                <div className="profile-tabs" role="tablist">
                     {(["nibs", "following"] as Tab[]).map(t => (
                         <button
                             key={t}
                             type="button"
+                            role="tab"
+                            aria-selected={tab === t}
                             className={`profile-tab${tab === t ? " active" : ""}`}
                             onClick={() => setTab(t)}
                         >

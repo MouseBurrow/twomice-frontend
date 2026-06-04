@@ -47,6 +47,8 @@
 }
 
 .nib-card {
+  display: flex;
+  align-items: flex-start;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 0 10px 10px 10px;
@@ -269,4 +271,13 @@
   color: var(--text-faint);
   font-family: 'Space Grotesk', sans-serif;
   margin-top: 6px;
+}
+
+.nib-card-link {
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: flex-start;
 }

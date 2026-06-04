@@ -18,16 +18,18 @@ export default function SqueakCard({ topic, post, comment }: Props) {
     const [echoes, setEchoes] = useState<EchoData[]>([]);
     const [error, setError] = useState<ApiError>();
 
-    async function loadEchoes() {
+    async function loadEchoes(signal?: { cancelled: boolean }) {
         try {
             setLoading(true);
             setError(undefined);
             const data = await api.getEchoes(topic, post, comment.hash);
-            setEchoes(data.filter(r => !r.deleted));
+            if (!signal?.cancelled) {
+                setEchoes(data.filter(r => !r.deleted));
+            }
         } catch (e) {
-            setError(e as ApiError);
+            if (!signal?.cancelled) setError(e as ApiError);
         } finally {
-            setLoading(false);
+            if (!signal?.cancelled) setLoading(false);
         }
     }
 

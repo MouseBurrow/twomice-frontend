@@ -108,7 +108,7 @@
   position: relative;
   transition: border-color 0.12s ease;
 
-  &:hover {
+  &:hover, &:focus-within {
     border-color: var(--accent);
     .navbar-dropdown { display: flex; }
   }

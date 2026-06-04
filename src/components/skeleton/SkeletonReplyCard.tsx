@@ -1,16 +1,16 @@
 import SkeletonVoteColumn from "./SkeletonVoteColumn";
 import "../../assets/Skeleton.scss";
 
-export default function SkeletonSqueakCard() {
+export default function SkeletonReplyCard() {
     return (
-        <article className="squeak-card">
+        <article className="comment-card">
             <SkeletonVoteColumn />
-            <div className="squeak-bubble">
-                <p className="squeak-content">
-                    <span className="shimmer-line" style={{ width: "92%", marginBottom: "6px" }} />
+            <div className="comment-bubble">
+                <p className="comment-content">
+                    <span className="shimmer-line" style={{ width: "92%", marginBottom: "0.375rem" }} />
                     <span className="shimmer-line" style={{ width: "75%" }} />
                 </p>
-                <div className="squeak-meta">
+                <div className="comment-meta">
                     <span className="shimmer-line" style={{ width: "18%" }} />
                 </div>
             </div>

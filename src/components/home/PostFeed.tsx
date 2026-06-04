@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
-import type { NibData } from "../../types";
-import NibCard from "../board/NibCard";
-import SkeletonNibCard from "../skeleton/SkeletonNibCard";
+import type { PostData } from "../../types";
+import PostCard from "../board/PostCard";
+import SkeletonPostCard from "../skeleton/SkeletonPostCard";
 import SortBar from "./SortBar";
 
 type Sort = "hot" | "new" | "top";
 
-export default function NibFeed() {
+export default function PostFeed() {
     const [sort, setSort] = useState<Sort>("hot");
-    const [nibs, setNibs] = useState<NibData[]>([]);
+    const [posts, setPosts] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ApiError>();
 
@@ -21,7 +21,7 @@ export default function NibFeed() {
         api.getFeed(sort)
             .then(data => {
                 if (cancelled) return;
-                setNibs(data.filter(n => !n.deleted));
+                setPosts(data.filter(n => !n.deleted));
                 setLoading(false);
             })
             .catch(e => {
@@ -33,20 +33,20 @@ export default function NibFeed() {
     }, [sort]);
 
     return (
-        <div className="nib-feed">
+        <div className="post-feed">
             <SortBar sort={sort} onSort={setSort} />
             {loading ? (
-                <div className="nib-feed-grid">
-                    {Array.from({ length: 6 }, (_, i) => <SkeletonNibCard key={i} />)}
+                <div className="post-feed-grid">
+                    {Array.from({ length: 6 }, (_, i) => <SkeletonPostCard key={i} />)}
                 </div>
             ) : error ? (
-                <p className="nib-feed-error">Failed to load feed.</p>
-            ) : nibs.length === 0 ? (
-                <p className="nib-feed-empty">Nothing here yet.</p>
+                <p className="post-feed-error">Failed to load feed.</p>
+            ) : posts.length === 0 ? (
+                <p className="post-feed-empty">Nothing here yet.</p>
             ) : (
-                <div className="nib-feed-grid">
-                    {nibs.map(n => (
-                        <NibCard key={`${n.board_id}-${n.slug}`} post={n} />
+                <div className="post-feed-grid">
+                    {posts.map(n => (
+                        <PostCard key={`${n.board_id}-${n.slug}`} post={n} />
                     ))}
                 </div>
             )}

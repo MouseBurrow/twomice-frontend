@@ -7,18 +7,18 @@ type Props = {
 
 function stripeStyle(score: number): { height: string; background: string } {
     if (score >= 100) return {
-        height: "32px",
+        height: "2rem",
         background: "linear-gradient(var(--stripe-top), var(--stripe-bottom))",
     };
     if (score >= 20) return {
-        height: "20px",
+        height: "1.25rem",
         background: "linear-gradient(#a05828, #d49060)",
     };
     if (score >= 5) return {
-        height: "13px",
+        height: "0.8125rem",
         background: "#c8a880",
     };
-    return { height: "5px", background: "#e0cdb8" };
+    return { height: "0.3125rem", background: "#e0cdb8" };
 }
 
 export default function VoteColumn({ initialScore = 0 }: Props) {
@@ -47,7 +47,7 @@ export default function VoteColumn({ initialScore = 0 }: Props) {
                 ▲
             </button>
             <div className="vote-stripe" style={stripeStyle(score)}/>
-            <span className="vote-score">{score}</span>
+            <span className="vote-col-score">{score}</span>
             <button
                 className={`vote-arrow${vote === "down" ? " active" : ""}`}
                 onClick={() => cast("down")}

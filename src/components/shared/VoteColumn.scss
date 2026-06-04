@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  width: 28px;
+  gap: 0.125rem;
+  width: 1.75rem;
   flex-shrink: 0;
   user-select: none;
 }
@@ -12,9 +12,9 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 0.625rem;
   line-height: 1;
-  padding: 2px;
+  padding: 0.125rem;
   color: var(--text-faint);
   transition: color 0.12s;
 
@@ -23,14 +23,14 @@
 }
 
 .vote-stripe {
-  width: 4px;
-  border-radius: 2px;
+  width: 0.25rem;
+  border-radius: 0.125rem;
   transition: height 0.2s ease, background 0.2s ease;
 }
 
-.vote-score {
+.vote-col-score {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   color: var(--text-muted);
   line-height: 1;

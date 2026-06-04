@@ -7,7 +7,7 @@ import ErrorMessage from "../ErrorMessage";
 
 type Props = { topicName: string; onCreated: () => Promise<void> };
 
-export default function CreateNibCard({ topicName, onCreated }: Props) {
+export default function CreatePostCard({ topicName, onCreated }: Props) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function CreateNibCard({ topicName, onCreated }: Props) {
         try {
             setError(undefined);
             setLoading(true);
-            await api.createNib(topicName, { title, content });
+            await api.createPost(topicName, { title, content });
             setTitle("");
             setContent("");
             await onCreated();
@@ -32,13 +32,13 @@ export default function CreateNibCard({ topicName, onCreated }: Props) {
     }
 
     return (
-        <section className="nib-create">
-            <h2>Post a nib</h2>
+        <section className="post-create">
+            <h2>New Post</h2>
 
             {isGuest ? (
-                <div className="nib-auth-cta">
-                    <span className="nib-auth-icon" aria-hidden="true">🐾</span>
-                    <p>Post a nib</p>
+                <div className="post-auth-cta">
+                    <span className="post-auth-icon" aria-hidden="true">🐾</span>
+                    <p>New Post</p>
                     <span>Sign in to leave your mark on this board.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
                 </div>
@@ -50,19 +50,19 @@ export default function CreateNibCard({ topicName, onCreated }: Props) {
                         onChange={e => setTitle(e.target.value)}
                     />
                     <textarea
-                        placeholder="What's the nibble?"
+                        placeholder="What's on your mind?"
                         value={content}
                         onChange={e => setContent(e.target.value)}
                         rows={3}
                     />
                     <button
                         type="button"
-                        className="nib-submit"
+                        className="post-submit"
                         onClick={submit}
                         disabled={!title || loading}
                     >
-                        {loading && <span className="nib-spinner"/>}
-                        {loading ? "Posting…" : "Post nib"}
+                        {loading && <span className="post-spinner"/>}
+                        {loading ? "Posting…" : "Post"}
                     </button>
                 </>
             )}

@@ -1,7 +1,7 @@
 import { ApiError, type ApiErrorPayload } from "./apiError.ts";
 import type {
-    AccountData, SqueakData, NibData, EchoData,
-    BoardData, BoardSummary, UserStats,
+    AccountData, CommentData, PostData, ReplyData,
+    BoardData, BoardSummary, UserStats, FollowedBoardInfo,
 } from "./types.ts";
 
 export const API_BASE = "/api";
@@ -76,42 +76,42 @@ export const api = {
     getAllBoards: () =>
         request<BoardData[]>("/mcf"),
 
-    // ── Nibs ─────────────────────────────────────────────────────────
-    createNib: (topic: string, body: { title: string; content: string }) =>
+    // ── Posts ─────────────────────────────────────────────────────────
+    createPost: (topic: string, body: { title: string; content: string }) =>
         request<void>(`/mcf/${topic}/nib`, { method: "POST", body: JSON.stringify(body) }),
 
-    getNib: (topic: string, postId: string) =>
-        request<NibData>(`/mcf/${topic}/nib/${postId}`),
+    getPost: (topic: string, postId: string) =>
+        request<PostData>(`/mcf/${topic}/nib/${postId}`),
 
-    getAllNibs: (topic: string) =>
-        request<NibData[]>(`/mcf/${topic}/nib`),
+    getAllPosts: (topic: string) =>
+        request<PostData[]>(`/mcf/${topic}/nib`),
 
-    // ── Squeaks / Echoes ─────────────────────────────────────────────
-    createSqueak: (topic: string, post: string, body: { content: string }) =>
+    // ── Comments / Replies ───────────────────────────────────────────
+    createComment: (topic: string, post: string, body: { content: string }) =>
         request<void>(`/mcf/${topic}/nib/${post}/sqk`, { method: "POST", body: JSON.stringify(body) }),
 
-    getAllSqueaks: (topic: string, post: string) =>
-        request<SqueakData[]>(`/mcf/${topic}/nib/${post}/sqk`),
+    getAllComments: (topic: string, post: string) =>
+        request<CommentData[]>(`/mcf/${topic}/nib/${post}/sqk`),
 
-    createEcho: (topic: string, post: string, comment: string, body: { content: string }) =>
+    createReply: (topic: string, post: string, comment: string, body: { content: string }) =>
         request<void>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`, { method: "POST", body: JSON.stringify(body) }),
 
-    getEchoes: (topic: string, post: string, comment: string) =>
-        request<EchoData[]>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`),
+    getReplies: (topic: string, post: string, comment: string) =>
+        request<ReplyData[]>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`),
 
     // ── Feed ─────────────────────────────────────────────────────────
-    /** Cross-board feed. Returns nibs with board_id set. sort: hot|new|top */
+    /** Cross-board feed. Returns posts with board_id set. sort: hot|new|top */
     getFeed: (sort: "hot" | "new" | "top") =>
-        request<NibData[]>(`/feed?sort=${sort}`),
+        request<PostData[]>(`/feed?sort=${sort}`),
 
     /** Active boards sorted by recent post count. */
     getActiveBoards: (limit = 8) =>
         request<BoardSummary[]>(`/mcf/active?limit=${limit}`),
 
     // ── Following ────────────────────────────────────────────────────
-    /** Auth-gated. Returns board IDs the authenticated user follows. */
+    /** Auth-gated. Returns board IDs the authenticated user follows, with metadata. */
     getFollowedBoards: () =>
-        request<string[]>("/users/me/following"),
+        request<FollowedBoardInfo[]>("/users/me/following"),
 
     /** Auth-gated. Follow a board. */
     followBoard: (boardId: string) =>
@@ -126,7 +126,7 @@ export const api = {
     getUserStats: () =>
         request<UserStats>("/users/me/stats"),
 
-    /** Auth-gated. Returns the authenticated user's own nibs. */
-    getUserNibs: () =>
-        request<NibData[]>("/users/me/nibs"),
+    /** Auth-gated. Returns the authenticated user's own posts. */
+    getUserPosts: () =>
+        request<PostData[]>("/users/me/nibs"),
 };

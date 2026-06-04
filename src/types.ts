@@ -25,7 +25,7 @@ export type BoardSummary = {
     post_count: number;
 };
 
-export type NibData = {
+export type PostData = {
     title: string;
     slug: string;
     content: string;
@@ -45,7 +45,7 @@ export type NibData = {
     board_id?: string;
 };
 
-export type SqueakData = {
+export type CommentData = {
     hash: string;
     content: string;
     created_at: string;
@@ -57,7 +57,7 @@ export type SqueakData = {
     is_mine?: boolean;
 };
 
-export type EchoData = {
+export type ReplyData = {
     hash: string;
     content: string;
     created_at: string;
@@ -69,4 +69,11 @@ export type UserStats = {
     squeak_count: number;
     upvote_count: number;
     following_count: number;
+};
+
+export type FollowedBoardInfo = {
+    id: string;
+    name: string;
+    description: string;
+    post_count: number;
 };

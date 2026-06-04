@@ -197,3 +197,82 @@
   font-size: 13px;
   text-align: center;
 }
+
+/* ── Density variants ── */
+.nib-card[data-density="compact"] a   { padding: 8px 12px; gap: 8px; }
+.nib-card[data-density="comfortable"] a { padding: 12px 16px; gap: 12px; }
+.nib-card[data-density="spacious"] a  { padding: 18px 22px; gap: 16px; }
+
+.nib-card[data-density="compact"] .nib-card-title    { font-size: 13px; }
+.nib-card[data-density="comfortable"] .nib-card-title { font-size: 15px; }
+.nib-card[data-density="spacious"] .nib-card-title   { font-size: 17px; }
+
+/* ── Top row (hot badge + board chip) ── */
+.nib-card-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+  flex-wrap: wrap;
+}
+
+.nib-card-hot {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 0 5px 5px 5px;
+  background: color-mix(in srgb, var(--accent2) 20%, transparent);
+  color: var(--accent2);
+  border: 1px solid var(--accent2);
+  animation: hotpulse 2s ease infinite;
+}
+
+@keyframes hotpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+
+.nib-card-board-chip {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  padding: 2px 8px;
+  border-radius: 0 5px 5px 5px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  text-decoration: none;
+}
+
+/* ── Tags ── */
+.nib-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0 5px;
+}
+
+.nib-tag-chip {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 2px 8px;
+  border-radius: 0 6px 6px 6px;
+  background: var(--accent-bg);
+  color: var(--accent2);
+  border: 1px solid var(--border);
+}
+
+/* ── Meta row (badge + date + counts) ── */
+.nib-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  color: var(--text-faint);
+  font-family: 'Space Grotesk', sans-serif;
+  margin-top: 6px;
+}

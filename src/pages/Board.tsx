@@ -17,7 +17,7 @@ import "../assets/Board.scss";
 export default function Board() {
     const { board } = useParams<{ board: string }>();
     const navigate = useNavigate();
-    const { auth } = useAuth();
+    const { isGuest } = useAuth();
     const { density } = useDensity();
 
     const [boardData, setBoardData] = useState<BoardData>();
@@ -29,31 +29,26 @@ export default function Board() {
     const [followLoading, setFollowLoading] = useState(false);
     const [followError, setFollowError] = useState<string | null>(null);
 
-    const isGuest = auth.status === "guest" || auth.status === "unknown";
-
     const [reloadVersion, setReloadVersion] = useState(0);
 
-    const prevKey = `${board}/${reloadVersion}`;
-    const [prevKeySt, setPrevKeySt] = useState(prevKey);
-    if (prevKeySt !== prevKey) {
-        setPrevKeySt(prevKey);
+    useEffect(() => {
         setLoading(true);
         setError(undefined);
         setFollowed(false);
         setFollowError(null);
-    }
+    }, [board, reloadVersion]);
 
     useEffect(() => {
         let cancelled = false;
         (async () => {
             try {
-                const [b, p] = await Promise.all([
+                const [boardResult, boardPosts] = await Promise.all([
                     api.getBoard(board!),
                     api.getAllPosts(board!),
                 ]);
                 if (cancelled) return;
-                setBoardData(b);
-                setPosts(p.filter(post => !post.deleted));
+                setBoardData(boardResult);
+                setPosts(boardPosts.filter(post => !post.deleted));
                 setLoading(false);
             } catch (e) {
                 if (cancelled) return;

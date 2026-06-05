@@ -9,6 +9,7 @@ import GreenText from "../shared/GreenText";
 import CreateReplyCard from "./CreateReplyCard";
 import { useDensity } from "../../contexts/DensityContext";
 import { dv } from "../../utils/density";
+import { formatDate } from "../../utils/date";
 
 type Props = {
     topic: string;
@@ -58,7 +59,7 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                         <AnonBadge token={comment.anon_token} isOp={isOp} isMe={comment.is_mine} sm />
                     )}
                     <span className="comment-date">
-                        {new Date(comment.created_at).toLocaleDateString()}
+                        {formatDate(comment.created_at)}
                     </span>
                     <span className="comment-hash">
                         #{comment.hash.slice(0, 7)}
@@ -111,7 +112,7 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                                     <GreenText text={r.content} />
                                 </div>
                                 <span className="reply-meta">
-                                    {new Date(r.created_at).toLocaleDateString()}
+                                    {formatDate(r.created_at)}
                                 </span>
                             </div>
                         ))}

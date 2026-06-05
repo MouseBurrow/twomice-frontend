@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function BoardSearchModal({ onClose, navigate }: Props) {
-  const [q, setQ] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [boards, setBoards] = useState<BoardData[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -28,8 +28,8 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
   }, []);
 
   const filtered = boards.filter(b =>
-    b.name.toLowerCase().includes(q.toLowerCase()) ||
-    b.description.toLowerCase().includes(q.toLowerCase())
+    b.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    b.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleBoardClick = (boardName: string) => {
@@ -62,7 +62,7 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
             {creating ? "Start a new board" : "Browse Boards"}
           </div>
           {!creating && (
-            <input className="board-search-input" type="text" placeholder="Search boards…" autoFocus value={q} onChange={e => setQ(e.target.value)} />
+            <input className="board-search-input" type="text" placeholder="Search boards…" autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
           )}
         </div>
 

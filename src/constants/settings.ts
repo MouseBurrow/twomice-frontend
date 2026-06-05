@@ -1,6 +1,8 @@
 import { type Theme } from "../contexts/ThemeContext";
 import { type Density } from "../contexts/DensityContext";
 
+export const DEFAULT_FONT = "Inter";
+
 export const THEMES: { value: Theme; label: string; preview: [string, string, string] }[] = [
     { value: "fieldmouse", label: "Fieldmouse", preview: ["#faf5ee", "#8b4513", "#c8761a"] },
     { value: "midnight",   label: "Midnight",   preview: ["#f0eeff", "#7c6fcf", "#a090ef"] },

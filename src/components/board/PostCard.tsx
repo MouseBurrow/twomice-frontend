@@ -5,6 +5,7 @@ import AnonBadge from "../shared/AnonBadge";
 import BoardChip from "../shared/BoardChip";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
+import { formatDate } from "../../utils/date";
 
 type Props = {
     board?: string;
@@ -13,11 +14,9 @@ type Props = {
 
 export default function PostCard({ board, post }: Props) {
     const navigate = useNavigate();
-    const { auth } = useAuth();
+    const { isGuest } = useAuth();
     const { density } = useDensity();
     const resolvedBoard = board ?? post.board_id;
-
-    const isGuest = auth.status === "guest" || auth.status === "unknown";
     const canNavigate = !!resolvedBoard;
 
     const handleClick = () => {
@@ -46,7 +45,7 @@ export default function PostCard({ board, post }: Props) {
                         <span className="post-card-hot-badge">🔥 hot</span>
                     )}
                     <span className="post-card-date">
-                        {new Date(post.created_at).toLocaleDateString()}
+                        {formatDate(post.created_at)}
                     </span>
                 </div>
 

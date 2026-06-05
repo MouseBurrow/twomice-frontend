@@ -6,9 +6,10 @@ import { AuthProvider } from "./contexts/AuthContext.tsx";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import { ToastProvider } from "./contexts/ToastContext.tsx";
 import { DensityProvider } from "./contexts/DensityContext.tsx";
+import { DEFAULT_FONT } from "./constants/settings";
 
 // Apply saved font on first paint (before React hydrates)
-const savedFont = localStorage.getItem("twomice_font") ?? "Inter";
+const savedFont = localStorage.getItem("twomice_font") ?? DEFAULT_FONT;
 const fontValue = `'${savedFont}', sans-serif`;
 document.body.style.fontFamily = fontValue;
 document.documentElement.style.setProperty("--font-body", fontValue);

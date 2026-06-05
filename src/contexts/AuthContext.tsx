@@ -5,6 +5,7 @@ import type { AuthState } from "../types.ts";
 
 type AuthContextValue = {
     auth: AuthState;
+    isGuest: boolean;
     refresh: () => Promise<void>;
     logout: () => Promise<void>;
 };
@@ -38,8 +39,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refresh();
     }, []);
 
+    const isGuest = auth.status === "guest" || auth.status === "unknown";
+
     return (
-        <AuthContext.Provider value={{ auth, refresh, logout }}>
+        <AuthContext.Provider value={{ auth, isGuest, refresh, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -13,14 +13,14 @@ import GuestBanner from "../components/shared/GuestBanner";
 import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
 import SkeletonReplyCard from "../components/skeleton/SkeletonReplyCard";
 import type { CommentData, PostData } from "../types";
+import { formatDate } from "../utils/date";
 import "../assets/Post.scss";
 
 export default function Post() {
     const { board, post } = useParams<{ board: string; post: string }>();
     const navigate = useNavigate();
-    const { auth } = useAuth();
+    const { isGuest } = useAuth();
     const { density } = useDensity();
-    const isGuest = auth.status === "guest" || auth.status === "unknown";
 
     const [postData, setPostData] = useState<PostData>();
     const [comments, setComments] = useState<CommentData[]>([]);
@@ -28,25 +28,19 @@ export default function Post() {
     const [loading, setLoading] = useState(true);
     const [reloadVersion, setReloadVersion] = useState(0);
 
-    const prevKey = `${board}/${post}/${reloadVersion}`;
-    const [prevKeySt, setPrevKeySt] = useState(prevKey);
-    if (prevKeySt !== prevKey) {
-        setPrevKeySt(prevKey);
-        setLoading(true);
-        setError(undefined);
-    }
-
     useEffect(() => {
         let cancelled = false;
         (async () => {
+            setLoading(true);
+            setError(undefined);
             try {
-                const [p, c] = await Promise.all([
+                const [postResult, commentList] = await Promise.all([
                     api.getPost(board!, post!),
                     api.getAllComments(board!, post!)
                 ]);
                 if (cancelled) return;
-                setPostData(p);
-                setComments(c.filter(x => !x.deleted));
+                setPostData(postResult);
+                setComments(commentList.filter(x => !x.deleted));
                 setLoading(false);
             } catch (e) {
                 if (cancelled) return;
@@ -58,7 +52,7 @@ export default function Post() {
     }, [board, post, reloadVersion]);
 
     const formattedTime = postData?.created_at
-        ? new Date(postData.created_at).toLocaleDateString()
+        ? formatDate(postData.created_at)
         : "";
 
     const opToken = postData?.anon_token;

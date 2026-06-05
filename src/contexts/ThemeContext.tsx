@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { availableModesFor } from "../utils/themes";
 
 export type Theme =
     | "fieldmouse"
@@ -13,19 +14,8 @@ export type Theme =
 
 export type Mode = "light" | "mid" | "dark";
 
-/** Themes that have no data-mode attribute — CSS targets data-theme only */
-const SINGLE_MODE_THEMES: Theme[] = ["stark-light", "stark-dark", "goldenrod"];
-
-/** Themes that support only light + dark (no mid) */
-const TWO_MODE_THEMES: Theme[] = [];
-
-/** Available modes for a given theme (empty = single-mode, no selector) */
 // eslint-disable-next-line react-refresh/only-export-components
-export function availableModesFor(t: Theme): Mode[] {
-    if (SINGLE_MODE_THEMES.includes(t)) return [];
-    if (TWO_MODE_THEMES.includes(t)) return ["light", "dark"];
-    return ["light", "mid", "dark"];
-}
+export { availableModesFor };
 
 type ThemeContextValue = {
     theme: Theme;
@@ -85,7 +75,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         const el = document.documentElement;
         const update = () => {
             el.dataset.theme = theme;
-            if (SINGLE_MODE_THEMES.includes(theme)) {
+            if (availableModesFor(theme).length === 0) {
                 delete el.dataset.mode;
             } else {
                 el.dataset.mode = mode;

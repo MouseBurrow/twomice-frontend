@@ -9,15 +9,13 @@ import SettingsDrawer from "./SettingsDrawer";
 import "./NavBar.scss";
 
 export default function NavBar() {
-    const { auth, logout } = useAuth();
+    const { auth, logout, isGuest } = useAuth();
     const navigate = useNavigate();
     const { density } = useDensity();
     const [boardSearch, setBoardSearch] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [composeOpen, setComposeOpen] = useState(false);
-
-    const isGuest = auth.status === "guest" || auth.status === "unknown";
 
     const handle = localStorage.getItem("twomice_handle") ??
         (auth.status === "user" || auth.status === "admin"

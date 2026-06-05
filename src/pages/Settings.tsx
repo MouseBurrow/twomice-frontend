@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { availableModesFor } from "../utils/themes";
 import { useDensity } from "../contexts/DensityContext";
-import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, applyFont } from "../constants/settings";
+import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DEFAULT_FONT, applyFont } from "../constants/settings";
 import "../assets/Settings.scss";
 
 export default function Settings() {
@@ -13,7 +13,7 @@ export default function Settings() {
         () => localStorage.getItem("twomice_handle") ?? ""
     );
     const [font, setFontState] = useState(
-        () => localStorage.getItem("twomice_font") ?? "Inter"
+        () => localStorage.getItem("twomice_font") ?? DEFAULT_FONT
     );
 
     function saveHandle() {

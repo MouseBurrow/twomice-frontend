@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { availableModesFor } from "../../utils/themes";
 import { useDensity } from "../../contexts/DensityContext";
-import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, applyFont } from "../../constants/settings";
+import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DEFAULT_FONT, applyFont } from "../../constants/settings";
 
 interface Props { onClose: () => void; }
 
@@ -10,7 +10,7 @@ export default function SettingsDrawer({ onClose }: Props) {
   const { theme, mode, setTheme, setMode } = useTheme();
   const { density, setDensity } = useDensity();
 
-  const [font, setFontState] = useState(() => localStorage.getItem("twomice_font") ?? "Inter");
+  const [font, setFontState] = useState(() => localStorage.getItem("twomice_font") ?? DEFAULT_FONT);
 
   function setFont(f: string) {
     setFontState(f);

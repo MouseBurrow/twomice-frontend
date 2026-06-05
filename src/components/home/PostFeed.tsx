@@ -13,19 +13,19 @@ export default function PostFeed() {
     const [posts, setPosts] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ApiError>();
-    const [prevSort, setPrevSort] = useState(sort);
-    if (prevSort !== sort) {
-        setPrevSort(sort);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         setError(undefined);
-    }
+    }, [sort]);
 
     useEffect(() => {
         let cancelled = false;
         api.getFeed(sort)
             .then(data => {
                 if (cancelled) return;
-                setPosts(data.filter(n => !n.deleted));
+                setPosts(data.filter(item => !item.deleted));
                 setLoading(false);
             })
             .catch(e => {
@@ -49,8 +49,8 @@ export default function PostFeed() {
                 <p className="post-feed-empty">Nothing here yet.</p>
             ) : (
                 <div className="post-feed-grid">
-                    {posts.map(n => (
-                        <PostCard key={`${n.board_id}-${n.slug}`} post={n} />
+                    {posts.map(item => (
+                        <PostCard key={`${item.board_id}-${item.slug}`} post={item} />
                     ))}
                 </div>
             )}

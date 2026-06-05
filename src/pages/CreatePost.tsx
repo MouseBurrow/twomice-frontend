@@ -8,7 +8,7 @@ import "../assets/CreatePost.scss";
 
 export default function CreatePost() {
     const { board } = useParams<{ board: string }>();
-    const { auth } = useAuth();
+    const { isGuest } = useAuth();
     const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
@@ -16,7 +16,7 @@ export default function CreatePost() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError | undefined>(undefined);
 
-    if (auth.status === "unknown" || auth.status === "guest") {
+    if (isGuest) {
         return (
             <div className="create-post-page">
                 <div className="create-post-board">

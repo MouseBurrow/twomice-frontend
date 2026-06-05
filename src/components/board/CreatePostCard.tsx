@@ -12,9 +12,8 @@ export default function CreatePostCard({ topicName, onCreated }: Props) {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError>();
-    const { auth } = useAuth();
+    const { isGuest } = useAuth();
     const navigate = useNavigate();
-    const isGuest = auth.status === "unknown" || auth.status === "guest";
 
     async function submit() {
         try {

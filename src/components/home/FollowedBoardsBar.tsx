@@ -9,19 +9,19 @@ import { dv } from "../../utils/density";
 export default function FollowedBoardsBar() {
   const [boards, setBoards] = useState<FollowedBoardInfo[]>([]);
   const navigate = useNavigate();
-  const { auth } = useAuth();
+  const { isGuest } = useAuth();
   const { density } = useDensity();
 
   useEffect(() => {
-    if (auth.status === "guest") return;
+    if (isGuest) return;
     let cancelled = false;
     api.getFollowedBoards()
       .then(data => { if (!cancelled) setBoards(data); })
       .catch(() => {});
     return () => { cancelled = true; };
-  }, [auth.status]);
+  }, [isGuest]);
 
-  if (auth.status === "guest" || boards.length === 0) return null;
+  if (isGuest || boards.length === 0) return null;
 
   return (
     <div className="followed-bar" style={{ marginBottom: dv(density, "0.75rem", "1.25rem", "1.5rem") }}>

@@ -6,6 +6,7 @@ import { api } from "../api";
 import type { PostData, UserStats, FollowedBoardInfo } from "../types";
 import PostCard from "../components/board/PostCard";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
+import { formatDate } from "../utils/date";
 import "../assets/Profile.scss";
 
 type Tab = "posts" | "following";
@@ -44,7 +45,7 @@ export default function Profile() {
         let cancelled = false;
         if (tab === "posts") {
             api.getUserPosts()
-                .then(data => { if (!cancelled) { setPosts(data.filter(n => !n.deleted)); setPostsLoading(false); } })
+                .then(data => { if (!cancelled) { setPosts(data.filter(item => !item.deleted)); setPostsLoading(false); } })
                 .catch(() => { if (!cancelled) setPostsLoading(false); });
         } else {
             api.getFollowedBoards()
@@ -113,7 +114,7 @@ export default function Profile() {
                         </div>
                     </div>
                     <div className="profile-member-since" style={{ display: "block" }}>
-                        member since {new Date(auth.info.created_at).toLocaleDateString()}
+                        member since {formatDate(auth.info.created_at)}
                     </div>
                     {stats && (
                         <div className="profile-stats">

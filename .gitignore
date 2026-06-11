@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .worktrees/
+prototype_frontend/
+TODO.md
+docs/
+changelog/

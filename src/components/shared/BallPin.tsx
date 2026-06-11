@@ -24,7 +24,7 @@ export default function BallPin({ color = 'var(--accent)', glow = false }: Props
             </div>
             <div style={{
                 width: 2.5, height: 10,
-                background: 'rgba(0,0,0,0.24)',
+                background: `color-mix(in srgb, var(--text-primary) 24%, transparent)`,
                 borderRadius: '0 0 1px 1px',
                 marginTop: -1,
             }} />
@@ -32,7 +32,7 @@ export default function BallPin({ color = 'var(--accent)', glow = false }: Props
                 width: 0, height: 0,
                 borderLeft: '3.5px solid transparent',
                 borderRight: '3.5px solid transparent',
-                borderTop: '6px solid rgba(0,0,0,0.24)',
+                borderTop: `6px solid color-mix(in srgb, var(--text-primary) 24%, transparent)`,
             }} />
         </div>
     );

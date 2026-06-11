@@ -3,7 +3,7 @@ import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { CommentData, ReplyData } from "../../types";
 import ErrorMessage from "../ErrorMessage";
-import VoteColumn from "../shared/VoteColumn";
+import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
 import ModActions from "../shared/ModActions";
@@ -19,13 +19,14 @@ type Props = {
     post: string;
     comment: CommentData;
     opToken?: string;
+    bc?: string;
 };
 
-export default function CommentCard({ topic, post, comment, opToken }: Props) {
+export default function CommentCard({ topic, post, comment, opToken, bc }: Props) {
     const { auth } = useAuth();
     const { density } = useDensity();
     const mountRef = useRef(true);
-    const [open, setOpen] = useState(false);
+    const [col, setCol] = useState(false);
     const [loading, setLoading] = useState(false);
     const [replies, setReplies] = useState<ReplyData[]>([]);
     const [error, setError] = useState<ApiError>();
@@ -36,9 +37,9 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
 
     if (removed) {
         return (
-            <article className="comment-card" style={{ padding: dv(density, "0.375rem 0.75rem", "0.5rem 1rem", "0.625rem 1.125rem") }}>
-                <span className="comment-removed">[removed by moderator]</span>
-            </article>
+            <div className="comment-removed">
+                [removed by moderator]
+            </div>
         );
     }
 
@@ -62,7 +63,7 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
     }, []);
 
     const isOp = !!(opToken && comment.anon_token === opToken);
-    const padding = dv(density, "0.5rem 0.75rem", "0.75rem 1rem", "1rem 1.25rem");
+    const isMe = !!(comment.is_mine);
 
     /* Thread colour derived from the parent comment's anon_token */
     const threadColor = comment.anon_token
@@ -70,47 +71,33 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
         : undefined;
 
     return (
-        <article className="comment-card" style={{ padding }}>
-            <VoteColumn initialScore={comment.vote_count ?? 0} />
-
-            <div className="comment-bubble">
-                <div className="comment-author">
+        <div className="comment-outer">
+            <div className="comment-row">
+                <div className="comment-header">
                     {comment.anon_token && (
-                        <AnonBadge token={comment.anon_token} isOp={isOp} isMe={comment.is_mine} sm />
+                        <AnonBadge token={comment.anon_token} isOp={isOp} isMe={isMe} sm />
                     )}
-                    <span className="comment-date">
-                        {formatDate(comment.created_at)}
-                    </span>
-                    <span className="comment-hash">
-                        #{comment.hash.slice(0, 7)}
-                    </span>
-                    <div style={{ marginLeft: "auto", display: "flex", gap: "0.25rem", alignItems: "center" }}>
-                        <ModActions
-                            show={isAdmin}
-                            type="comment"
-                            onRemove={() => setRemoved(true)}
-                        />
+                    <span className="comment-time">{formatDate(comment.created_at)}</span>
+                    <span className="comment-id">#{comment.hash.slice(0, 7)}</span>
+                    <div className="comment-header-end">
+                        <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
+                        {replies.length > 0 && (
+                            <button className="comment-collapse" onClick={() => setCol(!col)}>
+                                {col ? `[+${replies.length}]` : '[–]'}
+                            </button>
+                        )}
                     </div>
                 </div>
 
-                <div className="comment-content">
+                <div className="comment-body">
                     <GreenText text={comment.content} />
                 </div>
 
-                <div className="comment-meta">
-                    <button
-                        onClick={() => setReplyOpen(!replyOpen)}
-                        className="comment-reply-btn"
-                    >
-                        ↩ squeak back
-                    </button>
-                    {open && (
-                        <button
-                            className="comment-replies-toggle"
-                            onClick={() => { setOpen(false); setReplyOpen(false); }}
-                            aria-label="Hide replies"
-                        >
-                            hide replies
+                <div className="comment-footer">
+                    <VoteButtons votes={comment.vote_count ?? 0} disabled={false} bc={bc} />
+                    {!replyOpen && !col && (
+                        <button className="reply-chip" onClick={() => setReplyOpen(true)}>
+                            ↩ squeak back
                         </button>
                     )}
                 </div>
@@ -124,7 +111,7 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                         onCreated={async () => {
                             setReplyOpen(false);
                             await loadReplies({ cancelled: !mountRef.current });
-                            if (mountRef.current) setOpen(true);
+                            if (mountRef.current) setCol(true);
                         }}
                     />
                 )}
@@ -132,8 +119,8 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                 {loading && <p className="comment-loading">Loading replies…</p>}
 
                 {/* Dot-terminus reply threading */}
-                {open && replies.length > 0 && (
-                    <div className="reply-thread" style={{ paddingLeft: 18 }}>
+                {!col && replies.length > 0 && (
+                    <div className="comment-replies">
                         {replies.map((r, i, arr) => {
                             const isLast = i === arr.length - 1;
                             const lineColor = threadColor
@@ -144,13 +131,13 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                                 : 'var(--bg-elevated)';
                             const circSize = 9;
                             const circR = circSize / 2;
-                            const circTop = 5;
+                            const circCenter = 21;
+                            const circTop = Math.round(circCenter - circR);
                             const circBottom = circTop + circSize;
                             const lineX = Math.round(circR) - 1;
 
                             return (
                                 <div key={r.hash} style={{ position: 'relative', paddingLeft: circSize + 10, marginTop: i > 0 ? 4 : 0 }}>
-                                    {/* Lead line */}
                                     {i === 0 && (
                                         <div style={{
                                             position: 'absolute', left: lineX, top: 0,
@@ -158,7 +145,6 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                                         }} />
                                     )}
 
-                                    {/* Circle */}
                                     <div style={{
                                         position: 'absolute', left: 0, top: circTop,
                                         width: circSize, height: circSize, borderRadius: '50%',
@@ -166,7 +152,6 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                                         border: `2px solid ${lineColor}`, zIndex: 2,
                                     }} />
 
-                                    {/* Dashed segment between circles */}
                                     {!isLast && (
                                         <div style={{
                                             position: 'absolute', left: lineX,
@@ -191,6 +176,6 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
 
                 <ErrorMessage error={error} />
             </div>
-        </article>
+        </div>
     );
 }

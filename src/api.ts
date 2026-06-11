@@ -69,36 +69,36 @@ export const api = {
 
     // ── Boards ───────────────────────────────────────────────────────
     createBoard: (body: { name: string; description: string }) =>
-        request<void>("/mcf", { method: "POST", body: JSON.stringify(body) }),
+        request<void>("/b", { method: "POST", body: JSON.stringify(body) }),
 
     getBoard: (topic: string) =>
-        request<BoardData>(`/mcf/${topic}`),
+        request<BoardData>(`/b/${topic}`),
 
     getAllBoards: () =>
-        request<BoardData[]>("/mcf"),
+        request<BoardData[]>("/b"),
 
     // ── Posts ─────────────────────────────────────────────────────────
     createPost: (topic: string, body: { title: string; content: string }) =>
-        request<void>(`/mcf/${topic}/nib`, { method: "POST", body: JSON.stringify(body) }),
+        request<void>(`/b/${topic}/nib`, { method: "POST", body: JSON.stringify(body) }),
 
     getPost: (topic: string, postId: string) =>
-        request<PostData>(`/mcf/${topic}/nib/${postId}`),
+        request<PostData>(`/b/${topic}/nib/${postId}`),
 
     getAllPosts: (topic: string) =>
-        request<PostData[]>(`/mcf/${topic}/nib`),
+        request<PostData[]>(`/b/${topic}/nib`),
 
     // ── Comments / Replies ───────────────────────────────────────────
     createComment: (topic: string, post: string, body: { content: string }) =>
-        request<void>(`/mcf/${topic}/nib/${post}/sqk`, { method: "POST", body: JSON.stringify(body) }),
+        request<void>(`/b/${topic}/nib/${post}/sqk`, { method: "POST", body: JSON.stringify(body) }),
 
     getAllComments: (topic: string, post: string) =>
-        request<CommentData[]>(`/mcf/${topic}/nib/${post}/sqk`),
+        request<CommentData[]>(`/b/${topic}/nib/${post}/sqk`),
 
     createReply: (topic: string, post: string, comment: string, body: { content: string }) =>
-        request<void>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`, { method: "POST", body: JSON.stringify(body) }),
+        request<void>(`/b/${topic}/nib/${post}/sqk/${comment}/echoes`, { method: "POST", body: JSON.stringify(body) }),
 
     getReplies: (topic: string, post: string, comment: string) =>
-        request<ReplyData[]>(`/mcf/${topic}/nib/${post}/sqk/${comment}/echoes`),
+        request<ReplyData[]>(`/b/${topic}/nib/${post}/sqk/${comment}/echoes`),
 
     // ── Feed ─────────────────────────────────────────────────────────
     /** Cross-board feed. Returns posts with board_id set. sort: hot|new|top */
@@ -107,7 +107,7 @@ export const api = {
 
     /** Active boards sorted by recent post count. */
     getActiveBoards: (limit = 8) =>
-        request<BoardSummary[]>(`/mcf/active?limit=${limit}`),
+        request<BoardSummary[]>(`/b/active?limit=${limit}`),
 
     // ── Following ────────────────────────────────────────────────────
     /** Auth-gated. Returns board IDs the authenticated user follows, with metadata. */
@@ -134,11 +134,11 @@ export const api = {
     // ── Admin / Mod ───────────────────────────────────────────────────
     /** Admin-only. Toggles the lock state of a thread. */
     lockPost: (topic: string, slug: string) =>
-        request<{ is_locked: boolean }>(`/mcf/${topic}/nib/${slug}/lock`, { method: "POST" }),
+        request<{ is_locked: boolean }>(`/b/${topic}/nib/${slug}/lock`, { method: "POST" }),
 
     /** Admin-only. Soft-deletes a nib. */
     deletePost: (topic: string, slug: string) =>
-        request<void>(`/mcf/${topic}/nib/${slug}`, { method: "DELETE" }),
+        request<void>(`/b/${topic}/nib/${slug}`, { method: "DELETE" }),
 
     /** Admin-only. Returns all mod reports. */
     getReports: () =>
@@ -154,5 +154,5 @@ export const api = {
 
     /** Admin-only. Updates board metadata. */
     updateBoard: (name: string, body: { name?: string; description?: string }) =>
-        request<void>(`/mcf/${name}`, { method: "PUT", body: JSON.stringify(body) }),
+        request<void>(`/b/${name}`, { method: "PUT", body: JSON.stringify(body) }),
 };

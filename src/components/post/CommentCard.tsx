@@ -13,6 +13,7 @@ import { useDensity } from "../../contexts/DensityContext";
 import { dv } from "../../utils/density";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
+import "../../assets/components.scss";
 
 type Props = {
     topic: string;
@@ -65,7 +66,6 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     const isOp = !!(opToken && comment.anon_token === opToken);
     const isMe = !!(comment.is_mine);
 
-    /* Thread colour derived from the parent comment's anon_token */
     const threadColor = comment.anon_token
         ? hashColor(comment.anon_token).dot
         : undefined;
@@ -118,7 +118,6 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
                 {loading && <p className="comment-loading">Loading replies…</p>}
 
-                {/* Dot-terminus reply threading */}
                 {!col && replies.length > 0 && (
                     <div className="comment-replies">
                         {replies.map((r, i, arr) => {
@@ -139,25 +138,19 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                             return (
                                 <div key={r.hash} style={{ position: 'relative', paddingLeft: circSize + 10, marginTop: i > 0 ? 4 : 0 }}>
                                     {i === 0 && (
-                                        <div style={{
-                                            position: 'absolute', left: lineX, top: 0,
-                                            height: circTop, borderLeft: `2px dashed ${lineColor}`,
-                                        }} />
+                                        <div className="thread-line"
+                                            style={{ left: lineX, top: 0, height: circTop, borderColor: lineColor }}
+                                        />
                                     )}
 
-                                    <div style={{
-                                        position: 'absolute', left: 0, top: circTop,
-                                        width: circSize, height: circSize, borderRadius: '50%',
-                                        background: circFill,
-                                        border: `2px solid ${lineColor}`, zIndex: 2,
-                                    }} />
+                                    <div className="thread-dot"
+                                        style={{ top: circTop, width: circSize, height: circSize, background: circFill, border: `2px solid ${lineColor}` }}
+                                    />
 
                                     {!isLast && (
-                                        <div style={{
-                                            position: 'absolute', left: lineX,
-                                            top: circBottom, bottom: -circTop,
-                                            borderLeft: `2px dashed ${lineColor}`,
-                                        }} />
+                                        <div className="thread-line"
+                                            style={{ left: lineX, top: circBottom, bottom: -circTop, borderColor: lineColor }}
+                                        />
                                     )}
 
                                     <div className="reply-card-inline">

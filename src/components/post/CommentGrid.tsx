@@ -1,5 +1,6 @@
 import type { CommentData } from "../../types";
 import CommentCard from "./CommentCard";
+import "../../assets/components.scss";
 
 type Props = { topic: string; post: string; comments: CommentData[]; opToken?: string; bc?: string };
 
@@ -15,15 +16,16 @@ export default function CommentGrid({ topic, post, comments, opToken, bc }: Prop
             {comments.map((c, i) => {
                 const rot = ROTS[i % ROTS.length];
                 return (
-                    <div key={c.hash} style={{
-                        background: 'var(--bg-surface)',
-                        border: '1.5px solid var(--border)',
-                        borderRadius: NC[i % 4],
-                        transform: `rotate(${rot}deg)`,
-                        transformOrigin: '50% 0',
-                        boxShadow: `${rot > 0 ? '-3' : '3'}px 5px 14px rgba(0,0,0,.07)`,
-                        transition: 'background-color .2s,border-color .2s',
-                    }}>
+                    <div key={c.hash} className="cmt-tilt-wrap"
+                        style={{
+                            background: 'var(--bg-surface)',
+                            border: '1.5px solid var(--border)',
+                            borderRadius: NC[i % 4],
+                            transform: `rotate(${rot}deg)`,
+                            transformOrigin: '50% 0',
+                            boxShadow: `${rot > 0 ? '-3' : '3'}px 5px 14px rgba(0,0,0,.07)`,
+                        }}
+                    >
                         <CommentCard topic={topic} post={post} comment={c} opToken={opToken} />
                     </div>
                 );

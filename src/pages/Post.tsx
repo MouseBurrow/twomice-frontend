@@ -20,6 +20,7 @@ import { formatDate } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
 import { dv } from "../utils/density";
 import "../assets/Post.scss";
+import "../assets/components.scss";
 
 export default function Post() {
     const { board, post } = useParams<{ board: string; post: string }>();
@@ -89,8 +90,6 @@ export default function Post() {
         const sorted = [...comments];
         if (commentSort === "new") {
             sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        } else if (commentSort === "top") {
-            sorted.sort((a, b) => (b.vote_count ?? 0) - (a.vote_count ?? 0));
         } else {
             sorted.sort((a, b) => (b.vote_count ?? 0) - (a.vote_count ?? 0));
         }
@@ -120,7 +119,7 @@ export default function Post() {
     if (!postData) {
         return (
             <div className="post-page" data-density={density}>
-                <div className="post-back" style={{ justifyContent: 'center', paddingTop: 60 }}>
+                <div className="post-breadcrumb" style={{ justifyContent: 'center', paddingTop: 60 }}>
                     <div style={{ textAlign: 'center' }}>
                         <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 24, marginBottom: 8 }}>Post not found</div>
                         <button className="btn-ghost" onClick={() => navigate(`/b/${board}`)}>← Back to board</button>
@@ -143,28 +142,13 @@ export default function Post() {
 
     return (
         <div className="post-page" data-density={density}>
-            <div style={{
-                maxWidth: 1120,
-                margin: '0 auto',
-                padding: pagePad,
-                display: 'flex',
-                gap: panelGap,
-                alignItems: 'start',
-            }}>
+            <div className="post-dblend" style={{ padding: pagePad, gap: panelGap }}>
                 {/* ─── LEFT — sticky context panel ─── */}
-                <div style={{
-                    width: leftW,
-                    flexShrink: 0,
-                    position: 'sticky',
-                    top: sidebarTop,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: dv(density, '0.625rem', '0.875rem', '1.125rem'),
-                }}>
-                    {/* Breadcrumb */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <button
-                            className="btn-ghost"
+                <div className="post-dblend-left"
+                    style={{ width: leftW, top: sidebarTop, gap: dv(density, '0.625rem', '0.875rem', '1.125rem') }}
+                >
+                    <div className="post-breadcrumb">
+                        <button className="btn-ghost"
                             style={{ padding: dv(density, '3px 8px', '4px 10px', '5px 12px'), fontSize: dv(density, 11, 12, 13) }}
                             onClick={() => navigate(`/b/${board}`)}>
                             ← {board}
@@ -172,25 +156,16 @@ export default function Post() {
                         {locked && <span className="locked-badge">🔒 locked</span>}
                     </div>
 
-                    {/* ── OP card, tilted with PushPin ── */}
-                    <div style={{ position: 'relative', marginTop: dv(density, 16, 20, 24) }}>
+                    <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
                         <PushPin color={bc} glow={!!postData.is_hot} />
-                        <div className="post-detail" style={{
-                            borderTop: `3px solid ${bc}`,
-                            borderRadius: '0 1rem 1rem 1rem',
-                            transform: 'rotate(0.8deg)',
-                            transformOrigin: '50% 0',
-                            boxShadow: '-3px 8px 20px rgba(0,0,0,.10)',
-                            marginBottom: 0,
-                        }}>
+                        <div className="post-op-card" style={{ borderTop: `3px solid ${bc}`, background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
                             <div className="post-detail-inner" style={{ padding: cardPad }}>
-                                {/* meta row */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: dv(density, 8, 10, 12), flexWrap: 'wrap' }}>
+                                <div className="post-op-meta" style={{ marginBottom: dv(density, 8, 10, 12) }}>
                                     {postData.anon_token && (
                                         <AnonBadge token={postData.anon_token} isOp isMe={postData.is_mine} />
                                     )}
                                     <span className="post-detail-time">OP · {formattedTime}</span>
-                                    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <div className="post-op-meta-end">
                                         {board && <BoardChip boardName={board} />}
                                         <span className="post-detail-slug">#{postData.slug}</span>
                                         <ModActions show={isAdmin} type="post" locked={locked}
@@ -199,58 +174,56 @@ export default function Post() {
                                     </div>
                                 </div>
 
-                                {/* title */}
-                                <div className="post-detail-title" style={{ fontSize: dv(density, 16, 20, 24), marginBottom: dv(density, 8, 10, 12) }}>
+                                <div className="post-op-title" style={{ fontSize: dv(density, 16, 20, 24), marginBottom: dv(density, 8, 10, 12) }}>
                                     {postData.title}
                                 </div>
 
-                                {/* body */}
-                                <div className="post-detail-content" style={{ fontSize: dv(density, 12, 13, 14) }}>
+                                <div className="post-op-body" style={{ fontSize: dv(density, 12, 13, 14) }}>
                                     {postData.content}
                                 </div>
 
-                                {/* footer */}
-                                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: 8, marginTop: dv(density, 8, 10, 12), display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                                <div className="post-op-footer" style={{ paddingTop: 8, marginTop: dv(density, 8, 10, 12) }}>
                                     <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={comments.length} />
-                                    {postData.tags?.map(t => <span key={t} style={tagStyle}>#{t}</span>)}
+                                    {postData.tags?.map(t => <span key={t} className="bc-tag" style={{
+                                        color: bc,
+                                        background: `color-mix(in srgb,${bc} 12%,transparent)`,
+                                        border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
+                                    }}>#{t}</span>)}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* ── Board info widget ── */}
-                    <div style={{
-                        background: 'var(--bg-surface)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '0 0.75rem 0.75rem 0.75rem',
-                        overflow: 'hidden',
-                        transition: 'background-color .2s,border-color .2s',
-                    }}>
-                        <div style={{ padding: widgetHd, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 7 }}>
-                            <span style={{ width: 7, height: 7, borderRadius: '50%', background: bc, display: 'inline-block', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.10)', boxShadow: '0 1px 3px rgba(0,0,0,0.18)' }} />
-                            <span style={{ fontFamily: "'Fredoka One',cursive", fontSize: dv(density, 12, 14, 15), color: 'var(--accent2)' }}>b/{board}</span>
+                    <div className="post-board-widget">
+                        <div className="post-board-widget-header" style={{ padding: widgetHd }}>
+                            <span className="post-board-dot" style={{ background: bc }} />
+                            <span className="post-board-name" style={{ fontSize: dv(density, 12, 14, 15) }}>b/{board}</span>
                         </div>
-                        <div style={{ padding: infoPad }}>
+                        <div className="post-board-widget-body" style={{ padding: infoPad }}>
                             {postData.tags && postData.tags.length > 0 && (
                                 <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
-                                    {postData.tags.map(tag => <span key={tag} style={tagStyle}>#{tag}</span>)}
+                                    {postData.tags.map(tag => <span key={tag} className="bc-tag" style={{
+                                        color: bc,
+                                        background: `color-mix(in srgb,${bc} 12%,transparent)`,
+                                        border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
+                                    }}>#{tag}</span>)}
                                 </div>
                             )}
 
                             {relatedPosts.length > 0 && (
                                 <div>
-                                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: dv(density, 5, 7, 8) }}>
+                                    <div className="related-header" style={{ marginBottom: dv(density, 5, 7, 8) }}>
                                         More in b/{board}
                                     </div>
                                     {relatedPosts.map((rp, i) => (
-                                        <div key={rp.slug}
+                                        <div key={rp.slug} className="related-item"
                                             onClick={() => navigate(`/b/${board}/nib/${rp.slug}`)}
-                                            style={{ padding: `${dv(density, 5, 7, 8)}px 0`, borderBottom: i < relatedPosts.length - 1 ? '1px solid var(--border-soft)' : 'none', cursor: 'pointer' }}
+                                            style={{ padding: `${dv(density, 5, 7, 8)}px 0` }}
                                         >
-                                            <div style={{ fontSize: dv(density, 11, 12, 12), color: 'var(--text-muted)', lineHeight: 1.35, marginBottom: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                            <div className="related-title" style={{ fontSize: dv(density, 11, 12, 12) }}>
                                                 {rp.title}
                                             </div>
-                                            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 9, color: 'var(--text-faint)', display: 'flex', gap: 8 }}>
+                                            <div className="related-stats" style={{ marginTop: 2 }}>
                                                 <span>▲ {rp.vote_count ?? 0}</span>
                                                 <span>💬 {rp.reply_count ?? 0}</span>
                                             </div>
@@ -261,7 +234,6 @@ export default function Post() {
                         </div>
                     </div>
 
-                    {/* ── Reply box ── */}
                     {!isGuest && !locked ? (
                         <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
                             <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
@@ -274,14 +246,12 @@ export default function Post() {
                 </div>
 
                 {/* ─── RIGHT — comment feed ─── */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: dv(density, 8, 10, 12), marginBottom: dv(density, 12, 16, 20) }}>
-                        <span style={{ fontFamily: "'Fredoka One',cursive", fontSize: dv(density, 14, 16, 18), color: 'var(--text-primary)' }}>
+                <div className="post-dblend-right">
+                    <div className="comment-feed-header" style={{ gap: dv(density, 8, 10, 12), marginBottom: dv(density, 12, 16, 20) }}>
+                        <span className="comment-feed-count" style={{ fontSize: dv(density, 14, 16, 18) }}>
                             {comments.length} squeaks
                         </span>
-                        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '0.625rem', fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--text-faint)', marginLeft: 'auto' }}>
-                            Sort
-                        </span>
+                        <span className="comment-feed-sort-label">Sort</span>
                         {(["hot", "new", "top"] as const).map(s => (
                             <MiniBtn key={s} active={commentSort === s} onClick={() => setCommentSort(s)}>
                                 {COMMENT_SORT_LABELS[s]}

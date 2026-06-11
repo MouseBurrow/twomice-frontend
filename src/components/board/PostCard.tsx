@@ -10,6 +10,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
 import { formatDate } from "../../utils/date";
 import { hashPostId, SCRAP_ROTS, NEST_CORNERS, boardColorFromName } from "../../utils/hash";
+import "../../assets/components.scss";
 
 type Props = {
     board?: string;
@@ -46,7 +47,7 @@ export default function PostCard({ board, post }: Props) {
     const bc = post.board_id ? boardColorFromName(post.board_id) : 'var(--accent)';
 
     return (
-        <div style={{ position: 'relative', marginTop: scrap ? 22 : 0 }}>
+        <div className={`pcard-wrap${scrap ? ' scrap' : ''}`}>
             {scrap && <PushPin color={bc} glow={!!post.is_hot} />}
 
             <article
@@ -64,15 +65,7 @@ export default function PostCard({ board, post }: Props) {
                     <div className="post-card-meta-row">
                         {!board && post.board_id && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                <span style={{
-                                    display: 'inline-block',
-                                    width: 8, height: 8,
-                                    borderRadius: '50%',
-                                    background: bc,
-                                    flexShrink: 0,
-                                    border: '1.5px solid rgba(0,0,0,0.12)',
-                                    boxShadow: `0 1px 3px rgba(0,0,0,0.22), inset 0 1px 2px rgba(255,255,255,.32)`,
-                                }} />
+                                <span className="board-dot-sm" style={{ background: bc }} />
                                 <BoardChip
                                     boardName={post.board_id}
                                     onClick={() => navigate(`/b/${post.board_id}`)}
@@ -100,11 +93,7 @@ export default function PostCard({ board, post }: Props) {
                         </p>
                     )}
 
-                    <div style={{
-                        borderTop: '1px dashed var(--border)',
-                        paddingTop: 9,
-                        display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap',
-                    }}>
+                    <div className="pcard-footer">
                         <VoteButtons
                             votes={post.vote_count ?? 0}
                             disabled={isGuest}
@@ -112,19 +101,17 @@ export default function PostCard({ board, post }: Props) {
                             replies={post.reply_count}
                         />
 
-                        <div style={{ flex: 1 }} />
+                        <div className="pcard-footer-spacer" />
 
                         {post.tags && post.tags.slice(0, 1).map(tag => (
-                            <span key={tag} style={{
-                                fontSize: 9, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                                color: bc, letterSpacing: '.05em',
+                            <span key={tag} className="bc-tag" style={{
+                                color: bc,
                                 background: `color-mix(in srgb, ${bc} 12%, transparent)`,
                                 border: `1px solid color-mix(in srgb, ${bc} 28%, transparent)`,
-                                borderRadius: '0 4px 4px 4px', padding: '2px 7px',
                             }}>#{tag}</span>
                         ))}
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div className="pcard-footer-end">
                             <ModActions
                                 show={isAdmin}
                                 type="post"
@@ -133,11 +120,9 @@ export default function PostCard({ board, post }: Props) {
                                 onRemove={() => setRemoved(true)}
                             />
                             {canNavigate && (
-                                <span style={{
-                                    fontSize: 10, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
-                                    color: `color-mix(in srgb, ${bc} 50%, transparent)`,
-                                    borderLeft: '1px solid var(--border)', paddingLeft: 7,
-                                }}>peek in →</span>
+                                <span className="pcard-peek" style={{ color: `color-mix(in srgb, ${bc} 50%, transparent)` }}>
+                                    peek in →
+                                </span>
                             )}
                         </div>
                     </div>

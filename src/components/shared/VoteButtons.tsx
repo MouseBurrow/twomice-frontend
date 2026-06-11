@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import "../../assets/components.scss";
 
 type Props = {
     votes: number;
@@ -40,22 +41,14 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
 
     return (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{
-                display: 'inline-flex', alignItems: 'center',
-                borderRadius: 99,
-                background: pillBg,
-                border: `1.5px solid ${pillBorder}`,
-                overflow: 'hidden',
-                transition: 'border-color 0.15s, background 0.15s',
-            }}>
+            <div
+                className="vote-pill"
+                style={{ background: pillBg, border: `1.5px solid ${pillBorder}` }}
+            >
                 <button
-                    className={`vote-btn${up ? ' vote-up' : ''}`}
+                    className="vote-pill-half"
                     disabled={disabled}
-                    style={{
-                        padding: '3px 9px', display: 'flex', alignItems: 'center', gap: 5,
-                        background: 'transparent', border: 'none',
-                        cursor: disabled ? 'default' : 'pointer',
-                    }}
+                    style={{ cursor: disabled ? 'default' : 'pointer' }}
                     onClick={e => {
                         e.stopPropagation();
                         if (!disabled) vote(e, up ? 0 : 1);
@@ -64,25 +57,17 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
                     <svg width="10" height="7" viewBox="0 0 10 7" fill="none">
                         <path d="M1 6L5 1.5L9 6" stroke={upArrow} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span style={{
-                        fontSize: 11, fontFamily: "'Space Grotesk', sans-serif",
-                        fontWeight: 700, color: countColor, lineHeight: 1,
-                        transition: 'color 0.15s',
-                    }}>
+                    <span className="vote-pill-score" style={{ color: countColor }}>
                         {fmt(score)}
                     </span>
                 </button>
 
-                <div style={{ width: 1, height: 14, background: dividerCol, flexShrink: 0 }} />
+                <div className="vote-pill-divider" style={{ background: dividerCol }} />
 
                 <button
-                    className={`vote-btn${dn ? ' vote-dn' : ''}`}
+                    className="vote-pill-half"
                     disabled={disabled}
-                    style={{
-                        padding: '3px 9px', display: 'flex', alignItems: 'center',
-                        background: 'transparent', border: 'none',
-                        cursor: disabled ? 'default' : 'pointer',
-                    }}
+                    style={{ cursor: disabled ? 'default' : 'pointer' }}
                     onClick={e => {
                         e.stopPropagation();
                         if (!disabled) vote(e, dn ? 0 : -1);
@@ -95,16 +80,13 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
             </div>
 
             {replies != null && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div className="reply-count-wrap">
                     <svg width="11" height="10" viewBox="0 0 12 11" fill="none">
                         <path d="M1.5 1.5h9v6H7L5.5 9 4 7.5H1.5V1.5z"
                             stroke="var(--text-faint)"
                             strokeWidth="1.2" strokeLinejoin="round"/>
                     </svg>
-                    <span style={{
-                        fontSize: 11, fontFamily: "'Space Grotesk', sans-serif",
-                        color: 'var(--text-faint)',
-                    }}>{replies}</span>
+                    <span className="reply-count-label">{replies}</span>
                 </div>
             )}
         </div>

@@ -19,3 +19,14 @@ export function boardColorFromName(name: string): string {
     const hue = Math.abs(h) % 360;
     return `oklch(62% 0.24 ${hue})`;
 }
+
+export function hashColor(id: string): { bg: string; text: string; dot: string } {
+    let h = 0;
+    for (let c of id) h = (h * 31 + c.charCodeAt(0)) | 0;
+    const hue = Math.abs(h) % 360;
+    return {
+        bg: `oklch(72% 0.10 ${hue})`,
+        text: `oklch(32% 0.14 ${hue})`,
+        dot: `oklch(62% 0.24 ${hue})`,
+    };
+}

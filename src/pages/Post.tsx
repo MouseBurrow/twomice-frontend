@@ -15,6 +15,7 @@ import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
 import SkeletonReplyCard from "../components/skeleton/SkeletonReplyCard";
 import type { CommentData, PostData } from "../types";
 import { formatDate } from "../utils/date";
+import { boardColorFromName } from "../utils/hash";
 import "../assets/Post.scss";
 
 export default function Post() {
@@ -115,13 +116,12 @@ export default function Post() {
                             <div className="post-detail-content">{postData?.content}</div>
 
                             <div className="post-detail-footer">
-                                <VoteButtons votes={postData?.vote_count ?? 0} disabled={isGuest} />
-                                <span className="post-detail-reply-count">
-                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ verticalAlign: "middle", marginRight: "0.25rem" }}>
-                                        <path d="M1.5 2h9v6.5H7L5.5 10 4 8.5H1.5V2z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-                                    </svg>
-                                    {comments.length} comments
-                                </span>
+                                <VoteButtons
+                                    votes={postData?.vote_count ?? 0}
+                                    disabled={isGuest}
+                                    bc={board ? boardColorFromName(board) : undefined}
+                                    replies={comments.length}
+                                />
                                 {postData?.tags && postData.tags.map(t => (
                                     <span key={t} className="tag-chip">#{t}</span>
                                 ))}

@@ -201,6 +201,8 @@
 /* ── PostCard scrapbook outer ── */
 .pcard-wrap {
   position: relative;
+  break-inside: avoid;
+  overflow: visible;
 }
 
 .pcard-wrap.scrap {

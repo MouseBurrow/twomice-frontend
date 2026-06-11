@@ -27,7 +27,6 @@ export default function Board() {
     const [loading, setLoading] = useState(true);
     const [sort, setSort] = useState<"hot" | "new" | "top">("hot");
     const [followed, setFollowed] = useState(false);
-    const [followedId, setFollowedId] = useState<string | null>(null);
     const [followLoading, setFollowLoading] = useState(false);
     const [followError, setFollowError] = useState<string | null>(null);
 
@@ -66,10 +65,7 @@ export default function Board() {
         let cancelled = false;
         api.getFollowedBoards()
             .then(followedBoards => {
-                if (cancelled) return;
-                const match = followedBoards.find(b => b.name === board);
-                setFollowed(!!match);
-                setFollowedId(match?.id ?? null);
+                if (!cancelled) setFollowed(followedBoards.some(b => b.name === board));
             })
             .catch(() => {});
         return () => { cancelled = true; };
@@ -80,15 +76,12 @@ export default function Board() {
         setFollowLoading(true);
         setFollowError(null);
         try {
-            if (followed && followedId) {
-                await api.unfollowBoard(followedId);
+            if (followed) {
+                await api.unfollowBoard(board);
                 setFollowed(false);
-                setFollowedId(null);
             } else {
                 await api.followBoard(board);
                 setFollowed(true);
-                const b = await api.getFollowedBoards().then(list => list.find(x => x.name === board));
-                if (b) setFollowedId(b.id);
             }
         } catch {
             setFollowError("Failed to update follow status");
@@ -159,7 +152,7 @@ export default function Board() {
                             <SortBar sort={sort} onSort={setSort} />
 
                             <div className="board-layout">
-                                <div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
                                     <CreatePostCard topicName={boardData.name} onCreated={async () => { setReloadVersion(v => v + 1); }} />
                                     <div className="board-posts">
                                         {sortedPosts.map(post => <PostCard key={post.slug} board={boardData.name} post={post} />)}

@@ -64,6 +64,9 @@ export type ReplyData = {
     content: string;
     created_at: string;
     deleted: boolean;
+    vote_count?: number;
+    anon_token?: string;
+    is_mine?: boolean;
 };
 
 export type UserStats = {

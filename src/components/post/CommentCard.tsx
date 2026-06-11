@@ -62,6 +62,10 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
         return () => { mountRef.current = false; };
     }, []);
 
+    useEffect(() => {
+        loadReplies({ cancelled: !mountRef.current });
+    }, []);
+
     const isOp = !!(opToken && comment.anon_token === opToken);
     const isMe = !!(comment.is_mine);
 

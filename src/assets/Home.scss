@@ -84,6 +84,8 @@
   columns: 2;
   column-gap: 0.75rem;
   column-fill: balance;
+  overflow: visible;
+  height: max-content;
 }
 
 .post-feed-error,

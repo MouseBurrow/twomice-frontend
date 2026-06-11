@@ -573,6 +573,25 @@ input, textarea {
 .anon-badge-tag--op { color: var(--accent); }
 .anon-badge-tag--me { color: var(--accent2); }
 
+/* ── Sidebar widget card ── */
+.widget-card {
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  overflow: hidden;
+  transition: background-color .2s, border-color .2s;
+}
+
+.widget-header {
+  padding: 0.625rem 0.875rem;
+  border-bottom: 0.0625rem solid var(--border);
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 /* ── Followed sidebar widget items ── */
 .followed-item {
   padding: 0.5rem 0.875rem;

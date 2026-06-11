@@ -99,6 +99,7 @@ export default function Post() {
 
     const COMMENT_SORT_LABELS: Record<string, string> = { hot: "Hot", new: "Fresh", top: "Buried" };
     const sidebarTop = dv(density, '3.625rem', '4.5rem', '5.5rem');
+    const pagePad = dv(density, '1rem 1rem 2.5rem', '1.5rem 1rem 3.75rem', '2rem 1rem 5rem');
     const leftW = dv(density, '18.75rem', '23.75rem', '27.5rem');
     const panelGap = dv(density, '0.875rem', '1.25rem', '1.75rem');
     const cardPad = dv(density, '0.75rem 0.875rem', '1.125rem 1.25rem', '1.375rem 1.625rem');
@@ -145,7 +146,7 @@ export default function Post() {
             <div style={{
                 maxWidth: 1120,
                 margin: '0 auto',
-                padding: `var(--page-pad)`,
+                padding: pagePad,
                 display: 'flex',
                 gap: panelGap,
                 alignItems: 'start',

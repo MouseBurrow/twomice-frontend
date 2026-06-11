@@ -42,7 +42,7 @@ export default function NavBar() {
                                 <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.4"/>
                                 <path d="M9.5 9.5l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
                             </svg>
-                            <span className="header-search-text">Search boards and posts…</span>
+                            <span className="header-search-text">Sniff around the burrow…</span>
                             <kbd className="header-search-kbd">⌘K</kbd>
                         </div>
                     </div>

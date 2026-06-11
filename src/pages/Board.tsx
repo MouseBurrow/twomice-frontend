@@ -12,6 +12,7 @@ import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import Sidebar from "../components/board/Sidebar";
 import GuestBanner from "../components/shared/GuestBanner";
 import SortBar from "../components/home/SortBar";
+import { boardColorFromName } from "../utils/hash";
 import "../assets/Board.scss";
 
 export default function Board() {
@@ -110,17 +111,20 @@ export default function Board() {
                 <>
                     {boardData && (
                         <>
-                            <div className="board-hero">
-                                <div className="board-hero-glow" />
+                            <div className="board-hero" style={{ borderTop: `3px solid ${boardColorFromName(boardData.name)}` }}>
+                                <div className="board-hero-glow" style={{ background: `radial-gradient(ellipse at 92% 50%, color-mix(in srgb, ${boardColorFromName(boardData.name)} 12%, transparent) 0%, transparent 65%)` }} />
                                 <div className="board-hero-body">
                                     <div className="board-hero-row">
-                                        <div className="board-hero-name">b/{boardData.name}</div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                            <span style={{ width: 12, height: 12, borderRadius: '50%', background: boardColorFromName(boardData.name), display: 'inline-block', border: '2px solid rgba(0,0,0,0.12)', boxShadow: `0 1px 4px rgba(0,0,0,0.25), 0 0 0 3px color-mix(in srgb,${boardColorFromName(boardData.name)} 18%,transparent)`, flexShrink: 0 }} />
+                                            <div className="board-hero-name" style={{ color: boardColorFromName(boardData.name) }}>b/{boardData.name}</div>
+                                        </div>
                                         {!isGuest && (
                                             <button
                                                 onClick={handleFollow}
                                                 disabled={followLoading}
                                                 className={followed ? "btn-ghost" : "btn-pill"}
-                                                style={{ fontSize: "0.75rem", padding: "0.375rem 0.875rem", flexShrink: 0, marginTop: "0.125rem" }}
+                                                style={{ fontSize: "0.75rem", padding: "0.375rem 0.875rem", flexShrink: 0, marginTop: "0.125rem", ...(followed ? {} : { background: boardColorFromName(boardData.name) }) }}
                                             >
                                                 {followLoading ? "…" : followed ? "✓ Following" : "+ Follow"}
                                             </button>
@@ -132,7 +136,7 @@ export default function Board() {
                                     <div className="board-hero-desc">{boardData.description}</div>
                                     <div className="board-hero-stats">
                                         <div className="board-hero-stat">
-                                            <div className="board-hero-stat-value">{sortedPosts.length}</div>
+                                            <div className="board-hero-stat-value" style={{ color: boardColorFromName(boardData.name) }}>{sortedPosts.length}</div>
                                             <div className="board-hero-stat-label">Posts</div>
                                         </div>
                                     </div>

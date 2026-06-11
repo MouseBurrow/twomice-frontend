@@ -45,25 +45,6 @@
   margin-right: 0.25rem;
 }
 
-.sort-btn {
-  padding: 0.25rem 0.75rem;
-  border-radius: 6.1875rem;
-  border: 0.0625rem solid var(--border);
-  background: var(--bg-surface);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.12s ease;
-
-  &.active, &:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--text-on-accent);
-  }
-}
-
 /* ── Feed grid ── */
 .post-feed-grid {
   display: grid;

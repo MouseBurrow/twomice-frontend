@@ -35,41 +35,15 @@ export default function Home() {
 
     return (
         <div className="home-page" data-density={density}>
-            {hasFollowed ? (
-                <div className="home-layout--three-col">
-                    <aside className="home-left-col hide-sidebar">
-                        <div className="followed-sidebar">
-                            <div className="followed-sidebar-label">Following</div>
-                            {followed.map(b => (
-                                <button
-                                    key={b.id}
-                                    type="button"
-                                    className="followed-sidebar-chip"
-                                    onClick={() => navigate(`/b/${b.name}`)}
-                                >
-                                    b/{b.name}
-                                </button>
-                            ))}
-                        </div>
-                    </aside>
-                    <main className="home-main">
-                        <PostFeed title={feedTitle} />
-                    </main>
-                    <aside className="home-sidebar hide-sidebar">
-                        <HomeSidebar />
-                    </aside>
-                </div>
-            ) : (
-                <div className="home-layout">
-                    <main className="home-main">
-                        {isGuest && <GuestBanner onLogin={() => navigate("/auth")} />}
-                        <PostFeed title={feedTitle} note={feedNote} />
-                    </main>
-                    <aside className="home-sidebar hide-sidebar">
-                        <HomeSidebar />
-                    </aside>
-                </div>
-            )}
+            <div className="home-layout">
+                <main className="home-main">
+                    {isGuest && <GuestBanner onLogin={() => navigate("/auth")} />}
+                    <PostFeed title={feedTitle} note={feedNote} />
+                </main>
+                <aside className="home-sidebar hide-sidebar">
+                    <HomeSidebar followed={hasFollowed ? followed : undefined} navigate={navigate} />
+                </aside>
+            </div>
         </div>
     );
 }

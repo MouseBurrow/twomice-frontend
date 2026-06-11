@@ -11,9 +11,9 @@ export default function GuestBanner({ onLogin }: Props) {
       <div className="guest-banner-stripe" />
       <div style={{ paddingTop: "0.125rem" }}>
         <div className="guest-banner-title">Browsing as guest</div>
-        <div className="guest-banner-text">Sign in to post, vote, reply, and follow boards. Your identity stays anonymous.</div>
+        <div className="guest-banner-text">Enter the burrow to post, vote, reply, and follow boards. Your identity stays anonymous.</div>
       </div>
-      <button className="btn-pill" style={{ fontSize: "0.8125rem" }} onClick={onLogin}>Sign In</button>
+      <button className="btn-pill" style={{ fontSize: "0.8125rem" }} onClick={onLogin}>Enter the Burrow</button>
     </div>
   );
 }

@@ -60,7 +60,7 @@ export default function NavBar() {
                             </button>
                         )}
                         {isGuest ? (
-                            <button className="btn-pill" onClick={() => navigate("/auth")}>Sign In</button>
+                            <button className="btn-pill" onClick={() => navigate("/auth")}>Enter the Burrow</button>
                         ) : (
                             <>
                                 <button className="btn-pill header-compose-btn hide-sm" onClick={() => setComposeOpen(true)}>

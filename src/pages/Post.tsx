@@ -11,11 +11,13 @@ import VoteButtons from "../components/shared/VoteButtons";
 import BoardChip from "../components/shared/BoardChip";
 import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
+import PushPin from "../components/shared/PushPin";
 import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
 import SkeletonReplyCard from "../components/skeleton/SkeletonReplyCard";
 import type { CommentData, PostData } from "../types";
 import { formatDate } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
+import { dv } from "../utils/density";
 import "../assets/Post.scss";
 
 export default function Post() {
@@ -71,89 +73,171 @@ export default function Post() {
         return comments.find(c => c.is_mine)?.anon_token;
     }, [postData, comments]);
 
+    const bc = board ? boardColorFromName(board) : 'var(--accent)';
+    const leftW = dv(density, '18.75rem', '23.75rem', '27.5rem');
+    const panelGap = dv(density, '0.875rem', '1.25rem', '1.75rem');
+    const cardPad = dv(density, '0.75rem 0.875rem', '1.125rem 1.25rem', '1.375rem 1.625rem');
+    const infoPad = dv(density, '0.5rem 0.625rem 0.375rem', '0.625rem 0.875rem 0.5rem', '0.75rem 1rem 0.625rem');
+    const widgetHd = dv(density, '0.4375rem 0.625rem', '0.5625rem 0.875rem', '0.6875rem 1rem');
+
+    if (loading) {
+        return (
+            <div className="post-page" data-density={density}>
+                <SkeletonPostHeader />
+                <div className="comment-list">
+                    {Array.from({ length: 4 }, (_, i) => <SkeletonReplyCard key={i} />)}
+                </div>
+            </div>
+        );
+    }
+
+    if (!postData) {
+        return (
+            <div className="post-page" data-density={density}>
+                <div className="post-back" style={{ justifyContent: 'center', paddingTop: 60 }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 24, marginBottom: 8 }}>Post not found</div>
+                        <button className="btn-ghost" onClick={() => navigate(`/b/${board}`)}>← Back to board</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const tagStyle = {
+        fontSize: 9,
+        fontFamily: "'Space Grotesk',sans-serif",
+        fontWeight: 700,
+        color: bc,
+        background: `color-mix(in srgb,${bc} 12%,transparent)`,
+        border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
+        borderRadius: '0 4px 4px 4px',
+        padding: '2px 7px',
+    };
+
     return (
         <div className="post-page" data-density={density}>
-            {loading ? (
-                <>
-                    <SkeletonPostHeader />
-                    <div className="comment-list">
-                        {Array.from({ length: 4 }, (_, i) => <SkeletonReplyCard key={i} />)}
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div className="post-back">
+            <div style={{
+                maxWidth: 1120,
+                margin: '0 auto',
+                padding: `var(--page-pad)`,
+                display: 'flex',
+                gap: panelGap,
+                alignItems: 'start',
+            }}>
+                {/* ─── LEFT — sticky context panel ─── */}
+                <div style={{
+                    width: leftW,
+                    flexShrink: 0,
+                    position: 'sticky',
+                    top: 'var(--sidebar-top)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: dv(density, '0.625rem', '0.875rem', '1.125rem'),
+                }}>
+                    {/* Breadcrumb */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <button
                             className="btn-ghost"
-                            onClick={() => navigate(`/b/${board}`)}
-                            style={{ padding: "0.3125rem 0.75rem" }}
-                        >
+                            style={{ padding: dv(density, '3px 8px', '4px 10px', '5px 12px'), fontSize: dv(density, 11, 12, 13) }}
+                            onClick={() => navigate(`/b/${board}`)}>
                             ← {board}
                         </button>
                         {locked && <span className="locked-badge">🔒 locked</span>}
                     </div>
 
-                    <div className="post-detail">
-                        <div className="post-detail-inner">
-                            <div className="post-detail-meta">
-                                {postData?.anon_token && (
-                                    <AnonBadge token={postData.anon_token} isOp={true} isMe={postData.is_mine} />
-                                )}
-                                <span className="post-detail-time">OP · {formattedTime}</span>
-                                {board && <BoardChip boardName={board} />}
-                                <span className="post-detail-slug">#{postData?.slug}</span>
-                                <ModActions
-                                    show={isAdmin}
-                                    type="post"
-                                    locked={locked}
-                                    onLock={() => setLocked(l => !l)}
-                                    onRemove={() => navigate(`/b/${board}`)}
-                                />
-                            </div>
+                    {/* ── OP card, tilted with PushPin ── */}
+                    <div style={{ position: 'relative', marginTop: dv(density, 16, 20, 24) }}>
+                        <PushPin color={bc} glow={!!postData.is_hot} />
+                        <div className="post-detail" style={{
+                            borderTop: `3px solid ${bc}`,
+                            borderRadius: '0 1rem 1rem 1rem',
+                            transform: 'rotate(0.8deg)',
+                            transformOrigin: '50% 0',
+                            boxShadow: '-3px 8px 20px rgba(0,0,0,.10)',
+                            marginBottom: 0,
+                        }}>
+                            <div className="post-detail-inner" style={{ padding: cardPad }}>
+                                {/* meta row */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: dv(density, 8, 10, 12), flexWrap: 'wrap' }}>
+                                    {postData.anon_token && (
+                                        <AnonBadge token={postData.anon_token} isOp isMe={postData.is_mine} />
+                                    )}
+                                    <span className="post-detail-time">OP · {formattedTime}</span>
+                                    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        {board && <BoardChip boardName={board} />}
+                                        <span className="post-detail-slug">#{postData.slug}</span>
+                                        <ModActions show={isAdmin} type="post" locked={locked}
+                                            onLock={() => setLocked(p => !p)}
+                                            onRemove={() => navigate(`/b/${board}`)} />
+                                    </div>
+                                </div>
 
-                            <div className="post-detail-title">{postData?.title}</div>
+                                {/* title */}
+                                <div className="post-detail-title" style={{ fontSize: dv(density, 16, 20, 24), marginBottom: dv(density, 8, 10, 12) }}>
+                                    {postData.title}
+                                </div>
 
-                            <div className="post-detail-content">{postData?.content}</div>
+                                {/* body */}
+                                <div className="post-detail-content" style={{ fontSize: dv(density, 12, 13, 14) }}>
+                                    {postData.content}
+                                </div>
 
-                            <div className="post-detail-footer">
-                                <VoteButtons
-                                    votes={postData?.vote_count ?? 0}
-                                    disabled={isGuest}
-                                    bc={board ? boardColorFromName(board) : undefined}
-                                    replies={comments.length}
-                                />
-                                {postData?.tags && postData.tags.map(t => (
-                                    <span key={t} className="tag-chip">#{t}</span>
-                                ))}
+                                {/* footer */}
+                                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: 8, marginTop: dv(density, 8, 10, 12), display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                                    <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={comments.length} />
+                                    {postData.tags?.map(t => <span key={t} style={tagStyle}>#{t}</span>)}
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {isGuest ? (
-                        <div className="post-guest-banner-wrap">
-                            <GuestBanner onLogin={() => navigate("/auth")} />
+                    {/* ── Board info widget ── */}
+                    <div style={{
+                        background: 'var(--bg-surface)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '0 0.75rem 0.75rem 0.75rem',
+                        overflow: 'hidden',
+                        transition: 'background-color .2s,border-color .2s',
+                    }}>
+                        <div style={{ padding: widgetHd, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 7 }}>
+                            <span style={{ width: 7, height: 7, borderRadius: '50%', background: bc, display: 'inline-block', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.10)', boxShadow: '0 1px 3px rgba(0,0,0,0.18)' }} />
+                            <span style={{ fontFamily: "'Fredoka One',cursive", fontSize: dv(density, 12, 14, 15), color: 'var(--accent2)' }}>b/{board}</span>
                         </div>
-                    ) : locked && !isAdmin ? (
-                        <div style={{ textAlign: "center", padding: "0.75rem", color: "var(--text-muted)", fontSize: "0.8125rem", marginBottom: "1rem" }}>
-                            🔒 Thread is locked.
+                        <div style={{ padding: infoPad }}>
+                            {postData.tags && postData.tags.length > 0 && (
+                                <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
+                                    {postData.tags.map(tag => <span key={tag} style={tagStyle}>#{tag}</span>)}
+                                </div>
+                            )}
                         </div>
-                    ) : (
-                        <div className="post-reply-box">
+                    </div>
+
+                    {/* ── Reply box ── */}
+                    {!isGuest && !locked ? (
+                        <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
                             <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
                         </div>
+                    ) : isGuest ? (
+                        <GuestBanner onLogin={() => navigate("/auth")} />
+                    ) : (
+                        <div className="locked-notice">🔒 This burrow is locked.</div>
                     )}
+                </div>
 
-                    <div className="post-comment-section">
-                        <div className="post-comment-header">
-                            <span className="post-comment-header-title">{comments.length} squeaks</span>
-                            <span className="post-comment-header-sub">sorted by top</span>
-                        </div>
-                        <CommentGrid topic={board!} post={post!} comments={comments} opToken={opToken} />
+                {/* ─── RIGHT — comment feed ─── */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: dv(density, 8, 10, 12), marginBottom: dv(density, 12, 16, 20) }}>
+                        <span style={{ fontFamily: "'Fredoka One',cursive", fontSize: dv(density, 14, 16, 18), color: 'var(--text-primary)' }}>
+                            {comments.length} squeaks
+                        </span>
                     </div>
 
+                    <CommentGrid topic={board!} post={post!} comments={comments} opToken={opToken} bc={bc} />
+
                     {error && <p className="post-error">Failed to load comments.</p>}
-                </>
-            )}
+                </div>
+            </div>
         </div>
     );
 }

@@ -8,7 +8,12 @@ import SortBar from "./SortBar";
 
 type Sort = "hot" | "new" | "top";
 
-export default function PostFeed() {
+type Props = {
+    title?: string;
+    note?: string;
+};
+
+export default function PostFeed({ title, note }: Props) {
     const [sort, setSort] = useState<Sort>("hot");
     const [posts, setPosts] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,7 +43,23 @@ export default function PostFeed() {
 
     return (
         <div className="post-feed">
+            {title && (
+                <div className="post-feed-title-row">
+                    <div className="post-feed-title">{title}</div>
+                    {!loading && (
+                        <span className="post-feed-count">
+                            {posts.length} squeaks
+                        </span>
+                    )}
+                </div>
+            )}
+
             <SortBar sort={sort} onSort={setSort} />
+
+            {note && (
+                <div className="post-feed-note">{note}</div>
+            )}
+
             {loading ? (
                 <div className="post-feed-grid">
                     {Array.from({ length: 6 }, (_, i) => <SkeletonPostCard key={i} />)}

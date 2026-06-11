@@ -27,6 +27,40 @@
   .hide-sidebar { display: none !important; }
 }
 
+/* ── Feed title row ── */
+.post-feed-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.post-feed-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.625rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.post-feed-count {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.post-feed-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.875rem;
+  padding: 0.5625rem 0.875rem;
+  background: var(--bg-elevated);
+  border-radius: 0 0.5rem 0.5rem 0.5rem;
+  border: 0.0625rem solid var(--border-soft);
+}
+
 /* ── Sort bar ── */
 .sort-bar {
   display: flex;

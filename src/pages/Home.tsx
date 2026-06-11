@@ -26,6 +26,13 @@ export default function Home() {
 
     const hasFollowed = !isGuest && followed.length > 0;
 
+    const feedTitle = hasFollowed ? "Your Feed" : "Trending everywhere";
+    const feedNote = isGuest
+        ? "Enter the burrow and follow boards to fill your feed."
+        : !hasFollowed
+            ? "You're not following any boards yet — visit a board and hit Follow."
+            : undefined;
+
     return (
         <div className="home-page" data-density={density}>
             {hasFollowed ? (
@@ -46,7 +53,7 @@ export default function Home() {
                         </div>
                     </aside>
                     <main className="home-main">
-                        <PostFeed />
+                        <PostFeed title={feedTitle} />
                     </main>
                     <aside className="home-sidebar hide-sidebar">
                         <HomeSidebar />
@@ -56,7 +63,7 @@ export default function Home() {
                 <div className="home-layout">
                     <main className="home-main">
                         {isGuest && <GuestBanner onLogin={() => navigate("/auth")} />}
-                        <PostFeed />
+                        <PostFeed title={feedTitle} note={feedNote} />
                     </main>
                     <aside className="home-sidebar hide-sidebar">
                         <HomeSidebar />

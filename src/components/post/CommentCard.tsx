@@ -9,6 +9,7 @@ import GreenText from "../shared/GreenText";
 import ModActions from "../shared/ModActions";
 import CreateReplyCard from "./CreateReplyCard";
 import { useAuth } from "../../contexts/AuthContext";
+import { useDensity } from "../../contexts/DensityContext";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import "../../assets/components.scss";

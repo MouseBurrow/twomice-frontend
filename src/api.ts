@@ -94,7 +94,7 @@ export const api = {
     getAllComments: (topic: string, post: string) =>
         request<CommentData[]>(`/b/${topic}/nib/${post}/sqk`),
 
-    createReply: (topic: string, post: string, comment: string, body: { content: string }) =>
+    createReply: (topic: string, post: string, comment: string, body: { content: string; reply_hash?: string }) =>
         request<void>(`/b/${topic}/nib/${post}/sqk/${comment}/echoes`, { method: "POST", body: JSON.stringify(body) }),
 
     getReplies: (topic: string, post: string, comment: string) =>

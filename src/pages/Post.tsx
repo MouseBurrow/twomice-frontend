@@ -145,7 +145,7 @@ export default function Post() {
 
                     <div className="post-comment-section">
                         <div className="post-comment-header">
-                            <span className="post-comment-header-title">{comments.length} comments</span>
+                            <span className="post-comment-header-title">{comments.length} squeaks</span>
                             <span className="post-comment-header-sub">sorted by top</span>
                         </div>
                         <CommentGrid topic={board!} post={post!} comments={comments} opToken={opToken} />

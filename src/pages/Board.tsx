@@ -27,6 +27,7 @@ export default function Board() {
     const [loading, setLoading] = useState(true);
     const [sort, setSort] = useState<"hot" | "new" | "top">("hot");
     const [followed, setFollowed] = useState(false);
+    const [followedId, setFollowedId] = useState<string | null>(null);
     const [followLoading, setFollowLoading] = useState(false);
     const [followError, setFollowError] = useState<string | null>(null);
 
@@ -65,7 +66,10 @@ export default function Board() {
         let cancelled = false;
         api.getFollowedBoards()
             .then(followedBoards => {
-                if (!cancelled) setFollowed(followedBoards.some(b => b.name === board));
+                if (cancelled) return;
+                const match = followedBoards.find(b => b.name === board);
+                setFollowed(!!match);
+                setFollowedId(match?.id ?? null);
             })
             .catch(() => {});
         return () => { cancelled = true; };
@@ -76,9 +80,10 @@ export default function Board() {
         setFollowLoading(true);
         setFollowError(null);
         try {
-            if (followed) {
-                await api.unfollowBoard(board);
+            if (followed && followedId) {
+                await api.unfollowBoard(followedId);
                 setFollowed(false);
+                setFollowedId(null);
             } else {
                 await api.followBoard(board);
                 setFollowed(true);

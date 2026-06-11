@@ -33,9 +33,9 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
     const dnArrow = dn ? '#c0392b' : 'var(--text-faint)';
     const countColor = dn ? '#c0392b' : boardColor;
 
-    const vote = (e: React.MouseEvent, dir: 1 | -1) => {
+    const vote = (e: React.MouseEvent, dir: 0 | 1 | -1) => {
         e.stopPropagation();
-        if (disabled) return;
+        if (disabled || dir === 0) { setUserVote(null); return; }
         setUserVote(userVote === dir ? null : dir);
     };
 

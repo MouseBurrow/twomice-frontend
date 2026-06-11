@@ -129,17 +129,6 @@ export default function Post() {
         );
     }
 
-    const tagStyle = {
-        fontSize: 9,
-        fontFamily: "'Space Grotesk',sans-serif",
-        fontWeight: 700,
-        color: bc,
-        background: `color-mix(in srgb,${bc} 12%,transparent)`,
-        border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
-        borderRadius: '0 4px 4px 4px',
-        padding: '2px 7px',
-    };
-
     return (
         <div className="post-page" data-density={density}>
             <div className="post-dblend" style={{ padding: pagePad, gap: panelGap }}>
@@ -263,9 +252,9 @@ export default function Post() {
 
                     {comments.length > 5 && (
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: dv(density, 16, 24, 32), paddingBottom: dv(density, 20, 32, 40) }}>
-                            <button className="btn-ghost">
-                                {comments.length - 5} more squeaks…
-                            </button>
+                            <span style={{ color: 'var(--text-faint)', fontSize: '0.75rem' }}>
+                                Viewing all {comments.length} squeaks
+                            </span>
                         </div>
                     )}
 

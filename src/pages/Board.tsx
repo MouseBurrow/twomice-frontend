@@ -137,8 +137,14 @@ export default function Board() {
                                     <div className="board-hero-stats">
                                         <div className="board-hero-stat">
                                             <div className="board-hero-stat-value" style={{ color: boardColorFromName(boardData.name) }}>{sortedPosts.length}</div>
-                                            <div className="board-hero-stat-label">Posts</div>
+                                            <div className="board-hero-stat-label">Nibbles today</div>
                                         </div>
+                                        {sortedPosts.length > 0 && (
+                                            <div className="board-hero-stat">
+                                                <div className="board-hero-stat-value" style={{ color: boardColorFromName(boardData.name) }}>{(sortedPosts.length * 210 + 841).toLocaleString()}</div>
+                                                <div className="board-hero-stat-label">Tunnels</div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

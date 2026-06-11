@@ -43,6 +43,8 @@ export type PostData = {
     is_hot?: boolean;
     /** Present when nib is returned from a cross-board feed endpoint */
     board_id?: string;
+    /** True when the thread has been locked by a moderator. */
+    is_locked?: boolean;
 };
 
 export type CommentData = {
@@ -76,4 +78,21 @@ export type FollowedBoardInfo = {
     name: string;
     description: string;
     post_count: number;
+};
+
+export type ReportData = {
+    id: string;
+    board_id: string;
+    post_slug: string;
+    reason: string;
+    count: number;
+    status: "pending" | "resolved";
+    preview: string;
+};
+
+export type ModLogEntry = {
+    action: string;
+    board: string;
+    reason: string;
+    time: string;
 };

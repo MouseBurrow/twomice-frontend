@@ -2,6 +2,7 @@ import { ApiError, type ApiErrorPayload } from "./apiError.ts";
 import type {
     AccountData, CommentData, PostData, ReplyData,
     BoardData, BoardSummary, UserStats, FollowedBoardInfo,
+    ReportData, ModLogEntry,
 } from "./types.ts";
 
 export const API_BASE = "/api";
@@ -129,4 +130,29 @@ export const api = {
     /** Auth-gated. Returns the authenticated user's own posts. */
     getUserPosts: () =>
         request<PostData[]>("/users/me/nibs"),
+
+    // ── Admin / Mod ───────────────────────────────────────────────────
+    /** Admin-only. Toggles the lock state of a thread. */
+    lockPost: (topic: string, slug: string) =>
+        request<{ is_locked: boolean }>(`/mcf/${topic}/nib/${slug}/lock`, { method: "POST" }),
+
+    /** Admin-only. Soft-deletes a nib. */
+    deletePost: (topic: string, slug: string) =>
+        request<void>(`/mcf/${topic}/nib/${slug}`, { method: "DELETE" }),
+
+    /** Admin-only. Returns all mod reports. */
+    getReports: () =>
+        request<ReportData[]>("/admin/reports"),
+
+    /** Admin-only. Resolves a report. */
+    resolveReport: (id: string) =>
+        request<void>(`/admin/reports/${id}/resolve`, { method: "POST" }),
+
+    /** Admin-only. Returns the mod action log. */
+    getModLog: () =>
+        request<ModLogEntry[]>("/admin/log"),
+
+    /** Admin-only. Updates board metadata. */
+    updateBoard: (name: string, body: { name?: string; description?: string }) =>
+        request<void>(`/mcf/${name}`, { method: "PUT", body: JSON.stringify(body) }),
 };

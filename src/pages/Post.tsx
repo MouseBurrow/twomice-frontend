@@ -9,6 +9,7 @@ import CreateCommentCard from "../components/post/CreateCommentCard";
 import AnonBadge from "../components/shared/AnonBadge";
 import VoteButtons from "../components/shared/VoteButtons";
 import BoardChip from "../components/shared/BoardChip";
+import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
 import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
 import SkeletonReplyCard from "../components/skeleton/SkeletonReplyCard";
@@ -19,7 +20,7 @@ import "../assets/Post.scss";
 export default function Post() {
     const { board, post } = useParams<{ board: string; post: string }>();
     const navigate = useNavigate();
-    const { isGuest } = useAuth();
+    const { auth, isGuest } = useAuth();
     const { density } = useDensity();
 
     const [postData, setPostData] = useState<PostData>();
@@ -27,6 +28,13 @@ export default function Post() {
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
     const [reloadVersion, setReloadVersion] = useState(0);
+    const [locked, setLocked] = useState(false);
+
+    const isAdmin = auth.status === "admin";
+
+    useEffect(() => {
+        if (postData) setLocked(postData.is_locked ?? false);
+    }, [postData]);
 
     useEffect(() => {
         let cancelled = false;
@@ -81,6 +89,7 @@ export default function Post() {
                         >
                             ← {board}
                         </button>
+                        {locked && <span className="locked-badge">🔒 locked</span>}
                     </div>
 
                     <div className="post-detail">
@@ -92,6 +101,13 @@ export default function Post() {
                                 <span className="post-detail-time">OP · {formattedTime}</span>
                                 {board && <BoardChip boardName={board} />}
                                 <span className="post-detail-slug">#{postData?.slug}</span>
+                                <ModActions
+                                    show={isAdmin}
+                                    type="post"
+                                    locked={locked}
+                                    onLock={() => setLocked(l => !l)}
+                                    onRemove={() => navigate(`/b/${board}`)}
+                                />
                             </div>
 
                             <div className="post-detail-title">{postData?.title}</div>
@@ -116,6 +132,10 @@ export default function Post() {
                     {isGuest ? (
                         <div className="post-guest-banner-wrap">
                             <GuestBanner onLogin={() => navigate("/auth")} />
+                        </div>
+                    ) : locked && !isAdmin ? (
+                        <div style={{ textAlign: "center", padding: "0.75rem", color: "var(--text-muted)", fontSize: "0.8125rem", marginBottom: "1rem" }}>
+                            🔒 Thread is locked.
                         </div>
                     ) : (
                         <div className="post-reply-box">

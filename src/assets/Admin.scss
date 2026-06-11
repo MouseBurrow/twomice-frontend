@@ -1,0 +1,318 @@
+.admin-page {
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.admin-page[data-density="compact"]     { padding: 1rem 1rem 2.5rem; }
+.admin-page[data-density="comfortable"] { padding: 1.5rem 1rem 3.75rem; }
+.admin-page[data-density="spacious"]    { padding: 2rem 1rem 5rem; }
+
+/* ── Hero ── */
+.admin-hero {
+  background: var(--bg-elevated);
+  border-radius: 0 1rem 1rem 1rem;
+  border: 0.0625rem solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-page[data-density="compact"] .admin-hero     { margin-bottom: 0.875rem; }
+.admin-page[data-density="comfortable"] .admin-hero { margin-bottom: 1.5rem; }
+.admin-page[data-density="spacious"] .admin-hero    { margin-bottom: 2rem; }
+
+.admin-hero-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0.1875rem;
+  background: linear-gradient(90deg, var(--stripe-top), var(--stripe-bottom));
+}
+
+.admin-hero-body {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-page[data-density="compact"] .admin-hero-body     { padding: 1rem 1.25rem; }
+.admin-page[data-density="comfortable"] .admin-hero-body { padding: 1.5rem 1.75rem; }
+.admin-page[data-density="spacious"] .admin-hero-body    { padding: 2rem 2.25rem; }
+
+.admin-hero-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.375rem;
+}
+
+.admin-hero-title {
+  font-family: 'Fredoka One', cursive;
+}
+
+.admin-page[data-density="compact"] .admin-hero-title     { font-size: 1.25rem; }
+.admin-page[data-density="comfortable"] .admin-hero-title { font-size: 1.5rem; }
+.admin-page[data-density="spacious"] .admin-hero-title    { font-size: 1.75rem; }
+
+.admin-hero-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 0.1875rem 0.625rem;
+  border-radius: 0 0.5rem 0.5rem 0.5rem;
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.admin-hero-sub {
+  color: var(--text-muted);
+}
+
+.admin-page[data-density="compact"] .admin-hero-sub     { font-size: 0.75rem; margin-bottom: 0.75rem; }
+.admin-page[data-density="comfortable"] .admin-hero-sub { font-size: 0.875rem; margin-bottom: 1.125rem; }
+.admin-page[data-density="spacious"] .admin-hero-sub    { font-size: 0.9375rem; margin-bottom: 1.5rem; }
+
+.admin-hero-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.admin-page[data-density="compact"] .admin-hero-stats     { gap: 1rem; }
+.admin-page[data-density="comfortable"] .admin-hero-stats { gap: 1.75rem; }
+.admin-page[data-density="spacious"] .admin-hero-stats    { gap: 2.25rem; }
+
+.admin-stat-value {
+  font-family: 'Fredoka One', cursive;
+}
+
+.admin-page[data-density="compact"] .admin-stat-value     { font-size: 1.125rem; }
+.admin-page[data-density="comfortable"] .admin-stat-value { font-size: 1.375rem; }
+.admin-page[data-density="spacious"] .admin-stat-value    { font-size: 1.625rem; }
+
+.admin-stat-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.125rem;
+}
+
+/* ── Tabs ── */
+.admin-tabs {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.admin-page[data-density="compact"] .admin-tabs     { margin-bottom: 0.75rem; }
+.admin-page[data-density="comfortable"] .admin-tabs { margin-bottom: 1.25rem; }
+.admin-page[data-density="spacious"] .admin-tabs    { margin-bottom: 1.5rem; }
+
+.admin-loading, .admin-empty {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── Reports ── */
+.admin-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-page[data-density="compact"] .admin-list     { gap: 0.375rem; }
+.admin-page[data-density="comfortable"] .admin-list { gap: 0.625rem; }
+.admin-page[data-density="spacious"] .admin-list    { gap: 0.875rem; }
+
+.admin-report-card {
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  transition: opacity .2s;
+}
+
+.admin-page[data-density="compact"] .admin-report-card     { padding: 0.75rem 0.875rem; }
+.admin-page[data-density="comfortable"] .admin-report-card { padding: 1rem 1.25rem; }
+.admin-page[data-density="spacious"] .admin-report-card    { padding: 1.25rem 1.5rem; }
+
+.admin-report-card--resolved { opacity: .5; }
+
+.admin-report-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.admin-page[data-density="compact"] .admin-report-meta     { margin-bottom: 0.25rem; }
+.admin-page[data-density="comfortable"] .admin-report-meta { margin-bottom: 0.5rem; }
+.admin-page[data-density="spacious"] .admin-report-meta    { margin-bottom: 0.625rem; }
+
+.admin-report-board {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--accent2);
+}
+
+.admin-report-status {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0 0.3125rem 0.3125rem 0.3125rem;
+  border: 0.0625rem solid;
+}
+
+.admin-report-status--pending {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+}
+
+.admin-report-status--resolved {
+  color: var(--text-faint);
+  background: var(--bg-primary);
+  border-color: var(--border);
+}
+
+.admin-report-count {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  color: var(--text-faint);
+}
+
+.admin-report-preview {
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.admin-report-reason {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.admin-page[data-density="compact"] .admin-report-reason     { margin-bottom: 0.5rem; }
+.admin-page[data-density="comfortable"] .admin-report-reason { margin-bottom: 0.75rem; }
+.admin-page[data-density="spacious"] .admin-report-reason    { margin-bottom: 1rem; }
+
+.admin-report-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Mod Log ── */
+.admin-log {
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  overflow: hidden;
+}
+
+.admin-log-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.admin-log-entry:last-child { border-bottom: none; }
+
+.admin-page[data-density="compact"] .admin-log-entry     { padding: 0.5rem 0.75rem; }
+.admin-page[data-density="comfortable"] .admin-log-entry { padding: 0.75rem 1.125rem; }
+.admin-page[data-density="spacious"] .admin-log-entry    { padding: 0.875rem 1.25rem; }
+
+.admin-log-action {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.admin-log-board {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  color: var(--text-muted);
+}
+
+.admin-log-reason {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.admin-log-time {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+/* ── Boards management ── */
+.admin-board-card {
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  transition: border-color .15s;
+}
+
+.admin-page[data-density="compact"] .admin-board-card     { padding: 0.75rem 0.875rem; }
+.admin-page[data-density="comfortable"] .admin-board-card { padding: 1rem 1.25rem; }
+.admin-page[data-density="spacious"] .admin-board-card    { padding: 1.25rem 1.5rem; }
+
+.admin-board-card--editing { border-color: var(--accent2); }
+
+.admin-board-info {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-board-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 0.1875rem;
+}
+
+.admin-board-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.admin-board-meta {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  color: var(--text-faint);
+}
+
+.admin-board-actions {
+  display: flex;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+.admin-board-edit {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-page[data-density="compact"] .admin-board-edit     { gap: 0.75rem; }
+.admin-page[data-density="comfortable"] .admin-board-edit { gap: 0.75rem; }
+.admin-page[data-density="spacious"] .admin-board-edit    { gap: 0.75rem; }
+
+.admin-board-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+}
+
+.admin-board-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}

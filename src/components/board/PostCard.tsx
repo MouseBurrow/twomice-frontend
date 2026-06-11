@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { PostData } from "../../types";
 import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
 import BoardChip from "../shared/BoardChip";
+import ModActions from "../shared/ModActions";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
 import { formatDate } from "../../utils/date";
@@ -14,10 +16,17 @@ type Props = {
 
 export default function PostCard({ board, post }: Props) {
     const navigate = useNavigate();
-    const { isGuest } = useAuth();
+    const { auth, isGuest } = useAuth();
     const { density } = useDensity();
     const resolvedBoard = board ?? post.board_id;
     const canNavigate = !!resolvedBoard;
+
+    const [locked, setLocked] = useState(post.is_locked ?? false);
+    const [removed, setRemoved] = useState(false);
+
+    const isAdmin = auth.status === "admin";
+
+    if (removed) return null;
 
     const handleClick = () => {
         if (canNavigate) navigate(`/b/${resolvedBoard}/nib/${post.slug}`);
@@ -43,6 +52,9 @@ export default function PostCard({ board, post }: Props) {
                     )}
                     {post.is_hot && (
                         <span className="post-card-hot-badge">🔥 hot</span>
+                    )}
+                    {locked && (
+                        <span className="locked-badge">🔒 locked</span>
                     )}
                     <span className="post-card-date">
                         {formatDate(post.created_at)}
@@ -71,6 +83,13 @@ export default function PostCard({ board, post }: Props) {
                     {canNavigate && (
                         <span className="post-card-open">→ open</span>
                     )}
+                    <ModActions
+                        show={isAdmin}
+                        type="post"
+                        locked={locked}
+                        onLock={() => setLocked(l => !l)}
+                        onRemove={() => setRemoved(true)}
+                    />
                 </div>
             </div>
         </article>

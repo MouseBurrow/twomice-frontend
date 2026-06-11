@@ -6,7 +6,9 @@ import ErrorMessage from "../ErrorMessage";
 import VoteColumn from "../shared/VoteColumn";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
+import ModActions from "../shared/ModActions";
 import CreateReplyCard from "./CreateReplyCard";
+import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
 import { dv } from "../../utils/density";
 import { formatDate } from "../../utils/date";
@@ -19,6 +21,7 @@ type Props = {
 };
 
 export default function CommentCard({ topic, post, comment, opToken }: Props) {
+    const { auth } = useAuth();
     const { density } = useDensity();
     const mountRef = useRef(true);
     const [open, setOpen] = useState(false);
@@ -26,6 +29,17 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
     const [replies, setReplies] = useState<ReplyData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [replyOpen, setReplyOpen] = useState(false);
+    const [removed, setRemoved] = useState(false);
+
+    const isAdmin = auth.status === "admin";
+
+    if (removed) {
+        return (
+            <article className="comment-card" style={{ padding: dv(density, "0.375rem 0.75rem", "0.5rem 1rem", "0.625rem 1.125rem") }}>
+                <span className="comment-removed">[removed by moderator]</span>
+            </article>
+        );
+    }
 
     async function loadReplies(signal?: { cancelled: boolean }) {
         try {
@@ -64,6 +78,13 @@ export default function CommentCard({ topic, post, comment, opToken }: Props) {
                     <span className="comment-hash">
                         #{comment.hash.slice(0, 7)}
                     </span>
+                    <div style={{ marginLeft: "auto", display: "flex", gap: "0.25rem", alignItems: "center" }}>
+                        <ModActions
+                            show={isAdmin}
+                            type="comment"
+                            onRemove={() => setRemoved(true)}
+                        />
+                    </div>
                 </div>
 
                 <div className="comment-content">

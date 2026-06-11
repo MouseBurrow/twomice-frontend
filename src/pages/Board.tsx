@@ -152,12 +152,14 @@ export default function Board() {
                             <SortBar sort={sort} onSort={setSort} />
 
                             <div className="board-layout">
-                                <div className="board-posts">
+                                <div>
                                     <CreatePostCard topicName={boardData.name} onCreated={async () => { setReloadVersion(v => v + 1); }} />
-                                    {sortedPosts.map(post => <PostCard key={post.slug} board={boardData.name} post={post} />)}
-                                    {sortedPosts.length === 0 && (
-                                        <div className="board-posts-empty">No posts yet on this board.</div>
-                                    )}
+                                    <div className="board-posts">
+                                        {sortedPosts.map(post => <PostCard key={post.slug} board={boardData.name} post={post} />)}
+                                        {sortedPosts.length === 0 && (
+                                            <div className="board-posts-empty">No posts yet on this board.</div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="board-sidebar hide-sidebar">
                                     <Sidebar />

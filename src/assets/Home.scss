@@ -79,11 +79,11 @@
   margin-right: 0.25rem;
 }
 
-/* ── Feed grid ── */
+/* ── Feed grid (2-column masonry) ── */
 .post-feed-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.625rem;
+  columns: 2;
+  column-gap: 0.75rem;
+  column-fill: balance;
 }
 
 .post-feed-error,

@@ -158,7 +158,6 @@ function ReplyRow({ reply, topic, post, commentHash, bc, onUpdated }: {
 
 export default function CommentCard({ topic, post, comment, opToken, bc }: Props) {
     const { auth } = useAuth();
-    const { density } = useDensity();
     const mountRef = useRef(true);
     const [col, setCol] = useState(false);
     const [loading, setLoading] = useState(false);

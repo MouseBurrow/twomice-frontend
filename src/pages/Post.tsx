@@ -9,6 +9,7 @@ import CreateCommentCard from "../components/post/CreateCommentCard";
 import AnonBadge from "../components/shared/AnonBadge";
 import VoteButtons from "../components/shared/VoteButtons";
 import BoardChip from "../components/shared/BoardChip";
+import MiniBtn from "../components/shared/MiniBtn";
 import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
 import PushPin from "../components/shared/PushPin";
@@ -28,10 +29,12 @@ export default function Post() {
 
     const [postData, setPostData] = useState<PostData>();
     const [comments, setComments] = useState<CommentData[]>([]);
+    const [relatedPosts, setRelatedPosts] = useState<PostData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
     const [reloadVersion, setReloadVersion] = useState(0);
     const [locked, setLocked] = useState(false);
+    const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
 
     const isAdmin = auth.status === "admin";
 
@@ -45,13 +48,20 @@ export default function Post() {
             setLoading(true);
             setError(undefined);
             try {
-                const [postResult, commentList] = await Promise.all([
+                const [postResult, commentList, boardPosts] = await Promise.all([
                     api.getPost(board!, post!),
-                    api.getAllComments(board!, post!)
+                    api.getAllComments(board!, post!),
+                    api.getAllPosts(board!)
                 ]);
                 if (cancelled) return;
                 setPostData(postResult);
                 setComments(commentList.filter(x => !x.deleted));
+                setRelatedPosts(
+                    boardPosts
+                        .filter(p => p.slug !== post && !p.deleted)
+                        .sort((a, b) => (b.vote_count ?? 0) - (a.vote_count ?? 0))
+                        .slice(0, 3)
+                );
                 setLoading(false);
             } catch (e) {
                 if (cancelled) return;
@@ -74,6 +84,20 @@ export default function Post() {
     }, [postData, comments]);
 
     const bc = board ? boardColorFromName(board) : 'var(--accent)';
+
+    const sortedComments = useMemo(() => {
+        const sorted = [...comments];
+        if (commentSort === "new") {
+            sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        } else if (commentSort === "top") {
+            sorted.sort((a, b) => (b.vote_count ?? 0) - (a.vote_count ?? 0));
+        } else {
+            sorted.sort((a, b) => (b.vote_count ?? 0) - (a.vote_count ?? 0));
+        }
+        return sorted;
+    }, [comments, commentSort]);
+
+    const COMMENT_SORT_LABELS: Record<string, string> = { hot: "Hot", new: "Fresh", top: "Buried" };
     const leftW = dv(density, '18.75rem', '23.75rem', '27.5rem');
     const panelGap = dv(density, '0.875rem', '1.25rem', '1.75rem');
     const cardPad = dv(density, '0.75rem 0.875rem', '1.125rem 1.25rem', '1.375rem 1.625rem');
@@ -210,6 +234,28 @@ export default function Post() {
                                     {postData.tags.map(tag => <span key={tag} style={tagStyle}>#{tag}</span>)}
                                 </div>
                             )}
+
+                            {relatedPosts.length > 0 && (
+                                <div>
+                                    <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: dv(density, 5, 7, 8) }}>
+                                        More in b/{board}
+                                    </div>
+                                    {relatedPosts.map((rp, i) => (
+                                        <div key={rp.slug}
+                                            onClick={() => navigate(`/b/${board}/nib/${rp.slug}`)}
+                                            style={{ padding: `${dv(density, 5, 7, 8)}px 0`, borderBottom: i < relatedPosts.length - 1 ? '1px solid var(--border-soft)' : 'none', cursor: 'pointer' }}
+                                        >
+                                            <div style={{ fontSize: dv(density, 11, 12, 12), color: 'var(--text-muted)', lineHeight: 1.35, marginBottom: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                                {rp.title}
+                                            </div>
+                                            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 9, color: 'var(--text-faint)', display: 'flex', gap: 8 }}>
+                                                <span>▲ {rp.vote_count ?? 0}</span>
+                                                <span>💬 {rp.reply_count ?? 0}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -231,9 +277,25 @@ export default function Post() {
                         <span style={{ fontFamily: "'Fredoka One',cursive", fontSize: dv(density, 14, 16, 18), color: 'var(--text-primary)' }}>
                             {comments.length} squeaks
                         </span>
+                        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '0.625rem', fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--text-faint)', marginLeft: 'auto' }}>
+                            Sort
+                        </span>
+                        {(["hot", "new", "top"] as const).map(s => (
+                            <MiniBtn key={s} active={commentSort === s} onClick={() => setCommentSort(s)}>
+                                {COMMENT_SORT_LABELS[s]}
+                            </MiniBtn>
+                        ))}
                     </div>
 
-                    <CommentGrid topic={board!} post={post!} comments={comments} opToken={opToken} bc={bc} />
+                    <CommentGrid topic={board!} post={post!} comments={sortedComments} opToken={opToken} bc={bc} />
+
+                    {comments.length > 5 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: dv(density, 16, 24, 32), paddingBottom: dv(density, 20, 32, 40) }}>
+                            <button className="btn-ghost">
+                                {comments.length - 5} more squeaks…
+                            </button>
+                        </div>
+                    )}
 
                     {error && <p className="post-error">Failed to load comments.</p>}
                 </div>

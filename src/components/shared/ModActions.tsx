@@ -7,9 +7,10 @@ interface Props {
     locked?: boolean;
     onLock?: () => void;
     onRemove?: () => void;
+    onBan?: (duration: "1d" | "perm") => void;
 }
 
-export default function ModActions({ show, type, locked, onLock, onRemove }: Props) {
+export default function ModActions({ show, type, locked, onLock, onRemove, onBan }: Props) {
     const [open, setOpen] = useState(false);
     const [pos, setPos] = useState({ top: 0, left: 0 });
     const btnRef = useRef<HTMLButtonElement>(null);
@@ -39,7 +40,10 @@ export default function ModActions({ show, type, locked, onLock, onRemove }: Pro
 
     const items: Array<[string, (() => void) | undefined, boolean]> = [
         ...(type === "post" ? [[locked ? "Unlock thread" : "Lock thread", onLock, false] as const] : []),
+        ["Warn user", undefined, false],
         ["Remove content", onRemove, true],
+        ["Ban user (1d)", () => onBan?.("1d"), true],
+        ["Ban user (perm)", () => onBan?.("perm"), true],
     ];
 
     const dropdown = open && createPortal(

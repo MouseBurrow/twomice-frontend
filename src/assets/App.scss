@@ -744,7 +744,196 @@ input, textarea {
   -webkit-line-clamp: 1; -webkit-box-orient: vertical;
 }
 
+/* ── MiniBtn ── */
+.mini-btn {
+  padding: 0.25rem 0.625rem;
+  border-radius: 0 0.375rem 0.375rem 0.375rem;
+  font-size: 0.625rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 0.0625rem solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  transition: all .12s;
+  flex: 1;
+}
+.mini-btn--active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+/* ── Toggle ── */
+.mini-toggle {
+  width: 2rem;
+  height: 1.0625rem;
+  border-radius: 6.1875rem;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--border-soft);
+  transition: background .15s ease;
+  padding: 0;
+}
+.mini-toggle--on { background: var(--accent); }
+.mini-toggle:disabled { opacity: .5; cursor: not-allowed; }
+
+.mini-toggle-thumb {
+  position: absolute;
+  width: 0.8125rem;
+  height: 0.8125rem;
+  border-radius: 50%;
+  background: #fff;
+  left: 0.125rem;
+  top: 0.125rem;
+  transition: left .15s ease;
+  box-shadow: 0 0.0625rem 0.1875rem rgba(0,0,0,.2);
+}
+.mini-toggle--on .mini-toggle-thumb { left: 1rem; }
+
+/* ── Page spinner ── */
+.page-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1rem;
+}
+.page-spinner-ring {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 0.1875rem solid var(--border-soft);
+  border-top-color: var(--accent);
+  animation: spin .7s linear infinite;
+}
+
+/* ── Mod actions ── */
+.mod-actions {
+  position: relative;
+  display: inline-flex;
+}
+
+.mod-actions-trigger {
+  background: none;
+  border: 0.0625rem solid var(--border);
+  border-radius: 0 0.375rem 0.375rem 0.375rem;
+  cursor: pointer;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  transition: all .12s;
+  line-height: 1.2;
+}
+.mod-actions-trigger:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.mod-actions-dropdown {
+  position: fixed;
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 0 0.625rem 0.625rem 0.625rem;
+  box-shadow: 0 0.625rem 2rem rgba(0,0,0,.25);
+  z-index: 99999;
+  min-width: 10.75rem;
+  overflow: hidden;
+}
+
+.mod-actions-dropdown-header {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.5625rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  border-bottom: 0.0625rem solid var(--border-soft);
+}
+
+.mod-actions-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0.5625rem 0.875rem;
+  text-align: left;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  transition: background .1s;
+}
+.mod-actions-item:hover { background: var(--bg-primary); }
+.mod-actions-item--danger { color: var(--danger); }
+
+/* ── Locked badge ── */
+.locked-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 0.125rem 0.4375rem;
+  border-radius: 0 0.3125rem 0.3125rem 0.3125rem;
+  color: var(--text-muted);
+  border: 0.0625rem solid var(--border-soft);
+  white-space: nowrap;
+}
+
+/* ── 3-column home grid ── */
+.home-layout--three-col {
+  max-width: 75rem;
+  display: grid;
+  grid-template-columns: 13.75rem 1fr 16.25rem;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.home-left-col {
+  min-width: 0;
+}
+
+.followed-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.followed-sidebar-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.25rem;
+}
+.followed-sidebar-chip {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent2);
+  cursor: pointer;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 0 0.5rem 0.5rem 0.5rem;
+  border: 0.0625rem solid var(--border-soft);
+  background: transparent;
+  transition: border-color .1s, background .1s;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.followed-sidebar-chip:hover {
+  border-color: var(--accent2);
+  background: var(--accent-bg);
+}
+
 @media (max-width: 48.75rem) {
   .hide-sidebar { display: none !important; }
   .hide-sm      { display: none !important; }
+  .home-layout--three-col { grid-template-columns: 1fr !important; }
 }

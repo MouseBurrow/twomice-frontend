@@ -6,6 +6,7 @@ import { api } from "../api";
 import type { PostData, UserStats, FollowedBoardInfo } from "../types";
 import PostCard from "../components/board/PostCard";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
+import BallPin from "../components/shared/BallPin";
 import { formatDate } from "../utils/date";
 import "../assets/Profile.scss";
 
@@ -102,7 +103,8 @@ export default function Profile() {
                 <div className="profile-hero-glow" />
                 <div className="profile-hero-body">
                     <div className="profile-hero-top">
-                        <div className="profile-avatar">
+                        <div className="profile-avatar" style={{ position: 'relative' }}>
+                            <BallPin color={roleColor} />
                             <span className="profile-avatar-text">{initials}</span>
                         </div>
                         <div>

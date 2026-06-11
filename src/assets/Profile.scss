@@ -49,9 +49,9 @@
   flex-shrink: 0;
 }
 
-.profile-page[data-density="compact"] .profile-avatar     { width: 3.25rem; height: 3.25rem; }
-.profile-page[data-density="comfortable"] .profile-avatar { width: 4.25rem; height: 4.25rem; }
-.profile-page[data-density="spacious"] .profile-avatar    { width: 5rem; height: 5rem; }
+.profile-page[data-density="compact"] .profile-avatar     { width: 3.25rem; height: 3.25rem; padding-top: 0.75rem; }
+.profile-page[data-density="comfortable"] .profile-avatar { width: 4.25rem; height: 4.25rem; padding-top: 1rem; }
+.profile-page[data-density="spacious"] .profile-avatar    { width: 5rem; height: 5rem; padding-top: 1.25rem; }
 
 .profile-avatar-text {
   font-family: 'Fredoka One', cursive;

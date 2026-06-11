@@ -49,7 +49,7 @@ export default function CreatePost() {
         <div className="create-post-page">
             <div className="create-post-board">
                 <div className="create-post-header">
-                    <h1>New Post</h1>
+                    <h1>New Squeak</h1>
                     <p>b/{board}</p>
                 </div>
 

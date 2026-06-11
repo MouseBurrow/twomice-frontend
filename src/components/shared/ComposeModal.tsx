@@ -51,7 +51,7 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         <div className="modal-stripe" />
         <div className="modal-header">
-          <div className="modal-title">New Post</div>
+          <div className="modal-title">New Squeak</div>
         </div>
 
         <form className="modal-body" onSubmit={handleSubmit}>

@@ -64,7 +64,7 @@ export default function NavBar() {
                         ) : (
                             <>
                                 <button className="btn-pill header-compose-btn hide-sm" onClick={() => setComposeOpen(true)}>
-                                    + New Post
+                                    + New Squeak
                                 </button>
                                 <div className="header-user-wrap">
                                     <button

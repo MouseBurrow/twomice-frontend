@@ -32,12 +32,12 @@ export default function CreatePostCard({ topicName, onCreated }: Props) {
 
     return (
         <section className="post-create">
-            <h2>New Post</h2>
+            <h2>New Squeak</h2>
 
             {isGuest ? (
                 <div className="post-auth-cta">
                     <span className="post-auth-icon" aria-hidden="true">🐾</span>
-                    <p>New Post</p>
+                    <p>New Squeak</p>
                     <span>Sign in to leave your mark on this board.</span>
                     <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
                 </div>

@@ -19,12 +19,26 @@ html, body {
 }
 
 body {
-  background: var(--bg-primary);
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse 55% 35% at 12% 30%,
+      color-mix(in srgb, var(--shadow) 55%, transparent) 0%, transparent 100%),
+    radial-gradient(ellipse 42% 52% at 82% 18%,
+      color-mix(in srgb, var(--shadow) 40%, transparent) 0%, transparent 100%),
+    repeating-linear-gradient(0deg,
+      color-mix(in srgb, var(--border) 55%, transparent) 0,
+      color-mix(in srgb, var(--border) 55%, transparent) 1px,
+      transparent 0, transparent 11px),
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--border) 45%, transparent) 0,
+      color-mix(in srgb, var(--border) 45%, transparent) 1px,
+      transparent 0, transparent 11px);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 0.875rem;
   line-height: 1.5;
-  transition: background 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 a {

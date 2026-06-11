@@ -21,7 +21,7 @@ export default function TrendingWidget({ limit = 4 }: Props) {
 
   return (
     <div className="trending-widget">
-      <div className="trending-widget-header">🔥 Trending</div>
+      <div className="trending-widget-header">Hot Cheese</div>
       <div>
         {trending.map((post, idx) => (
           <div

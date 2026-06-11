@@ -20,7 +20,7 @@ export default function LiveWidget() {
   return (
     <div className="live-widget">
       <div className="live-widget-header">
-        Live
+        Scurrying
         <div className="live-dot" />
       </div>
       <div>

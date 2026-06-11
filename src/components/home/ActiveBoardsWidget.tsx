@@ -16,7 +16,7 @@ export default function ActiveBoardsWidget() {
 
     return (
         <div className="active-boards-widget">
-            <p className="widget-title">Active today</p>
+            <p className="widget-title">Busy Burrows</p>
             <div className="widget-board-list">
                 {boards.map(b => (
                     <Link key={b.name} to={`/b/${b.name}`} className="widget-board-chip">

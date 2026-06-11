@@ -3,6 +3,8 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { availableModesFor } from "../../utils/themes";
 import { useDensity } from "../../contexts/DensityContext";
 import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DEFAULT_FONT, applyFont } from "../../constants/settings";
+import MiniBtn from "../shared/MiniBtn";
+import Toggle from "../shared/Toggle";
 
 interface Props { onClose: () => void; }
 
@@ -11,6 +13,9 @@ export default function SettingsDrawer({ onClose }: Props) {
   const { density, setDensity } = useDensity();
 
   const [font, setFontState] = useState(() => localStorage.getItem("twomice_font") ?? DEFAULT_FONT);
+  const [notifications, setNotifications] = useState(true);
+  const [markRead, setMarkRead] = useState(true);
+  const [autoplayGifs, setAutoplayGifs] = useState(false);
 
   function setFont(f: string) {
     setFontState(f);
@@ -34,8 +39,7 @@ export default function SettingsDrawer({ onClose }: Props) {
             <div className="settings-section-title">Density</div>
             <div className="set-btn-row">
               {DENSITY_OPTIONS.map(d => (
-                <button key={d.value} className={`set-btn${density === d.value ? " set-btn--active" : ""}`}
-                  onClick={() => setDensity(d.value)}>{d.label}</button>
+                <MiniBtn key={d.value} active={density === d.value} onClick={() => setDensity(d.value)}>{d.label}</MiniBtn>
               ))}
             </div>
             <div className="set-desc">{DENSITY_OPTIONS.find(d => d.value === density)?.desc}</div>
@@ -60,8 +64,7 @@ export default function SettingsDrawer({ onClose }: Props) {
                 <div className="settings-section-title" style={{ marginBottom: "0.5rem" }}>Mode</div>
                 <div className="set-btn-row">
                   {availModes.map(m => (
-                    <button key={m} className={`set-btn${mode === m ? " set-btn--active" : ""}`}
-                      onClick={() => setMode(m)}>{m.charAt(0).toUpperCase() + m.slice(1)}</button>
+                    <MiniBtn key={m} active={mode === m} onClick={() => setMode(m)}>{m.charAt(0).toUpperCase() + m.slice(1)}</MiniBtn>
                   ))}
                 </div>
               </>
@@ -90,12 +93,18 @@ export default function SettingsDrawer({ onClose }: Props) {
           {/* Content toggles */}
           <div>
             <div className="settings-section-title">Content</div>
-            {["Notifications", "Mark posts as read", "Autoplay GIFs"].map((label, idx) => (
-              <div key={idx} className="set-toggle-row" style={idx === 2 ? { borderBottom: "none" } : undefined}>
-                <span className="set-toggle-label">{label}</span>
-                <div className="set-toggle-track"><div className="set-toggle-thumb" /></div>
-              </div>
-            ))}
+            <div className="set-toggle-row">
+              <span className="set-toggle-label">Notifications</span>
+              <Toggle on={notifications} onChange={setNotifications} />
+            </div>
+            <div className="set-toggle-row">
+              <span className="set-toggle-label">Mark posts as read</span>
+              <Toggle on={markRead} onChange={setMarkRead} />
+            </div>
+            <div className="set-toggle-row" style={{ borderBottom: "none" }}>
+              <span className="set-toggle-label">Autoplay GIFs</span>
+              <Toggle on={autoplayGifs} onChange={setAutoplayGifs} />
+            </div>
           </div>
         </div>
       </div>

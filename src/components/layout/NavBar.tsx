@@ -17,10 +17,10 @@ export default function NavBar() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [composeOpen, setComposeOpen] = useState(false);
 
-    const handle = localStorage.getItem("twomice_handle") ??
-        (auth.status === "user" || auth.status === "admin"
-            ? `anon_${auth.info.username.slice(-4)}`
-            : "guest");
+    const isAdmin = auth.status === "admin";
+    const username = auth.status === "user" || auth.status === "admin"
+        ? auth.info.username
+        : "guest";
 
     return (
         <>
@@ -54,6 +54,11 @@ export default function NavBar() {
                                 <path d="M7 1v1.2M7 11.8V13M1 7h1.2M11.8 7H13M2.9 2.9l.85.85M10.25 10.25l.85.85M2.9 11.1l.85-.85M10.25 3.75l.85-.85" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
                             </svg>
                         </button>
+                        {isAdmin && (
+                            <button className="icon-btn" title="Mod Panel" onClick={() => navigate("/admin")} style={window.location.pathname === "/admin" ? { color: "var(--accent)", borderColor: "var(--accent)" } : undefined}>
+                                ⚑
+                            </button>
+                        )}
                         {isGuest ? (
                             <button className="btn-pill" onClick={() => navigate("/auth")}>Sign In</button>
                         ) : (
@@ -65,13 +70,13 @@ export default function NavBar() {
                                     <button
                                         className="header-user-btn"
                                         onClick={() => setUserMenuOpen(v => !v)}
-                                        title={`Profile · ${handle}`}
+                                        title={`Profile · ${username}`}
                                     >
                                         <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
                                             <circle cx="6" cy="4" r="2.5" stroke="currentColor" strokeWidth="1.3"/>
                                             <path d="M1.5 10.5c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
                                         </svg>
-                                        {handle}
+                                        {username}
                                     </button>
                                     {userMenuOpen && (
                                         <>

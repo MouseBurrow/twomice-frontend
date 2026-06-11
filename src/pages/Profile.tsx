@@ -70,8 +70,8 @@ export default function Profile() {
         );
     }
 
-    const handle = localStorage.getItem("twomice_handle") ?? `anon_${auth.info.username.slice(-4)}`;
-    const initials = handle.slice(0, 2).toUpperCase();
+    const username = auth.info.username;
+    const initials = username.slice(0, 2).toUpperCase();
     const isAdmin = auth.status === "admin";
     const roleLabel = isAdmin ? "Admin" : "Member";
     const roleColor = isAdmin ? "#e67e22" : "var(--accent2)";
@@ -106,7 +106,7 @@ export default function Profile() {
                             <span className="profile-avatar-text">{initials}</span>
                         </div>
                         <div>
-                            <div className="profile-handle">{handle}</div>
+                            <div className="profile-handle">{username}</div>
                             <div className="profile-role-row">
                                 <span className="profile-role-badge" style={{ borderColor: roleColor, color: roleColor }}>{roleLabel}</span>
                                 <span className="profile-anon-note">all posts appear anonymous to others</span>

@@ -3,22 +3,16 @@ import { useTheme } from "../contexts/ThemeContext";
 import { availableModesFor } from "../utils/themes";
 import { useDensity } from "../contexts/DensityContext";
 import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DEFAULT_FONT, applyFont } from "../constants/settings";
+import MiniBtn from "../components/shared/MiniBtn";
 import "../assets/Settings.scss";
 
 export default function Settings() {
     const { theme, mode, setTheme, setMode } = useTheme();
     const { density, setDensity } = useDensity();
 
-    const [handle, setHandle] = useState(
-        () => localStorage.getItem("twomice_handle") ?? ""
-    );
     const [font, setFontState] = useState(
         () => localStorage.getItem("twomice_font") ?? DEFAULT_FONT
     );
-
-    function saveHandle() {
-        localStorage.setItem("twomice_handle", handle.trim());
-    }
 
     function setFont(f: string) {
         setFontState(f);
@@ -62,14 +56,7 @@ export default function Settings() {
                             <p className="settings-sub">Mode</p>
                             <div className="settings-btn-group">
                                 {availModes.map(m => (
-                                    <button
-                                        key={m}
-                                        type="button"
-                                        className={`settings-group-btn${mode === m ? " active" : ""}`}
-                                        onClick={() => setMode(m)}
-                                    >
-                                        {m.charAt(0).toUpperCase() + m.slice(1)}
-                                    </button>
+                                    <MiniBtn key={m} active={mode === m} onClick={() => setMode(m)}>{m.charAt(0).toUpperCase() + m.slice(1)}</MiniBtn>
                                 ))}
                             </div>
                         </>
@@ -81,14 +68,7 @@ export default function Settings() {
                     <h2>Density</h2>
                     <div className="settings-btn-group">
                         {DENSITY_OPTIONS.map(d => (
-                            <button
-                                key={d.value}
-                                type="button"
-                                className={`settings-group-btn${density === d.value ? " active" : ""}`}
-                                onClick={() => setDensity(d.value)}
-                            >
-                                {d.label}
-                            </button>
+                            <MiniBtn key={d.value} active={density === d.value} onClick={() => setDensity(d.value)}>{d.label}</MiniBtn>
                         ))}
                     </div>
                 </section>
@@ -114,25 +94,6 @@ export default function Settings() {
                             </button>
                         ))}
                     </div>
-                </section>
-
-                {/* Handle */}
-                <section className="settings-section">
-                    <h2>Anonymous handle</h2>
-                    <div className="settings-row">
-                        <label htmlFor="settings-handle">Handle</label>
-                        <input
-                            id="settings-handle"
-                            className="settings-input"
-                            value={handle}
-                            onChange={e => setHandle(e.target.value)}
-                            placeholder="anon_xxxx"
-                            maxLength={24}
-                        />
-                    </div>
-                    <button type="button" className="settings-save" onClick={saveHandle}>
-                        Save
-                    </button>
                 </section>
             </div>
         </div>

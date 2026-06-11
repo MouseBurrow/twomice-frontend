@@ -87,6 +87,8 @@ export default function Board() {
             } else {
                 await api.followBoard(board);
                 setFollowed(true);
+                const b = await api.getFollowedBoards().then(list => list.find(x => x.name === board));
+                if (b) setFollowedId(b.id);
             }
         } catch {
             setFollowError("Failed to update follow status");

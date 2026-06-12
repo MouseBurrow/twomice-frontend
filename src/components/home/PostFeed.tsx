@@ -4,6 +4,8 @@ import type { ApiError } from "../../apiError";
 import type { PostData } from "../../types";
 import PostCard from "../board/PostCard";
 import SkeletonPostCard from "../skeleton/SkeletonPostCard";
+import { FORCE_SKELETON } from "../../debug";
+import { useShowLoading } from "../../utils/useShowLoading";
 import SortBar from "./SortBar";
 
 type Sort = "hot" | "new" | "top";
@@ -18,6 +20,7 @@ export default function PostFeed({ title, note }: Props) {
     const [posts, setPosts] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ApiError>();
+    const showLoading = FORCE_SKELETON || useShowLoading(loading);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -60,7 +63,7 @@ export default function PostFeed({ title, note }: Props) {
                 <div className="post-feed-note">{note}</div>
             )}
 
-            {loading ? (
+            {showLoading ? (
                 <div className="post-feed-grid">
                     {Array.from({ length: 6 }, (_, i) => <SkeletonPostCard key={i} />)}
                 </div>

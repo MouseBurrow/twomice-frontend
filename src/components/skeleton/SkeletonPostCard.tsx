@@ -1,30 +1,65 @@
+import { useMemo } from "react";
 import { useDensity } from "../../contexts/DensityContext";
 import "../../assets/Skeleton.scss";
 
+const ROTS = [2, -1.5, 0.5, -0.8, 1.2, -2.5, 0, 1.8, -1, 0.3];
+const CORNERS = [12, 20, 8, 16];
+
+function rand<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
 export default function SkeletonPostCard() {
     const { density } = useDensity();
+    const isCompact = density === "compact";
+
+    const style = useMemo(() => {
+        const rot = rand(ROTS);
+        const shadowX = rot > 0 ? -5 : 5;
+        return {
+            '--card-rot': `${rot}deg`,
+            '--bc': 'var(--accent)',
+            borderRadius: rand(CORNERS),
+            boxShadow: `${shadowX}px 8px 20px var(--shadow), 0 1px 4px var(--shadow)`,
+        } as React.CSSProperties;
+    }, []);
 
     return (
-        <article className="post-card">
-            <div className="post-card-inner">
-                <div className="post-card-meta-row">
-                    <span className="shimmer-line" style={{ width: "3.5rem", height: "0.75rem" }} />
-                    <span className="shimmer-line" style={{ width: "5rem", height: "0.75rem" }} />
-                </div>
-                <div className="post-card-title">
-                    <span className="shimmer-line" style={{ width: "65%" }} />
-                </div>
-                {density !== "compact" && (
-                    <div className="post-card-preview" style={{ height: "2.5rem" }}>
-                        <span className="shimmer-line" style={{ width: "95%", marginBottom: "0.25rem" }} />
-                        <span className="shimmer-line" style={{ width: "72%" }} />
+        <div className="pcard-wrap scrap">
+            <div className="skeleton-pin" />
+
+            <article
+                className="post-card"
+                data-density={density}
+                style={style}
+            >
+                <div className="post-card-inner">
+                    <div className="post-card-meta-row">
+                        <span className="shimmer-line" style={{ width: "3.5rem", height: "0.75rem" }} />
+                        <span className="shimmer-line" style={{ width: "5rem", height: "0.75rem" }} />
                     </div>
-                )}
-                <div className="post-card-footer">
-                    <span className="shimmer-line" style={{ width: "4rem", height: "0.875rem" }} />
-                    <span className="shimmer-line" style={{ width: "3rem", height: "0.875rem" }} />
+
+                    <div className="post-card-title">
+                        <span className="shimmer-line" style={{ width: "65%" }} />
+                    </div>
+
+                    {!isCompact && (
+                        <div className="post-card-preview">
+                            <span className="shimmer-line" style={{ width: "95%", marginBottom: "0.375rem" }} />
+                            <span className="shimmer-line" style={{ width: "72%" }} />
+                        </div>
+                    )}
+
+                    <div className="pcard-footer">
+                        <div className="skeleton-votes">
+                            <span className="shimmer-line" style={{ width: "3.5rem", height: "1rem" }} />
+                        </div>
+                        <div className="pcard-footer-end">
+                            <span className="shimmer-line" style={{ width: "4rem", height: "0.75rem" }} />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </article>
+            </article>
+        </div>
     );
 }

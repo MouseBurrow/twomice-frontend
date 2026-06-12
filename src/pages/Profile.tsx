@@ -9,6 +9,8 @@ import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import BallPin from "../components/shared/BallPin";
 import { formatRelativeTime } from "../utils/date";
 import "../assets/Profile.scss";
+import { FORCE_SKELETON } from "../debug";
+import { useShowLoading } from "../utils/useShowLoading";
 
 type Tab = "posts" | "following";
 
@@ -24,6 +26,7 @@ export default function Profile() {
     const [followingLoading, setFollowingLoading] = useState(false);
     const [unfollowingIds, setUnfollowingIds] = useState<Set<string>>(new Set());
     const [statsError, setStatsError] = useState(false);
+    const showPostsLoading = FORCE_SKELETON || useShowLoading(postsLoading);
 
     const [prevTab, setPrevTab] = useState(tab);
     if (prevTab !== tab) {
@@ -139,7 +142,7 @@ export default function Profile() {
 
             {tab === "posts" && (
                 <div>
-                    {postsLoading ? (
+                    {showPostsLoading ? (
                         <div className="profile-posts-list">
                             {Array.from({ length: 4 }, (_, i) => <SkeletonPostCard key={i} />)}
                         </div>

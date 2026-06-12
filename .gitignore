@@ -26,4 +26,6 @@ dist-ssr
 prototype_frontend/
 TODO.md
 docs/
+# Local debug config — copy from debug.example.ts
+src/debug.ts
 changelog/

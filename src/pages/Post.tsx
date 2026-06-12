@@ -13,14 +13,15 @@ import MiniBtn from "../components/shared/MiniBtn";
 import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
 import PushPin from "../components/shared/PushPin";
-import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
-import SkeletonReplyCard from "../components/skeleton/SkeletonReplyCard";
+import SkeletonLines from "../components/skeleton/SkeletonLines";
 import type { CommentData, PostData } from "../types";
 import { formatRelativeTime } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
 import { dv } from "../utils/density";
 import "../assets/Post.scss";
 import "../assets/components.scss";
+import { FORCE_SKELETON } from "../debug";
+import { useShowLoading } from "../utils/useShowLoading";
 
 export default function Post() {
     const { board, post } = useParams<{ board: string; post: string }>();
@@ -33,6 +34,7 @@ export default function Post() {
     const [relatedPosts, setRelatedPosts] = useState<PostData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
+    const showLoading = FORCE_SKELETON || useShowLoading(loading);
     const [loadingMore, setLoadingMore] = useState(false);
     const [sortLoading, setSortLoading] = useState(false);
     const [reloadVersion, setReloadVersion] = useState(0);
@@ -156,12 +158,16 @@ export default function Post() {
     const infoPad = dv(density, '0.5rem 0.625rem 0.375rem', '0.625rem 0.875rem 0.5rem', '0.75rem 1rem 0.625rem');
     const widgetHd = dv(density, '0.4375rem 0.625rem', '0.5625rem 0.875rem', '0.6875rem 1rem');
 
-    if (loading) {
+    if (showLoading) {
         return (
             <div className="post-page" data-density={density}>
-                <SkeletonPostHeader />
-                <div className="comment-list">
-                    {Array.from({ length: 4 }, (_, i) => <SkeletonReplyCard key={i} />)}
+                <div className="post-dblend" style={{ padding: pagePad, gap: panelGap }}>
+                    <div className="post-dblend-left" style={{ width: leftW }}>
+                        <SkeletonLines lines={4} />
+                    </div>
+                    <div className="post-dblend-right">
+                        <SkeletonLines lines={5} />
+                    </div>
                 </div>
             </div>
         );

@@ -7,12 +7,14 @@ import { useAuth } from "../contexts/AuthContext";
 import { useDensity } from "../contexts/DensityContext";
 import PostCard from "../components/board/PostCard";
 import CreatePostCard from "../components/board/CreatePostCard";
-import SkeletonBoardHeader from "../components/skeleton/SkeletonBoardHeader";
+import SkeletonBoardHero from "../components/skeleton/SkeletonBoardHero";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import Sidebar from "../components/board/Sidebar";
 import GuestBanner from "../components/shared/GuestBanner";
 import SortBar from "../components/home/SortBar";
 import { boardColorFromName } from "../utils/hash";
+import { useShowLoading } from "../utils/useShowLoading";
+import { FORCE_SKELETON } from "../debug";
 import "../assets/Board.scss";
 
 export default function Board() {
@@ -31,6 +33,7 @@ export default function Board() {
     const [followError, setFollowError] = useState<string | null>(null);
 
     const [reloadVersion, setReloadVersion] = useState(0);
+    const showLoading = FORCE_SKELETON || useShowLoading(loading);
 
     useEffect(() => {
         setLoading(true);
@@ -100,9 +103,9 @@ export default function Board() {
         <div className="board-page" data-density={density}>
             {isGuest && <GuestBanner onLogin={() => navigate("/auth")} />}
 
-            {loading ? (
+            {showLoading ? (
                 <>
-                    <SkeletonBoardHeader />
+                    <SkeletonBoardHero />
                     <div className="board-posts">
                         {Array.from({ length: 5 }, (_, i) => <SkeletonPostCard key={i} />)}
                     </div>

@@ -53,7 +53,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
         setNestedLoading(true);
         try {
             const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, 0);
-            setNested(res.data.filter(r => !r.deleted));
+            setNested(res.data);
             setNestedOffset(0);
             setNestedTotal(res.total);
         } catch { /* ignore */ } finally {
@@ -66,8 +66,14 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
         try {
             const nextOffset = nestedOffset + NESTED_LIMIT;
             const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, nextOffset);
-            setNested(prev => [...prev, ...res.data.filter(r => !r.deleted)]);
-            setNestedOffset(nextOffset);
+            const existing = new Set(nested.map(r => r.hash));
+            const fresh = res.data.filter(r => !existing.has(r.hash));
+            if (fresh.length > 0) {
+                setNested(prev => [...prev, ...fresh]);
+                setNestedOffset(nextOffset);
+            } else {
+                setNestedOffset(nestedTotal);
+            }
         } catch { /* ignore */ }
     }
 
@@ -98,7 +104,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
         <div className="reply-row">
             <div className="reply-card">
                 <div className="comment-header">
-                    {reply.anon_token && <AnonBadge token={reply.anon_token} sm />}
+                    {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} sm />}
                     <span className="reply-card-inline-meta">{formatDate(reply.created_at)}</span>
                     <div className="comment-header-end">
                         {hasNested && (
@@ -108,15 +114,23 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
                         )}
                     </div>
                 </div>
-                <div className="comment-body">
-                    <GreenText text={reply.content} />
-                </div>
-                <div className="comment-footer">
-                    <VoteButtons votes={reply.vote_count ?? 0} disabled={false} bc={bc} />
-                    <button className="reply-chip" onClick={() => setReplyOpen(!replyOpen)}>
-                        ↩ squeak back
-                    </button>
-                </div>
+                {reply.deleted ? (
+                    <div className="comment-body">
+                        <em>[removed]</em>
+                    </div>
+                ) : (
+                    <>
+                        <div className="comment-body">
+                            <GreenText text={reply.content} />
+                        </div>
+                        <div className="comment-footer">
+                            <VoteButtons votes={reply.vote_count ?? 0} disabled={false} bc={bc} />
+                            <button className="reply-chip" onClick={() => setReplyOpen(!replyOpen)}>
+                                ↩ squeak back
+                            </button>
+                        </div>
+                    </>
+                )}
             </div>
 
             {replyOpen && (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../contexts/AuthContext";
@@ -40,6 +40,7 @@ export default function Post() {
     const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
     const [commentOffset, setCommentOffset] = useState(0);
     const [commentTotal, setCommentTotal] = useState(0);
+    const loadingMoreRef = useRef(false);
     const COMMENT_LIMIT = 25;
 
     const isAdmin = auth.status === "admin";
@@ -62,7 +63,7 @@ export default function Post() {
                 ]);
                 if (cancelled) return;
                 setPostData(postResult);
-                setComments(commentRes.data.filter(x => !x.deleted));
+                setComments(commentRes.data);
                 setCommentOffset(commentRes.offset);
                 setCommentTotal(commentRes.total);
                 setRelatedPosts(
@@ -90,7 +91,7 @@ export default function Post() {
             try {
                 const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, 0, commentSort);
                 if (cancelled) return;
-                setComments(res.data.filter(x => !x.deleted));
+                setComments(res.data);
                 setCommentOffset(res.offset);
                 setCommentTotal(res.total);
             } catch { /* ignore */ } finally {
@@ -102,13 +103,23 @@ export default function Post() {
 
     async function loadMoreComments() {
         const nextOffset = commentOffset + COMMENT_LIMIT;
-        if (loadingMore || nextOffset >= commentTotal) return;
+        if (loadingMoreRef.current || nextOffset >= commentTotal) return;
+        loadingMoreRef.current = true;
         setLoadingMore(true);
+        const scrollY = window.scrollY;
         try {
             const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, nextOffset, commentSort);
-            setComments(prev => [...prev, ...res.data.filter(x => !x.deleted)]);
-            setCommentOffset(res.offset);
+            const existing = new Set(comments.map(c => c.hash));
+            const fresh = res.data.filter(x => !existing.has(x.hash));
+            if (fresh.length > 0) {
+                setComments(prev => [...prev, ...fresh]);
+                setCommentOffset(nextOffset);
+            } else {
+                setCommentOffset(commentTotal);
+            }
+            requestAnimationFrame(() => window.scrollTo(0, scrollY));
         } catch { /* ignore */ } finally {
+            loadingMoreRef.current = false;
             setLoadingMore(false);
         }
     }

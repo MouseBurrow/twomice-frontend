@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { CommentData, ReplyData } from "../../types";
@@ -33,6 +33,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     const [removed, setRemoved] = useState(false);
     const [replyOffset, setReplyOffset] = useState(0);
     const [replyTotal, setReplyTotal] = useState(0);
+    const loadingMoreRef = useRef(false);
 
     const REPLY_LIMIT = 10;
     const replyHasMore = replyOffset + REPLY_LIMIT < replyTotal;
@@ -45,7 +46,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
             setError(undefined);
             const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, 0);
             if (cancelled?.()) return;
-            setReplies(res.data.filter(r => !r.deleted));
+            setReplies(res.data);
             setReplyOffset(0);
             setReplyTotal(res.total);
         } catch (e) {
@@ -56,13 +57,22 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     }
 
     async function loadMoreReplies() {
-        if (!replyHasMore) return;
+        if (loadingMoreRef.current || !replyHasMore) return;
+        loadingMoreRef.current = true;
         try {
             const nextOffset = replyOffset + REPLY_LIMIT;
             const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, nextOffset);
-            setReplies(prev => [...prev, ...res.data.filter(r => !r.deleted)]);
-            setReplyOffset(nextOffset);
-        } catch { /* ignore */ }
+            const existing = new Set(replies.map(r => r.hash));
+            const fresh = res.data.filter(r => !existing.has(r.hash));
+            if (fresh.length > 0) {
+                setReplies(prev => [...prev, ...fresh]);
+                setReplyOffset(nextOffset);
+            } else {
+                setReplyOffset(replyTotal);
+            }
+        } catch { /* ignore */ } finally {
+            loadingMoreRef.current = false;
+        }
     }
 
     useEffect(() => {
@@ -71,10 +81,20 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
         return () => { cancelled = true; };
     }, []);
 
-    if (removed) {
+    if (removed || comment.deleted) {
         return (
-            <div className="comment-removed">
-                [removed by moderator]
+            <div className="comment-outer">
+                <div className="comment-card comment-removed">
+                    <div className="comment-header">
+                        <span className="comment-id">#{comment.hash.slice(0, 7)}</span>
+                        <div className="comment-header-end">
+                            <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
+                        </div>
+                    </div>
+                    <div className="comment-body">
+                        <em>[removed]</em>
+                    </div>
+                </div>
             </div>
         );
     }

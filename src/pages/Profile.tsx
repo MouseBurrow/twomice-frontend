@@ -7,7 +7,7 @@ import type { PostData, UserStats, FollowedBoardInfo } from "../types";
 import PostCard from "../components/board/PostCard";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import BallPin from "../components/shared/BallPin";
-import { formatDate } from "../utils/date";
+import { formatRelativeTime } from "../utils/date";
 import "../assets/Profile.scss";
 
 type Tab = "posts" | "following";
@@ -23,6 +23,7 @@ export default function Profile() {
     const [postsLoading, setPostsLoading] = useState(false);
     const [followingLoading, setFollowingLoading] = useState(false);
     const [unfollowingIds, setUnfollowingIds] = useState<Set<string>>(new Set());
+    const [statsError, setStatsError] = useState(false);
 
     const [prevTab, setPrevTab] = useState(tab);
     if (prevTab !== tab) {
@@ -37,7 +38,7 @@ export default function Profile() {
     useEffect(() => {
         if (auth.status !== "user" && auth.status !== "admin") return;
         let cancelled = false;
-        api.getUserStats().then(data => { if (!cancelled) setStats(data); }).catch(() => {});
+        api.getUserStats().then(data => { if (!cancelled) { setStats(data); setStatsError(false); } }).catch(() => { if (!cancelled) setStatsError(true); });
         return () => { cancelled = true; };
     }, [auth.status]);
 
@@ -45,10 +46,12 @@ export default function Profile() {
         if (auth.status !== "user" && auth.status !== "admin") return;
         let cancelled = false;
         if (tab === "posts") {
+            setPostsLoading(true);
             api.getUserPosts()
                 .then(data => { if (!cancelled) { setPosts(data.filter(item => !item.deleted)); setPostsLoading(false); } })
                 .catch(() => { if (!cancelled) setPostsLoading(false); });
         } else {
+            setFollowingLoading(true);
             api.getFollowedBoards()
                 .then(data => { if (!cancelled) { setFollowedBoards(data); setFollowingLoading(false); } })
                 .catch(() => { if (!cancelled) setFollowingLoading(false); });
@@ -90,10 +93,11 @@ export default function Profile() {
     }
 
     const statItems = [
-        { label: "Posts", val: stats?.nib_count ?? 0 },
-        { label: "Comments", val: stats?.squeak_count ?? 0 },
+        { label: "Nibbles", val: stats?.nib_count ?? 0 },
+        { label: "Squeaks", val: stats?.squeak_count ?? 0 },
         { label: "Upvotes", val: stats?.upvote_count ?? 0 },
         { label: "Following", val: stats?.following_count ?? followedBoards.length },
+        { label: "Joined", val: formatRelativeTime(auth.info.created_at) },
     ];
 
     return (
@@ -115,19 +119,14 @@ export default function Profile() {
                             </div>
                         </div>
                     </div>
-                    <div className="profile-member-since" style={{ display: "block" }}>
-                        member since {formatDate(auth.info.created_at)}
+                    <div className="profile-stats">
+                        {statItems.map(({ label, val }) => (
+                            <div key={label} className="profile-stat">
+                                <div className="profile-stat-value">{val}</div>
+                                <div className="profile-stat-label">{label}</div>
+                            </div>
+                        ))}
                     </div>
-                    {stats && (
-                        <div className="profile-stats">
-                            {statItems.map(({ label, val }) => (
-                                <div key={label} className="profile-stat">
-                                    <div className="profile-stat-value">{val}</div>
-                                    <div className="profile-stat-label">{label}</div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -140,13 +139,17 @@ export default function Profile() {
 
             {tab === "posts" && (
                 <div>
-                    <div className="profile-posts-note">Your recent posts. Others only see your anonymous ID — never your username.</div>
                     {postsLoading ? (
                         <div className="profile-posts-list">
                             {Array.from({ length: 4 }, (_, i) => <SkeletonPostCard key={i} />)}
                         </div>
                     ) : posts.length === 0 ? (
-                        <div className="profile-empty">No posts yet.</div>
+                        <div className="profile-empty">
+                            No nibbles yet.
+                            <div className="profile-empty-action" onClick={() => navigate("/")}>
+                                Post your first nibble →
+                            </div>
+                        </div>
                     ) : (
                         <div className="profile-posts-list">
                             {posts.map(n => <PostCard key={`${n.board_id ?? ''}-${n.slug}`} post={n} />)}
@@ -160,7 +163,12 @@ export default function Profile() {
                     {followingLoading ? (
                         <div className="profile-empty">Loading…</div>
                     ) : followedBoards.length === 0 ? (
-                        <div className="profile-empty">Not following any boards yet.</div>
+                        <div className="profile-empty">
+                            Not following any burrows yet.
+                            <div className="profile-empty-action" onClick={() => navigate("/")}>
+                                Browse burrows →
+                            </div>
+                        </div>
                     ) : (
                         <div className="profile-following-grid">
                             {followedBoards.map(b => (

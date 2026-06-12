@@ -26,7 +26,7 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
     const dn = userVote === -1;
     const boardColor = bc || 'var(--accent)';
 
-    const pillBg = `color-mix(in srgb, ${boardColor} 10%, var(--bg-surface))`;
+    const pillBg = `color-mix(in srgb, ${boardColor} 20%, var(--bg-surface))`;
     const pillBorder = `color-mix(in srgb, ${boardColor} 28%, transparent)`;
     const dividerCol = `color-mix(in srgb, ${boardColor} 28%, transparent)`;
     const upArrow = boardColor;

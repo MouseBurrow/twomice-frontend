@@ -8,6 +8,7 @@ import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
 import ModActions from "../shared/ModActions";
 import CreateReplyCard from "./CreateReplyCard";
+import ReplyList from "./ReplyList";
 import ReplyRow from "./ReplyRow";
 import { useAuth } from "../../contexts/AuthContext";
 import { formatDate } from "../../utils/date";
@@ -31,6 +32,11 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     const [error, setError] = useState<ApiError>();
     const [replyOpen, setReplyOpen] = useState(false);
     const [removed, setRemoved] = useState(false);
+    const [replyOffset, setReplyOffset] = useState(0);
+    const [replyTotal, setReplyTotal] = useState(0);
+
+    const REPLY_LIMIT = 10;
+    const replyHasMore = replyOffset + REPLY_LIMIT < replyTotal;
 
     const isAdmin = auth.status === "admin";
 
@@ -46,15 +52,27 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
         try {
             setLoading(true);
             setError(undefined);
-            const data = await api.getReplies(topic, post, comment.hash);
+            const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, 0);
             if (!signal?.cancelled) {
-                setReplies(data.filter(r => !r.deleted));
+                setReplies(res.data.filter(r => !r.deleted));
+                setReplyOffset(0);
+                setReplyTotal(res.total);
             }
         } catch (e) {
             if (!signal?.cancelled) setError(e as ApiError);
         } finally {
             if (!signal?.cancelled) setLoading(false);
         }
+    }
+
+    async function loadMoreReplies() {
+        if (!replyHasMore) return;
+        try {
+            const nextOffset = replyOffset + REPLY_LIMIT;
+            const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, nextOffset);
+            setReplies(prev => [...prev, ...res.data.filter(r => !r.deleted)]);
+            setReplyOffset(nextOffset);
+        } catch { /* ignore */ }
     }
 
     useEffect(() => {
@@ -74,7 +92,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
     return (
         <div className="comment-outer">
-            <div className="comment-row">
+            <div className="comment-card">
                 <div className="comment-header">
                     {comment.anon_token && (
                         <AnonBadge token={comment.anon_token} isOp={isOp} isMe={isMe} sm />
@@ -123,53 +141,21 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
             {!col && replies.length > 0 && (
                 <div className="comment-replies">
-                    {replies.map((r, i, arr) => {
-                        const isLast = i === arr.length - 1;
-                        const lineColor = threadColor
-                            ? `color-mix(in srgb, ${threadColor} 38%, var(--text-faint))`
-                            : 'var(--text-faint)';
-                        const circFill = threadColor
-                            ? `color-mix(in srgb, ${threadColor} 10%, var(--bg-elevated))`
-                            : 'var(--bg-elevated)';
-                        const circSize = 9;
-                        const circR = circSize / 2;
-                        const circCenter = 22;
-                        const circTop = Math.round(circCenter - circR);
-                        const circBottom = circTop + circSize;
-                        const lineX = Math.round(circR) + 2;
-
-                        return (
-                            <div key={r.hash} className="reply-anchor">
-                                <div className="thread-group" style={{ left: lineX }}>
-                                    {i === 0 && (
-                                        <div className="thread-line"
-                                            style={{ top: -4, height: circTop + 4, borderColor: lineColor }}
-                                        />
-                                    )}
-
-                                    <div className="thread-dot"
-                                        style={{ top: circTop, width: circSize, height: circSize, background: circFill, border: `2px solid ${lineColor}` }}
-                                    />
-
-                                    {!isLast && (
-                                        <div className="thread-line"
-                                            style={{ top: circBottom, bottom: -circTop, borderColor: lineColor }}
-                                        />
-                                    )}
-                                </div>
-
-                                <ReplyRow
-                                    reply={r}
-                                    topic={topic}
-                                    post={post}
-                                    commentHash={comment.hash}
-                                    bc={bc}
-                                    parentColor={threadColor}
-                                    onUpdated={() => loadReplies({ cancelled: !mountRef.current })}
-                                />
-                            </div>
-                        );
-                    })}
+                    <ReplyList color={threadColor} hasMore={replyHasMore} onLoadMore={loadMoreReplies}>
+                        {replies.map(r => (
+                            <ReplyRow
+                                key={r.hash}
+                                reply={r}
+                                topic={topic}
+                                post={post}
+                                commentHash={comment.hash}
+                                bc={bc}
+                                parentColor={threadColor}
+                                depth={0}
+                                onUpdated={() => loadReplies({ cancelled: !mountRef.current })}
+                            />
+                        ))}
+                    </ReplyList>
                 </div>
             )}
 

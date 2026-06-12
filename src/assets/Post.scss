@@ -174,18 +174,16 @@
 }
 
 /* ── Comment ── */
-.comment-outer { }
-.comment-outer.nested {
-  margin-top: 4px;
+.comment-outer {
+  padding: 0.5rem;
 }
 
-.comment-row {
-  padding: 0.75rem 1rem;
-  margin: 0.5rem 0.5rem 0.25rem;
+.comment-card {
+  padding: 0.75rem;
   border-radius: var(--comment-corners, 0 0.5rem 0.5rem 0.5rem);
   transition: background 0.1s ease;
 }
-.comment-row:hover { background: var(--bg-primary); }
+.comment-card:hover { background: var(--bg-primary); }
 
 .comment-header {
   display: flex;
@@ -267,23 +265,60 @@
   padding: 0.375rem 0;
 }
 
-/* ── Comment replies (thread dots & lines container) ── */
-.comment-replies {
+/* ── Top-level replies need left padding (nested ones use card's own padding) ── */
+/* ── Shared ReplyList (thread connectors for all nesting levels) ── */
+.reply-list {
   position: relative;
-  padding: 0 1rem 0.75rem 1rem;
+  padding-left: 0.75rem;
 }
 
-/* ── Reply thread (dot-terminus) ── */
-.reply-thread {
-  margin-top: 0.5rem;
+
+.rl-item {
+  position: relative;
+  padding-left: 1.5rem;
 }
 
-.reply-card-inline {
-  padding: 0.75rem 1rem;
+.rl-dot {
+  position: absolute;
+  left: 0.375rem;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.rl-connector {
+  position: absolute;
+  left: 0.625rem;
+  top: 1.375rem;
+  width: 1rem;
+  height: 0;
+  border-top: 0.125rem dashed var(--line-clr, var(--text-faint));
+  pointer-events: none;
+}
+
+.rl-line {
+  position: absolute;
+  left: 0.5625rem;
+  border-left: 0.125rem dashed var(--line-clr, var(--text-faint));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rl-line--top {
+  top: 0;
+  height: 1.6875rem;
+}
+
+.rl-line--mid {
+  top: 1.6875rem;
+  bottom: -1.125rem;
+}
+
+.reply-card {
+  padding: 0.75rem;
   border-radius: 0 0.5rem 0.5rem 0.5rem;
   transition: background 0.1s ease;
 }
-.reply-card-inline:hover { background: var(--bg-primary); }
+.reply-card:hover { background: var(--bg-primary); }
 
 .reply-card-inline-meta {
   font-size: 0.625rem;
@@ -292,25 +327,9 @@
 }
 
 /* ── Reply row ── */
-.reply-anchor {
-  position: relative;
-}
-
 .reply-row {
   position: relative;
   margin-top: 2px;
-}
-
-.reply-nested {
-  margin-top: 0.5rem;
-  border-left: 1px solid var(--border-soft);
-  padding-left: 0.75rem;
-}
-
-.thread-group {
-  position: absolute;
-  top: 0;
-  bottom: 0;
 }
 
 /* ── Reply form ── */
@@ -440,4 +459,20 @@
   color: var(--text-faint);
   font-style: italic;
   font-size: 0.75rem;
+}
+
+.load-more-replies,
+.load-more-nested {
+  font-size: 0.6875rem;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0.375rem 0.5rem;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  transition: opacity 0.15s;
+}
+.load-more-replies:hover,
+.load-more-nested:hover {
+  opacity: 0.7;
 }

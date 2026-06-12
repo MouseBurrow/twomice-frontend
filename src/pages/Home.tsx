@@ -28,9 +28,9 @@ export default function Home() {
 
     const feedTitle = hasFollowed ? "Your Feed" : "Trending everywhere";
     const feedNote = isGuest
-        ? "Enter the burrow and follow boards to fill your feed."
+        ? "Hop in, follow some burrows, and this hole fills up with squeaks."
         : !hasFollowed
-            ? "You're not following any boards yet — visit a board and hit Follow."
+            ? "Nothing's squeaking yet. Go follow some burrows."
             : undefined;
 
     return (

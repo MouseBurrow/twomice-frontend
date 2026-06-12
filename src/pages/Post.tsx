@@ -16,7 +16,7 @@ import PushPin from "../components/shared/PushPin";
 import SkeletonPostHeader from "../components/skeleton/SkeletonPostHeader";
 import SkeletonReplyCard from "../components/skeleton/SkeletonReplyCard";
 import type { CommentData, PostData } from "../types";
-import { formatDate } from "../utils/date";
+import { formatRelativeTime } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
 import { dv } from "../utils/density";
 import "../assets/Post.scss";
@@ -74,7 +74,7 @@ export default function Post() {
     }, [board, post, reloadVersion]);
 
     const formattedTime = postData?.created_at
-        ? formatDate(postData.created_at)
+        ? formatRelativeTime(postData.created_at)
         : "";
 
     const opToken = postData?.anon_token;

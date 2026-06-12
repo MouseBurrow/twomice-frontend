@@ -8,7 +8,7 @@ import ModActions from "../shared/ModActions";
 import PushPin from "../shared/PushPin";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
-import { formatDate } from "../../utils/date";
+import { formatRelativeTime } from "../../utils/date";
 import { hashPostId, SCRAP_ROTS, NEST_CORNERS, boardColorFromName } from "../../utils/hash";
 import "../../assets/components.scss";
 
@@ -81,7 +81,7 @@ export default function PostCard({ board, post }: Props) {
                             <span className="locked-badge">🔒 locked</span>
                         )}
                         <span className="post-card-date">
-                            {formatDate(post.created_at)}
+                            {formatRelativeTime(post.created_at)}
                         </span>
                     </div>
 

@@ -1,6 +1,6 @@
 # Frontend Conventions
 
-- Never use inline styles — always use SCSS classes imported from `src/assets/*.scss`
+- Never use inline styles — always use SCSS classes imported from `src/assets/*.scss`. Only the truly dynamic values (positions, colors computed from JS) may be inline, and even then prefer CSS custom properties.
 - Use `rem` units via SCSS (convert px with `0.0625rem` multiplier)
 - Prefer CSS custom properties for theming (defined in `variables.scss`)
 - Use `dv()` utility for density-aware values only when unavoidable

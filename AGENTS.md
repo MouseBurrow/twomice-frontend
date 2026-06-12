@@ -7,7 +7,8 @@
 
 ## API Reference
 
-Always read each service's `API.md` to check the current API spec before making changes that touch the API layer:
+Before making changes that touch the API layer, check the backend service's `API.md` for the current spec. These live in `services/` under the monorepo root (`..` from here):
+
 - `services/post/API.md` — Boards, posts, comments, replies, votes, feed
 - `services/gateway/API.md` — Route map (which path goes to which service)
 - `services/auth/API.md` — Login, signup, logout, account
@@ -15,4 +16,4 @@ Always read each service's `API.md` to check the current API spec before making 
 - `services/social-feed/API.md` — Following boards, user stats
 - `services/moderation/API.md` — Reports, mod log, board management
 
-If the API spec does not have a feature I need, write a note to the service's `API_TODO.md` listing what is missing, then continue assuming the endpoint exists so the frontend code can be written. When the backend is ready, `API_TODO.md` serves as a checklist of endpoints to implement.
+If the API spec lacks a feature the frontend needs, add a note to that service's `API_TODO.md` in `services/<name>/API_TODO.md`, then continue assuming the endpoint exists so the frontend code can be written.

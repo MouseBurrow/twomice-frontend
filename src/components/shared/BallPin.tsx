@@ -5,7 +5,7 @@ type Props = {
     glow?: boolean;
 };
 
-export default function BallPin({ color = 'var(--accent)', glow = false }: Props) {
+export default function BallPin({ color = 'var(--accent)' }: Props) {
     return (
         <div className="ballpin">
             <div className="ballpin-head" style={{ background: color }}>

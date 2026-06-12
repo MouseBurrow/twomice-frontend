@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import type { FormEvent } from "react";
 
 export function autoResize(e: FormEvent<HTMLTextAreaElement>) {
     const el = e.currentTarget;

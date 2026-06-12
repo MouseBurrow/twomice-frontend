@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 export function useShowLoading(loading: boolean, delay = 150, minDisplay = 300): boolean {
     const [show, setShow] = useState(false);
     const shownAtRef = useRef(0);
-    const timerRef = useRef<ReturnType<typeof setTimeout>>();
+    const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     useEffect(() => {
         if (loading) {

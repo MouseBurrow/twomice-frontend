@@ -25,7 +25,6 @@ export default function Profile() {
     const [postsLoading, setPostsLoading] = useState(false);
     const [followingLoading, setFollowingLoading] = useState(false);
     const [unfollowingIds, setUnfollowingIds] = useState<Set<string>>(new Set());
-    const [statsError, setStatsError] = useState(false);
     const showPostsLoading = FORCE_SKELETON || useShowLoading(postsLoading);
 
     const [prevTab, setPrevTab] = useState(tab);
@@ -41,7 +40,7 @@ export default function Profile() {
     useEffect(() => {
         if (auth.status !== "user" && auth.status !== "admin") return;
         let cancelled = false;
-        api.getUserStats().then(data => { if (!cancelled) { setStats(data); setStatsError(false); } }).catch(() => { if (!cancelled) setStatsError(true); });
+        api.getUserStats().then(data => { if (!cancelled) setStats(data); }).catch(() => {});
         return () => { cancelled = true; };
     }, [auth.status]);
 

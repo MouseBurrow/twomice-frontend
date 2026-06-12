@@ -36,7 +36,6 @@ export default function Post() {
     const [loading, setLoading] = useState(true);
     const showLoading = FORCE_SKELETON || useShowLoading(loading);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [sortLoading, setSortLoading] = useState(false);
     const [reloadVersion, setReloadVersion] = useState(0);
     const [locked, setLocked] = useState(false);
     const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
@@ -88,7 +87,6 @@ export default function Post() {
         if (!postData) return;
         let cancelled = false;
         (async () => {
-            setSortLoading(true);
             setCommentOffset(0);
             try {
                 const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, 0, commentSort);
@@ -96,9 +94,7 @@ export default function Post() {
                 setComments(res.data);
                 setCommentOffset(res.offset);
                 setCommentTotal(res.total);
-            } catch { /* ignore */ } finally {
-                if (!cancelled) setSortLoading(false);
-            }
+            } catch { /* ignore */ }
         })();
         return () => { cancelled = true; };
     }, [commentSort]);

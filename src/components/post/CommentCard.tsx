@@ -147,7 +147,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                         onCreated={async () => {
                             setReplyOpen(false);
                             await loadReplies();
-                            if (mountRef.current) setCol(true);
+                            setCol(true);
                         }}
                     />
                 )}

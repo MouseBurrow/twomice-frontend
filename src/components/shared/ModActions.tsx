@@ -39,7 +39,7 @@ export default function ModActions({ show, type, locked, onLock, onRemove, onBan
     }
 
     const items: Array<[string, (() => void) | undefined, boolean]> = [
-        ...(type === "post" ? [[locked ? "Unlock thread" : "Lock thread", onLock, false] as const] : []),
+        ...(type === "post" ? [[locked ? "Unlock thread" : "Lock thread", onLock, false] as [string, (() => void) | undefined, boolean]] : []),
         ["Warn user", undefined, false],
         ["Remove content", onRemove, true],
         ["Ban user (1d)", () => onBan?.("1d"), true],

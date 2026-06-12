@@ -10,7 +10,7 @@ import GuestBanner from "../components/shared/GuestBanner";
 import "../assets/Home.scss";
 
 export default function Home() {
-    const { auth, isGuest } = useAuth();
+    const { isGuest } = useAuth();
     const { density } = useDensity();
     const navigate = useNavigate();
     const [followed, setFollowed] = useState<FollowedBoardInfo[]>([]);

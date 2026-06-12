@@ -147,7 +147,7 @@ export default function Post() {
 
                     <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
                         <PushPin color={bc} glow={!!postData.is_hot} />
-                        <div className="post-op-card" style={{ borderTop: `3px solid ${bc}`, borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', borderLeft: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
+                        <div className="post-op-card" style={{ '--bc': bc } as React.CSSProperties}>
                             <div className="post-detail-inner" style={{ padding: cardPad }}>
                                 <div className="post-op-meta" style={{ marginBottom: dv(density, 8, 10, 12) }}>
                                     {postData.anon_token && (

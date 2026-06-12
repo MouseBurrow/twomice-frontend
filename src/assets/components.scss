@@ -31,6 +31,9 @@
   margin-bottom: 0;
   overflow: hidden;
   transition: background-color .2s, border-color .2s;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--bc);
+  background: var(--bg-surface);
 }
 
 .post-op-meta {
@@ -143,6 +146,7 @@
 .related-item {
   cursor: pointer;
   transition: opacity .15s;
+  padding: 0.5rem 0;
 }
 .related-item:hover { opacity: .7; }
 

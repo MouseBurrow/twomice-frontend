@@ -272,7 +272,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                             const lineX = Math.round(circR) - 1;
 
                             return (
-                                <div key={r.hash}>
+                                <div key={r.hash} style={{ position: 'relative' }}>
                                     {i === 0 && (
                                         <div className="thread-line"
                                             style={{ left: lineX, top: 0, height: circTop, borderColor: lineColor }}

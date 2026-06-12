@@ -259,6 +259,11 @@
   padding: 0.375rem 0;
 }
 
+/* ── Comment replies (thread dots & lines container) ── */
+.comment-replies {
+  position: relative;
+}
+
 /* ── Reply thread (dot-terminus) ── */
 .reply-thread {
   margin-top: 0.5rem;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api";
 import { ApiError } from "../../apiError";
+import { autoResize } from "../../utils/autoResize";
 import type { BoardData } from "../../types";
 
 interface Props {
@@ -127,6 +128,7 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
               <textarea
                 className="field-textarea"
                 placeholder="What's this board about?"
+                onInput={autoResize}
                 value={newDesc}
                 onChange={e => setNewDesc(e.target.value)}
                 rows={2}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api";
 import { ApiError } from "../../apiError";
+import { autoResize } from "../../utils/autoResize";
 import type { BoardData } from "../../types";
 
 interface Props {
@@ -69,7 +70,7 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
           </div>
           <div className="field">
             <label className="field-label">Message</label>
-            <textarea className="field-textarea" placeholder="Start a line with > for greentext…" value={content} onChange={e => setContent(e.target.value)} />
+            <textarea className="field-textarea" onInput={autoResize} placeholder="Start a line with > for greentext…" value={content} onChange={e => setContent(e.target.value)} />
             {error && <div className="field-error">{error}</div>}
           </div>
         </form>

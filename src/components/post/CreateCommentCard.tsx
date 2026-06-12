@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import { useAuth } from "../../contexts/AuthContext";
+import { autoResize } from "../../utils/autoResize";
 import AnonBadge from "../shared/AnonBadge";
 import ErrorMessage from "../ErrorMessage";
 
@@ -53,6 +54,7 @@ export default function CreateCommentCard({ topic, post, myToken, onCreated }: P
                     )}
                     <textarea
                         placeholder="Start with > to quote…"
+                        onInput={autoResize}
                         value={content}
                         onChange={e => setContent(e.target.value)}
                         rows={3}

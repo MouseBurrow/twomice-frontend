@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../contexts/AuthContext";
 import { useDensity } from "../contexts/DensityContext";
+import { autoResize } from "../utils/autoResize";
 import type { BoardData, ModLogEntry, ReportData } from "../types";
 import MiniBtn from "../components/shared/MiniBtn";
 import "../assets/Admin.scss";
@@ -164,7 +165,7 @@ export default function Admin() {
                                     </div>
                                     <div className="field">
                                         <label className="field-label">Description</label>
-                                        <textarea className="field-textarea" style={{ minHeight: "3.5rem" }} value={editForm.description ?? ""} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
+                                        <textarea className="field-textarea" style={{ minHeight: "3.5rem" }} onInput={autoResize} value={editForm.description ?? ""} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
                                     </div>
                                     <div className="admin-board-edit-actions">
                                         <button className="btn-pill" style={{ fontSize: "0.75rem", padding: "0.3125rem 1rem" }} onClick={saveEdit}>Save changes</button>

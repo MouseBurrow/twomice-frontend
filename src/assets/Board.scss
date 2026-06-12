@@ -164,7 +164,7 @@
     color: var(--text-primary);
     font-size: 0.8125rem;
     font-family: var(--font-body);
-    resize: vertical;
+    resize: none;
 
     &:focus { outline: none; border-color: var(--accent); }
     &::placeholder { color: var(--text-faint); }

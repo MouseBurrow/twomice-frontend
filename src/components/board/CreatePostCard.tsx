@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import { useAuth } from "../../contexts/AuthContext";
+import { autoResize } from "../../utils/autoResize";
 import ErrorMessage from "../ErrorMessage";
 
 type Props = { topicName: string; onCreated: () => Promise<void> };
@@ -50,6 +51,7 @@ export default function CreatePostCard({ topicName, onCreated }: Props) {
                     />
                     <textarea
                         placeholder="What's on your mind?"
+                        onInput={autoResize}
                         value={content}
                         onChange={e => setContent(e.target.value)}
                         rows={3}

@@ -9,6 +9,7 @@ import GreenText from "../shared/GreenText";
 import ReplyList, { DOT_S, DOT_T, REM } from "./ReplyList";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
+import { autoResize } from "../../utils/autoResize";
 import "../../assets/components.scss";
 
 const MAX_DEPTH = 5;
@@ -163,6 +164,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
                         <textarea
                             className="reply-form-input"
                             placeholder="Echo back…"
+                            onInput={autoResize}
                             value={replyContent}
                             onChange={e => setReplyContent(e.target.value)}
                         />

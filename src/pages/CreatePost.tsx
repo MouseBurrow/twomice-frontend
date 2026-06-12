@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import type { ApiError } from "../apiError";
+import { autoResize } from "../utils/autoResize";
 import { useAuth } from "../contexts/AuthContext";
 import ErrorMessage from "../components/ErrorMessage";
 import "../assets/CreatePost.scss";
@@ -70,6 +71,7 @@ export default function CreatePost() {
                         className="create-post-body"
                         placeholder="What's on your mind?"
                         rows={8}
+                        onInput={autoResize}
                         value={content}
                         onChange={e => setContent(e.target.value)}
                     />

@@ -52,13 +52,14 @@
 }
 
 .post-feed-note {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--text-muted);
+  text-align: center;
   margin-bottom: 0.875rem;
-  padding: 0.5625rem 0.875rem;
-  background: var(--bg-elevated);
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border-soft);
+  padding: 2rem;
+  background: var(--bg-surface);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  border: 0.0625rem dashed var(--border);
 }
 
 /* ── Sort bar ── */

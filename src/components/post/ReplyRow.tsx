@@ -27,8 +27,8 @@ type Props = {
 export default function ReplyRow({ reply, topic, post, commentHash, bc, parentColor, onUpdated, depth = 0 }: Props) {
     const [nested, setNested] = useState<ReplyData[]>(reply.children ?? []);
     const [nestedLoading, setNestedLoading] = useState(false);
-    const [nestedOffset, setNestedOffset] = useState(0);
-    const [nestedTotal, setNestedTotal] = useState(0);
+    const [nestedOffset, setNestedOffset] = useState(reply.children?.length ?? 0);
+    const [nestedTotal, setNestedTotal] = useState(reply.children?.length ?? 0);
     const NESTED_LIMIT = 10;
     const nestedHasMore = nestedOffset + NESTED_LIMIT < nestedTotal;
     const [replyOpen, setReplyOpen] = useState(false);
@@ -42,7 +42,10 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
     const hasNested = nested.length > 0;
 
     useEffect(() => {
+        const len = reply.children?.length ?? 0;
         setNested(reply.children ?? []);
+        setNestedOffset(len);
+        setNestedTotal(len);
     }, [reply.children]);
 
     async function loadNested() {

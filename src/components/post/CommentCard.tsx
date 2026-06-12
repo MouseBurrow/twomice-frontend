@@ -10,9 +10,9 @@ import ModActions from "../shared/ModActions";
 import CreateReplyCard from "./CreateReplyCard";
 import ReplyList from "./ReplyList";
 import ReplyRow from "./ReplyRow";
-import { useAuth } from "../../contexts/AuthContext";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
+import { useAuth } from "../../contexts/AuthContext";
 import "../../assets/components.scss";
 
 type Props = {
@@ -102,7 +102,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     const isOp = !!(opToken && comment.anon_token === opToken);
     const isMe = !!(comment.is_mine);
 
-    const threadColor = comment.anon_token
+    const commentColor = comment.anon_token
         ? hashColor(comment.anon_token).dot
         : undefined;
 
@@ -157,8 +157,8 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
             {!col && replies.length > 0 && (
                 <div className="comment-replies">
-                    <ReplyList color={threadColor} hasMore={replyHasMore} onLoadMore={loadMoreReplies}>
-                        {replies.map(r => (
+                    <ReplyList hasMore={replyHasMore} onLoadMore={loadMoreReplies}>
+                        {replies.map((r, i) => (
                             <ReplyRow
                                 key={r.hash}
                                 reply={r}
@@ -166,8 +166,10 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                                 post={post}
                                 commentHash={comment.hash}
                                 bc={bc}
-                                parentColor={threadColor}
+                                connectorColor={commentColor}
                                 depth={0}
+                                isFirst={i === 0}
+                                hasMoreSiblings={i < replies.length - 1 || replyHasMore}
                                 onUpdated={() => loadReplies()}
                             />
                         ))}

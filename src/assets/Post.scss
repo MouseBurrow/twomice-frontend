@@ -311,6 +311,7 @@
   height: 0;
   border-top: 0.125rem dashed var(--line-clr, var(--text-faint));
   pointer-events: none;
+  z-index: 1;
 }
 
 .rl-line {

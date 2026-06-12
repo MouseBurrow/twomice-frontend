@@ -6,7 +6,7 @@ import ErrorMessage from "../ErrorMessage";
 import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
-import ReplyList from "./ReplyList";
+import ReplyList, { DOT_S, DOT_T, REM } from "./ReplyList";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import "../../assets/components.scss";
@@ -19,12 +19,14 @@ type Props = {
     post: string;
     commentHash: string;
     bc?: string;
-    parentColor?: string;
+    connectorColor?: string;
     depth?: number;
+    isFirst?: boolean;
+    hasMoreSiblings?: boolean;
     onUpdated: () => void;
 };
 
-export default function ReplyRow({ reply, topic, post, commentHash, bc, parentColor, onUpdated, depth = 0 }: Props) {
+export default function ReplyRow({ reply, topic, post, commentHash, bc, connectorColor, depth = 0, isFirst = false, hasMoreSiblings = false, onUpdated }: Props) {
     const [nested, setNested] = useState<ReplyData[]>(reply.children ?? []);
     const [nestedLoading, setNestedLoading] = useState(false);
     const [nestedOffset, setNestedOffset] = useState(reply.children?.length ?? 0);
@@ -96,79 +98,108 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
         }
     }
 
-    const threadColor = parentColor || (reply.anon_token
-        ? hashColor(reply.anon_token).dot
-        : undefined);
+    const rawColor = connectorColor;
+    const lineColor = rawColor
+        ? `color-mix(in srgb, ${rawColor} 38%, var(--text-faint))`
+        : 'var(--text-faint)';
+    const dotFill = rawColor
+        ? `color-mix(in srgb, ${rawColor} 10%, var(--bg-elevated))`
+        : 'var(--bg-elevated)';
+
+    const myColor = reply.anon_token ? hashColor(reply.anon_token).dot : undefined;
 
     return (
-        <div className="reply-row">
-            <div className="reply-card">
-                <div className="comment-header">
-                    {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} sm />}
-                    <span className="reply-card-inline-meta">{formatDate(reply.created_at)}</span>
-                    <div className="comment-header-end">
-                        {hasNested && (
-                            <button className="comment-collapse" onClick={() => setShowNested(!showNested)}>
-                                {showNested ? '[–]' : `[+${nested.length}]`}
-                            </button>
-                        )}
+        <div className="rl-item">
+            {isFirst && (
+                <div className="rl-line rl-line--top"
+                    style={{ borderLeftColor: lineColor }}
+                />
+            )}
+            <div className="rl-dot"
+                style={{ top: REM(DOT_T), width: REM(DOT_S), height: REM(DOT_S), background: dotFill, border: `0.125rem solid ${lineColor}` }}
+            />
+            {hasMoreSiblings && (
+                <div className="rl-line rl-line--mid"
+                    style={{ borderLeftColor: lineColor }}
+                />
+            )}
+            <div className="rl-connector"
+                style={{ borderColor: lineColor }}
+            />
+            <div className="reply-row">
+                <div className="reply-card">
+                    <div className="comment-header">
+                        {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} sm />}
+                        <span className="reply-card-inline-meta">{formatDate(reply.created_at)}</span>
+                        <div className="comment-header-end">
+                            {hasNested && (
+                                <button className="comment-collapse" onClick={() => setShowNested(!showNested)}>
+                                    {showNested ? '[–]' : `[+${nested.length}]`}
+                                </button>
+                            )}
+                        </div>
                     </div>
-                </div>
-                {reply.deleted ? (
-                    <div className="comment-body">
-                        <em>[removed]</em>
-                    </div>
-                ) : (
-                    <>
+                    {reply.deleted ? (
                         <div className="comment-body">
-                            <GreenText text={reply.content} />
+                            <em>[removed]</em>
                         </div>
-                        <div className="comment-footer">
-                            <VoteButtons votes={reply.vote_count ?? 0} disabled={false} bc={bc} />
-                            <button className="reply-chip" onClick={() => setReplyOpen(!replyOpen)}>
-                                ↩ squeak back
+                    ) : (
+                        <>
+                            <div className="comment-body">
+                                <GreenText text={reply.content} />
+                            </div>
+                            <div className="comment-footer">
+                                <VoteButtons votes={reply.vote_count ?? 0} disabled={false} bc={bc} />
+                                <button className="reply-chip" onClick={() => setReplyOpen(!replyOpen)}>
+                                    ↩ squeak back
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {replyOpen && (
+                    <div className="reply-form-wrap">
+                        <textarea
+                            className="reply-form-input"
+                            placeholder="Echo back…"
+                            value={replyContent}
+                            onChange={e => setReplyContent(e.target.value)}
+                        />
+                        <div className="reply-form-actions">
+                            <button
+                                className="reply-form-submit"
+                                disabled={!replyContent.trim() || replyBusy}
+                                onClick={submitReply}
+                            >
+                                {replyBusy ? "…" : "Echo"}
+                            </button>
+                            <button
+                                className="reply-form-cancel"
+                                onClick={() => { setReplyOpen(false); setReplyError(undefined); }}
+                            >
+                                Cancel
                             </button>
                         </div>
-                    </>
+                        <ErrorMessage error={replyError} />
+                    </div>
+                )}
+
+                {nestedLoading && <p className="comment-loading">Loading…</p>}
+
+                {showNested && nested.length > 0 && (
+                    <ReplyList hasMore={nestedHasMore} onLoadMore={loadMoreNested}>
+                        {nested.map((nr, i) => (
+                            <ReplyRow key={nr.hash} reply={nr} topic={topic} post={post} commentHash={commentHash} bc={bc}
+                                connectorColor={myColor}
+                                depth={depth + 1}
+                                isFirst={i === 0}
+                                hasMoreSiblings={i < nested.length - 1 || nestedHasMore}
+                                onUpdated={onUpdated} />
+                        ))}
+                    </ReplyList>
                 )}
             </div>
-
-            {replyOpen && (
-                <div className="reply-form-wrap">
-                    <textarea
-                        className="reply-form-input"
-                        placeholder="Echo back…"
-                        value={replyContent}
-                        onChange={e => setReplyContent(e.target.value)}
-                    />
-                    <div className="reply-form-actions">
-                        <button
-                            className="reply-form-submit"
-                            disabled={!replyContent.trim() || replyBusy}
-                            onClick={submitReply}
-                        >
-                            {replyBusy ? "…" : "Echo"}
-                        </button>
-                        <button
-                            className="reply-form-cancel"
-                            onClick={() => { setReplyOpen(false); setReplyError(undefined); }}
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                    <ErrorMessage error={replyError} />
-                </div>
-            )}
-
-            {nestedLoading && <p className="comment-loading">Loading…</p>}
-
-            {showNested && nested.length > 0 && (
-                <ReplyList color={threadColor} hasMore={nestedHasMore} onLoadMore={loadMoreNested}>
-                    {nested.map(nr => (
-                        <ReplyRow key={nr.hash} reply={nr} topic={topic} post={post} commentHash={commentHash} bc={bc} parentColor={parentColor} depth={depth + 1} onUpdated={onUpdated} />
-                    ))}
-                </ReplyList>
-            )}
         </div>
     );
 }

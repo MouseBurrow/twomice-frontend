@@ -5,6 +5,13 @@
 - Prefer CSS custom properties for theming (defined in `variables.scss`)
 - Use `dv()` utility for density-aware values only when unavoidable
 
+## Mouse Terminology
+
+- **nibbles** — posts (a single post is a "nibble")
+- **squeaks** — comments / replies
+- **burrows** — boards / communities
+- **hole** — the feed / front page
+
 ## API Reference
 
 Before making changes that touch the API layer, check the backend service's `API.md` for the current spec. These live in `services/` under the monorepo root (`..` from here):

@@ -48,7 +48,7 @@ export default function PostFeed({ title, note }: Props) {
                     <div className="post-feed-title">{title}</div>
                     {!loading && (
                         <span className="post-feed-count">
-                            {posts.length} squeaks
+                            {posts.length} nibble{posts.length !== 1 ? "s" : ""}
                         </span>
                     )}
                 </div>

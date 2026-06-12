@@ -26,24 +26,14 @@
 .board-hero {
   background: var(--bg-elevated);
   border: 0.0625rem solid var(--border);
+  border-top: none;
   border-radius: 0 1rem 1rem 1rem;
   position: relative;
   overflow: hidden;
 }
 
-.board-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 0.1875rem;
-  background: linear-gradient(90deg, var(--stripe-top), var(--stripe-bottom));
-}
-
 .board-hero-glow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 92% 50%, color-mix(in srgb, var(--accent2) 8%, transparent) 0%, transparent 65%);
+  display: none;
 }
 
 .board-hero-body {

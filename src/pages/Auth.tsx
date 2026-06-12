@@ -122,7 +122,7 @@ export default function Auth() {
                     <div className="tm-divider" />
 
                     <ul className="tm-reasons">
-                        <li>Post nibs &amp; start conversations</li>
+                        <li>Post nibbles &amp; start conversations</li>
                         <li>Squeak on anything that moves you</li>
                         <li>Build your burrow over time</li>
                     </ul>

@@ -27,8 +27,7 @@
 }
 
 .profile-hero-glow {
-  position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse at 95% 50%, color-mix(in srgb, var(--accent2) 7%, transparent) 0%, transparent 65%);
+  display: none;
 }
 
 .profile-hero-body { position: relative; z-index: 1; }

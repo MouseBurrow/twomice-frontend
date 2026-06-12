@@ -34,6 +34,7 @@ export default function Post() {
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [sortLoading, setSortLoading] = useState(false);
     const [reloadVersion, setReloadVersion] = useState(0);
     const [locked, setLocked] = useState(false);
     const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
@@ -78,7 +79,26 @@ export default function Post() {
             }
         })();
         return () => { cancelled = true; };
-    }, [board, post, reloadVersion, commentSort]);
+    }, [board, post, reloadVersion]);
+
+    useEffect(() => {
+        if (!postData) return;
+        let cancelled = false;
+        (async () => {
+            setSortLoading(true);
+            setCommentOffset(0);
+            try {
+                const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, 0, commentSort);
+                if (cancelled) return;
+                setComments(res.data.filter(x => !x.deleted));
+                setCommentOffset(res.offset);
+                setCommentTotal(res.total);
+            } catch { /* ignore */ } finally {
+                if (!cancelled) setSortLoading(false);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [commentSort]);
 
     async function loadMoreComments() {
         const nextOffset = commentOffset + COMMENT_LIMIT;

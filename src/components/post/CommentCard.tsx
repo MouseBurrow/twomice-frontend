@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { CommentData, ReplyData } from "../../types";
@@ -25,7 +25,6 @@ type Props = {
 
 export default function CommentCard({ topic, post, comment, opToken, bc }: Props) {
     const { auth } = useAuth();
-    const mountRef = useRef(true);
     const [col, setCol] = useState(false);
     const [loading, setLoading] = useState(false);
     const [replies, setReplies] = useState<ReplyData[]>([]);
@@ -40,28 +39,19 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
     const isAdmin = auth.status === "admin";
 
-    if (removed) {
-        return (
-            <div className="comment-removed">
-                [removed by moderator]
-            </div>
-        );
-    }
-
-    async function loadReplies(signal?: { cancelled: boolean }) {
+    async function loadReplies(cancelled?: () => boolean) {
         try {
             setLoading(true);
             setError(undefined);
             const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, 0);
-            if (!signal?.cancelled) {
-                setReplies(res.data.filter(r => !r.deleted));
-                setReplyOffset(0);
-                setReplyTotal(res.total);
-            }
+            if (cancelled?.()) return;
+            setReplies(res.data.filter(r => !r.deleted));
+            setReplyOffset(0);
+            setReplyTotal(res.total);
         } catch (e) {
-            if (!signal?.cancelled) setError(e as ApiError);
+            if (!cancelled?.()) setError(e as ApiError);
         } finally {
-            if (!signal?.cancelled) setLoading(false);
+            if (!cancelled?.()) setLoading(false);
         }
     }
 
@@ -76,12 +66,18 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     }
 
     useEffect(() => {
-        return () => { mountRef.current = false; };
+        let cancelled = false;
+        loadReplies(() => cancelled);
+        return () => { cancelled = true; };
     }, []);
 
-    useEffect(() => {
-        loadReplies({ cancelled: !mountRef.current });
-    }, []);
+    if (removed) {
+        return (
+            <div className="comment-removed">
+                [removed by moderator]
+            </div>
+        );
+    }
 
     const isOp = !!(opToken && comment.anon_token === opToken);
     const isMe = !!(comment.is_mine);
@@ -130,7 +126,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                         myToken={comment.is_mine ? comment.anon_token : undefined}
                         onCreated={async () => {
                             setReplyOpen(false);
-                            await loadReplies({ cancelled: !mountRef.current });
+                            await loadReplies();
                             if (mountRef.current) setCol(true);
                         }}
                     />
@@ -152,7 +148,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                                 bc={bc}
                                 parentColor={threadColor}
                                 depth={0}
-                                onUpdated={() => loadReplies({ cancelled: !mountRef.current })}
+                                onUpdated={() => loadReplies()}
                             />
                         ))}
                     </ReplyList>

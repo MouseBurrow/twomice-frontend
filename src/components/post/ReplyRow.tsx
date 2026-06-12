@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { ReplyData } from "../../types";
@@ -25,7 +25,6 @@ type Props = {
 };
 
 export default function ReplyRow({ reply, topic, post, commentHash, bc, parentColor, onUpdated, depth = 0 }: Props) {
-    const mountRef = useRef(true);
     const [nested, setNested] = useState<ReplyData[]>(reply.children ?? []);
     const [nestedLoading, setNestedLoading] = useState(false);
     const [nestedOffset, setNestedOffset] = useState(0);
@@ -43,10 +42,6 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
     const hasNested = nested.length > 0;
 
     useEffect(() => {
-        return () => { mountRef.current = false; };
-    }, []);
-
-    useEffect(() => {
         setNested(reply.children ?? []);
     }, [reply.children]);
 
@@ -55,12 +50,11 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
         setNestedLoading(true);
         try {
             const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, 0);
-            if (!mountRef.current) return;
             setNested(res.data.filter(r => !r.deleted));
             setNestedOffset(0);
             setNestedTotal(res.total);
         } catch { /* ignore */ } finally {
-            if (mountRef.current) setNestedLoading(false);
+            setNestedLoading(false);
         }
     }
 
@@ -69,7 +63,6 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, parentCo
         try {
             const nextOffset = nestedOffset + NESTED_LIMIT;
             const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, nextOffset);
-            if (!mountRef.current) return;
             setNested(prev => [...prev, ...res.data.filter(r => !r.deleted)]);
             setNestedOffset(nextOffset);
         } catch { /* ignore */ }

@@ -816,10 +816,9 @@ input, textarea {
   text-transform: uppercase;
   cursor: pointer;
   border: 0.0625rem solid var(--border);
-  background: transparent;
+  background: var(--bg-surface);
   color: var(--text-muted);
   transition: all .12s;
-  flex: 1;
 }
 .mini-btn--active {
   border-color: var(--accent);

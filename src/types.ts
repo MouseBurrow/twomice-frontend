@@ -67,6 +67,15 @@ export type ReplyData = {
     vote_count?: number;
     anon_token?: string;
     is_mine?: boolean;
+    children?: ReplyData[];  // nested replies, empty array if none
+};
+
+/** Paginated response used by the replies endpoint (offset/limit style). */
+export type OffsetPage<T> = {
+    data: T[];
+    total: number;
+    limit: number;
+    offset: number;
 };
 
 export type UserStats = {

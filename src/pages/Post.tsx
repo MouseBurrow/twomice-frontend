@@ -33,9 +33,13 @@ export default function Post() {
     const [relatedPosts, setRelatedPosts] = useState<PostData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [reloadVersion, setReloadVersion] = useState(0);
     const [locked, setLocked] = useState(false);
     const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
+    const [commentOffset, setCommentOffset] = useState(0);
+    const [commentTotal, setCommentTotal] = useState(0);
+    const COMMENT_LIMIT = 25;
 
     const isAdmin = auth.status === "admin";
 
@@ -47,16 +51,19 @@ export default function Post() {
         let cancelled = false;
         (async () => {
             setLoading(true);
+            setCommentOffset(0);
             setError(undefined);
             try {
-                const [postResult, commentList, boardPosts] = await Promise.all([
+                const [postResult, commentRes, boardPosts] = await Promise.all([
                     api.getPost(board!, post!),
-                    api.getAllComments(board!, post!),
+                    api.getAllComments(board!, post!, COMMENT_LIMIT, 0, commentSort),
                     api.getAllPosts(board!)
                 ]);
                 if (cancelled) return;
                 setPostData(postResult);
-                setComments(commentList.filter(x => !x.deleted));
+                setComments(commentRes.data.filter(x => !x.deleted));
+                setCommentOffset(commentRes.offset);
+                setCommentTotal(commentRes.total);
                 setRelatedPosts(
                     boardPosts
                         .filter(p => p.slug !== post && !p.deleted)
@@ -71,7 +78,20 @@ export default function Post() {
             }
         })();
         return () => { cancelled = true; };
-    }, [board, post, reloadVersion]);
+    }, [board, post, reloadVersion, commentSort]);
+
+    async function loadMoreComments() {
+        const nextOffset = commentOffset + COMMENT_LIMIT;
+        if (loadingMore || nextOffset >= commentTotal) return;
+        setLoadingMore(true);
+        try {
+            const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, nextOffset, commentSort);
+            setComments(prev => [...prev, ...res.data.filter(x => !x.deleted)]);
+            setCommentOffset(res.offset);
+        } catch { /* ignore */ } finally {
+            setLoadingMore(false);
+        }
+    }
 
     const formattedTime = postData?.created_at
         ? formatRelativeTime(postData.created_at)
@@ -204,7 +224,7 @@ export default function Post() {
                                     <div className="related-header" style={{ marginBottom: dv(density, 5, 7, 8) }}>
                                         More in b/{board}
                                     </div>
-                                    {relatedPosts.map((rp, i) => (
+                                    {relatedPosts.map(rp => (
                                         <div key={rp.slug} className="related-item"
                                             onClick={() => navigate(`/b/${board}/nib/${rp.slug}`)}
                                             style={{ padding: `${dv(density, 8, 10, 12)}px 0` }}
@@ -250,11 +270,11 @@ export default function Post() {
 
                     <CommentGrid topic={board!} post={post!} comments={sortedComments} opToken={opToken} bc={bc} />
 
-                    {comments.length > 5 && (
+                    {commentOffset + COMMENT_LIMIT < commentTotal && (
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: dv(density, 16, 24, 32), paddingBottom: dv(density, 20, 32, 40) }}>
-                            <span style={{ color: 'var(--text-faint)', fontSize: '0.75rem' }}>
-                                Viewing all {comments.length} squeaks
-                            </span>
+                            <button className="btn-ghost" onClick={loadMoreComments} disabled={loadingMore}>
+                                {loadingMore ? "Loading…" : `Load more (${comments.length}/${commentTotal})`}
+                            </button>
                         </div>
                     )}
 

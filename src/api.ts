@@ -1,6 +1,6 @@
 import { ApiError, type ApiErrorPayload } from "./apiError.ts";
 import type {
-    AccountData, CommentData, PostData, ReplyData,
+    AccountData, CommentData, PostData, ReplyData, OffsetPage,
     BoardData, BoardSummary, UserStats, FollowedBoardInfo,
     ReportData, ModLogEntry,
 } from "./types.ts";
@@ -91,14 +91,14 @@ export const api = {
     createComment: (topic: string, post: string, body: { content: string }) =>
         request<void>(`/b/${topic}/nib/${post}/sqk`, { method: "POST", body: JSON.stringify(body) }),
 
-    getAllComments: (topic: string, post: string) =>
-        request<CommentData[]>(`/b/${topic}/nib/${post}/sqk`),
+    getAllComments: (topic: string, post: string, limit = 25, offset = 0, sort: "hot" | "new" | "top" = "hot") =>
+        request<OffsetPage<CommentData>>(`/b/${topic}/nib/${post}/sqk?limit=${limit}&offset=${offset}&sort=${sort}`),
 
     createReply: (topic: string, post: string, comment: string, body: { content: string; reply_hash?: string }) =>
         request<void>(`/b/${topic}/nib/${post}/sqk/${comment}/echoes`, { method: "POST", body: JSON.stringify(body) }),
 
-    getReplies: (topic: string, post: string, comment: string) =>
-        request<ReplyData[]>(`/b/${topic}/nib/${post}/sqk/${comment}/echoes`),
+    getReplies: (topic: string, post: string, parentHash: string, limit = 25, offset = 0) =>
+        request<OffsetPage<ReplyData>>(`/b/${topic}/nib/${post}/sqk/${parentHash}/echoes?limit=${limit}&offset=${offset}`),
 
     // ── Feed ─────────────────────────────────────────────────────────
     /** Cross-board feed. Returns posts with board_id set. sort: hot|new|top */

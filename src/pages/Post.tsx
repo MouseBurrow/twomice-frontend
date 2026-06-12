@@ -147,7 +147,7 @@ export default function Post() {
 
                     <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
                         <PushPin color={bc} glow={!!postData.is_hot} />
-                        <div className="post-op-card" style={{ borderTop: `3px solid ${bc}`, background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
+                        <div className="post-op-card" style={{ borderTop: `3px solid ${bc}`, borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', borderLeft: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
                             <div className="post-detail-inner" style={{ padding: cardPad }}>
                                 <div className="post-op-meta" style={{ marginBottom: dv(density, 8, 10, 12) }}>
                                     {postData.anon_token && (
@@ -207,7 +207,7 @@ export default function Post() {
                                     {relatedPosts.map((rp, i) => (
                                         <div key={rp.slug} className="related-item"
                                             onClick={() => navigate(`/b/${board}/nib/${rp.slug}`)}
-                                            style={{ padding: `${dv(density, 5, 7, 8)}px 0` }}
+                                            style={{ padding: `${dv(density, 8, 10, 12)}px 0` }}
                                         >
                                             <div className="related-title" style={{ fontSize: dv(density, 11, 12, 12) }}>
                                                 {rp.title}

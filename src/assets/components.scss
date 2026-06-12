@@ -392,10 +392,22 @@
 
 .thread-line {
   position: absolute;
+  left: 4px;
   border-left: 2px dashed;
+}
+
+.thread-connector {
+  position: absolute;
+  height: 0;
+  border-top: 2px dashed var(--connector-clr, currentColor);
+  pointer-events: none;
 }
 
 /* ── Tilted comment card wrapper ── */
 .cmt-tilt-wrap {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--comment-corners, 0 1rem 1rem 1rem);
+  transform-origin: 50% 0;
   transition: background-color .2s, border-color .2s;
 }

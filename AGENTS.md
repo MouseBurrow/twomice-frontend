@@ -15,4 +15,4 @@ Always read each service's `API.md` to check the current API spec before making 
 - `services/social-feed/API.md` — Following boards, user stats
 - `services/moderation/API.md` — Reports, mod log, board management
 
-If the API spec does not have a feature I need, write a note to `API_TODO.md` listing what is missing, then continue assuming the endpoint exists so the frontend code can be written. When the backend is ready, `API_TODO.md` serves as a checklist of endpoints to implement.
+If the API spec does not have a feature I need, write a note to the service's `API_TODO.md` listing what is missing, then continue assuming the endpoint exists so the frontend code can be written. When the backend is ready, `API_TODO.md` serves as a checklist of endpoints to implement.

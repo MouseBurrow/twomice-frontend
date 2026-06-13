@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { CommentData, ReplyData } from "../../types";
@@ -7,13 +7,16 @@ import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
 import ModActions from "../shared/ModActions";
-import CreateReplyCard from "./CreateReplyCard";
+import CreateCard from "./CreateCard";
 import ReplyList from "./ReplyList";
 import ReplyRow from "./ReplyRow";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import { useAuth } from "../../contexts/AuthContext";
+import { useOffsetPagination } from "../../hooks/useOffsetPagination";
 import "../../assets/components.scss";
+
+const REPLY_LIMIT = 10;
 
 type Props = {
     topic: string;
@@ -27,58 +30,34 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     const { auth } = useAuth();
     const [col, setCol] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [replies, setReplies] = useState<ReplyData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [replyOpen, setReplyOpen] = useState(false);
     const [removed, setRemoved] = useState(false);
-    const [replyOffset, setReplyOffset] = useState(0);
-    const [replyTotal, setReplyTotal] = useState(0);
-    const loadingMoreRef = useRef(false);
-
-    const REPLY_LIMIT = 10;
-    const replyHasMore = replyOffset + REPLY_LIMIT < replyTotal;
 
     const isAdmin = auth.status === "admin";
+    const replyPagination = useOffsetPagination<ReplyData>(REPLY_LIMIT);
 
-    async function loadReplies(cancelled?: () => boolean) {
+    async function loadReplies() {
         try {
             setLoading(true);
             setError(undefined);
             const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, 0);
-            if (cancelled?.()) return;
-            setReplies(res.data);
-            setReplyOffset(0);
-            setReplyTotal(res.total);
+            replyPagination.replace(res.data, res.total, 0);
         } catch (e) {
-            if (!cancelled?.()) setError(e as ApiError);
+            setError(e as ApiError);
         } finally {
-            if (!cancelled?.()) setLoading(false);
+            setLoading(false);
         }
     }
 
     async function loadMoreReplies() {
-        if (loadingMoreRef.current || !replyHasMore) return;
-        loadingMoreRef.current = true;
-        try {
-            const nextOffset = replyOffset + REPLY_LIMIT;
-            const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, nextOffset);
-            const existing = new Set(replies.map(r => r.hash));
-            const fresh = res.data.filter(r => !existing.has(r.hash));
-            if (fresh.length > 0) {
-                setReplies(prev => [...prev, ...fresh]);
-                setReplyOffset(nextOffset);
-            } else {
-                setReplyOffset(replyTotal);
-            }
-        } catch { /* ignore */ } finally {
-            loadingMoreRef.current = false;
-        }
+        await replyPagination.loadMore(
+            nextOffset => api.getReplies(topic, post, comment.hash, REPLY_LIMIT, nextOffset)
+        );
     }
 
     useEffect(() => {
-        let cancelled = false;
-        loadReplies(() => cancelled);
-        return () => { cancelled = true; };
+        loadReplies();
     }, []);
 
     if (removed || comment.deleted) {
@@ -117,9 +96,9 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                     <span className="comment-id">#{comment.hash.slice(0, 7)}</span>
                     <div className="comment-header-end">
                         <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
-                        {replies.length > 0 && (
+                        {replyPagination.items.length > 0 && (
                             <button className="comment-collapse" onClick={() => setCol(!col)}>
-                                {col ? `[+${replies.length}]` : '[–]'}
+                                {col ? `[+${replyPagination.items.length}]` : '[–]'}
                             </button>
                         )}
                     </div>
@@ -139,7 +118,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                 </div>
 
                 {replyOpen && (
-                    <CreateReplyCard
+                    <CreateCard
                         topic={topic}
                         post={post}
                         commentHash={comment.hash}
@@ -155,10 +134,10 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
             {loading && <p className="comment-loading">Loading replies…</p>}
 
-            {!col && replies.length > 0 && (
+            {!col && replyPagination.items.length > 0 && (
                 <div className="comment-replies">
-                    <ReplyList hasMore={replyHasMore} onLoadMore={loadMoreReplies}>
-                        {replies.map((r, i) => (
+                    <ReplyList hasMore={replyPagination.hasMore} onLoadMore={loadMoreReplies}>
+                        {replyPagination.items.map((r, i) => (
                             <ReplyRow
                                 key={r.hash}
                                 reply={r}
@@ -169,7 +148,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                                 connectorColor={commentColor}
                                 depth={0}
                                 isFirst={i === 0}
-                                hasMoreSiblings={i < replies.length - 1 || replyHasMore}
+                                hasMoreSiblings={i < replyPagination.items.length - 1 || replyPagination.hasMore}
                                 onUpdated={() => loadReplies()}
                             />
                         ))}

@@ -6,6 +6,7 @@ import AnonBadge from "../shared/AnonBadge";
 import BoardChip from "../shared/BoardChip";
 import ModActions from "../shared/ModActions";
 import PushPin from "../shared/PushPin";
+import BoardTag from "../shared/BoardTag";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
 import { formatRelativeTime } from "../../utils/date";
@@ -104,11 +105,7 @@ export default function PostCard({ board, post }: Props) {
                         <div className="pcard-footer-spacer" />
 
                         {post.tags && post.tags.slice(0, 1).map(tag => (
-                            <span key={tag} className="bc-tag" style={{
-                                color: bc,
-                                background: `color-mix(in srgb, ${bc} 12%, transparent)`,
-                                border: `1px solid color-mix(in srgb, ${bc} 28%, transparent)`,
-                            }}>#{tag}</span>
+                            <BoardTag key={tag} tag={tag} bc={bc} />
                         ))}
 
                         <div className="pcard-footer-end">

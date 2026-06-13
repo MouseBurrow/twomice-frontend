@@ -193,16 +193,6 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.22), inset 0 1px 2px rgba(255,255,255,.32);
 }
 
-/* ── Board dot (large, used in hero) ── */
-.board-dot-lg {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  display: inline-block;
-  border: 2px solid rgba(0,0,0,0.12);
-  flex-shrink: 0;
-}
-
 /* ── PostCard scrapbook outer ── */
 .pcard-wrap {
   position: relative;
@@ -381,27 +371,6 @@
   width: 0.125rem;
   height: 0.375rem;
   background: rgba(0,0,0,0.2);
-}
-
-/* ── Comment thread dots ── */
-.thread-dot {
-  position: absolute;
-  left: 0;
-  border-radius: 50%;
-  z-index: 2;
-}
-
-.thread-line {
-  position: absolute;
-  left: 4px;
-  border-left: 2px dashed;
-}
-
-.thread-connector {
-  position: absolute;
-  height: 0;
-  border-top: 2px dashed var(--connector-clr, currentColor);
-  pointer-events: none;
 }
 
 /* ── Tilted comment card wrapper ── */

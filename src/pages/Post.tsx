@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../contexts/AuthContext";
 import { useDensity } from "../contexts/DensityContext";
 import type { ApiError } from "../apiError";
 import CommentGrid from "../components/post/CommentGrid";
-import CreateCommentCard from "../components/post/CreateCommentCard";
+import CreateCard from "../components/post/CreateCard";
 import AnonBadge from "../components/shared/AnonBadge";
 import VoteButtons from "../components/shared/VoteButtons";
 import BoardChip from "../components/shared/BoardChip";
@@ -13,15 +13,19 @@ import MiniBtn from "../components/shared/MiniBtn";
 import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
 import PushPin from "../components/shared/PushPin";
+import BoardTag from "../components/shared/BoardTag";
 import SkeletonLines from "../components/skeleton/SkeletonLines";
 import type { CommentData, PostData } from "../types";
 import { formatRelativeTime } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
 import { dv } from "../utils/density";
+import { useOffsetPagination } from "../hooks/useOffsetPagination";
 import "../assets/Post.scss";
 import "../assets/components.scss";
 import { FORCE_SKELETON } from "../debug";
 import { useShowLoading } from "../utils/useShowLoading";
+
+const COMMENT_LIMIT = 25;
 
 export default function Post() {
     const { board, post } = useParams<{ board: string; post: string }>();
@@ -30,21 +34,16 @@ export default function Post() {
     const { density } = useDensity();
 
     const [postData, setPostData] = useState<PostData>();
-    const [comments, setComments] = useState<CommentData[]>([]);
     const [relatedPosts, setRelatedPosts] = useState<PostData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
     const showLoading = FORCE_SKELETON || useShowLoading(loading);
-    const [loadingMore, setLoadingMore] = useState(false);
     const [reloadVersion, setReloadVersion] = useState(0);
     const [locked, setLocked] = useState(false);
     const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
-    const [commentOffset, setCommentOffset] = useState(0);
-    const [commentTotal, setCommentTotal] = useState(0);
-    const loadingMoreRef = useRef(false);
-    const COMMENT_LIMIT = 25;
 
     const isAdmin = auth.status === "admin";
+    const pagination = useOffsetPagination<CommentData>(COMMENT_LIMIT);
 
     useEffect(() => {
         if (postData) setLocked(postData.is_locked ?? false);
@@ -54,8 +53,8 @@ export default function Post() {
         let cancelled = false;
         (async () => {
             setLoading(true);
-            setCommentOffset(0);
             setError(undefined);
+            pagination.replace([], 0);
             try {
                 const [postResult, commentRes, boardPosts] = await Promise.all([
                     api.getPost(board!, post!),
@@ -64,9 +63,7 @@ export default function Post() {
                 ]);
                 if (cancelled) return;
                 setPostData(postResult);
-                setComments(commentRes.data);
-                setCommentOffset(commentRes.offset);
-                setCommentTotal(commentRes.total);
+                pagination.replace(commentRes.data, commentRes.total, commentRes.offset);
                 setRelatedPosts(
                     boardPosts
                         .filter(p => p.slug !== post && !p.deleted)
@@ -87,38 +84,22 @@ export default function Post() {
         if (!postData) return;
         let cancelled = false;
         (async () => {
-            setCommentOffset(0);
             try {
                 const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, 0, commentSort);
                 if (cancelled) return;
-                setComments(res.data);
-                setCommentOffset(res.offset);
-                setCommentTotal(res.total);
+                pagination.replace(res.data, res.total, res.offset);
             } catch { /* ignore */ }
         })();
         return () => { cancelled = true; };
     }, [commentSort]);
 
     async function loadMoreComments() {
-        const nextOffset = commentOffset + COMMENT_LIMIT;
-        if (loadingMoreRef.current || nextOffset >= commentTotal) return;
-        loadingMoreRef.current = true;
-        setLoadingMore(true);
         const scrollY = window.scrollY;
-        try {
-            const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, nextOffset, commentSort);
-            const existing = new Set(comments.map(c => c.hash));
-            const fresh = res.data.filter(x => !existing.has(x.hash));
-            if (fresh.length > 0) {
-                setComments(prev => [...prev, ...fresh]);
-                setCommentOffset(nextOffset);
-            } else {
-                setCommentOffset(commentTotal);
-            }
+        const fresh = await pagination.loadMore(
+            nextOffset => api.getAllComments(board!, post!, COMMENT_LIMIT, nextOffset, commentSort)
+        );
+        if (fresh.length > 0) {
             requestAnimationFrame(() => window.scrollTo(0, scrollY));
-        } catch { /* ignore */ } finally {
-            loadingMoreRef.current = false;
-            setLoadingMore(false);
         }
     }
 
@@ -130,20 +111,20 @@ export default function Post() {
 
     const myAnonToken = useMemo(() => {
         if (postData?.is_mine && postData.anon_token) return postData.anon_token;
-        return comments.find(c => c.is_mine)?.anon_token;
-    }, [postData, comments]);
+        return pagination.items.find(c => c.is_mine)?.anon_token;
+    }, [postData, pagination.items]);
 
     const bc = board ? boardColorFromName(board) : 'var(--accent)';
 
     const sortedComments = useMemo(() => {
-        const sorted = [...comments];
+        const sorted = [...pagination.items];
         if (commentSort === "new") {
             sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
         } else {
             sorted.sort((a, b) => (b.vote_count ?? 0) - (a.vote_count ?? 0));
         }
         return sorted;
-    }, [comments, commentSort]);
+    }, [pagination.items, commentSort]);
 
     const COMMENT_SORT_LABELS: Record<string, string> = { hot: "Hot", new: "Fresh", top: "Buried" };
     const sidebarTop = dv(density, '3.625rem', '4.5rem', '5.5rem');
@@ -192,7 +173,7 @@ export default function Post() {
                             </div>
                             {!isGuest ? (
                                 <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
-                                    <CreateCommentCard topic={board!} post={post!} myToken={undefined} onCreated={async () => {}} />
+                                    <CreateCard topic={board!} post={post!} myToken={undefined} onCreated={async () => {}} />
                                 </div>
                             ) : (
                                 <GuestBanner onLogin={() => navigate("/auth")} />
@@ -232,12 +213,8 @@ export default function Post() {
                                         </div>
 
                                         <div className="post-op-footer" style={{ paddingTop: 8, marginTop: dv(density, 8, 10, 12) }}>
-                                            <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={comments.length} />
-                                            {postData.tags?.map(t => <span key={t} className="bc-tag" style={{
-                                                color: bc,
-                                                background: `color-mix(in srgb,${bc} 12%,transparent)`,
-                                                border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
-                                            }}>#{t}</span>)}
+                                            <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={pagination.items.length} />
+                                            {postData.tags?.map(t => <BoardTag key={t} tag={t} bc={bc} />)}
                                         </div>
                                     </div>
                                 </div>
@@ -251,11 +228,7 @@ export default function Post() {
                                 <div className="post-board-widget-body" style={{ padding: infoPad }}>
                                     {postData.tags && postData.tags.length > 0 && (
                                         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
-                                            {postData.tags.map(tag => <span key={tag} className="bc-tag" style={{
-                                                color: bc,
-                                                background: `color-mix(in srgb,${bc} 12%,transparent)`,
-                                                border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
-                                            }}>#{tag}</span>)}
+                                            {postData.tags.map(tag => <BoardTag key={tag} tag={tag} bc={bc} />)}
                                         </div>
                                     )}
 
@@ -285,7 +258,7 @@ export default function Post() {
 
                             {!isGuest && !locked ? (
                                 <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
-                                    <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
+                                    <CreateCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
                                 </div>
                             ) : isGuest ? (
                                 <GuestBanner onLogin={() => navigate("/auth")} />
@@ -300,7 +273,7 @@ export default function Post() {
                 <div className="post-dblend-right">
                     <div className="comment-feed-header" style={{ gap: dv(density, 8, 10, 12), marginBottom: dv(density, 12, 16, 20) }}>
                         <span className="comment-feed-count" style={{ fontSize: dv(density, 14, 16, 18) }}>
-                            {showLoading ? "… squeaks" : `${comments.length} squeaks`}
+                            {showLoading ? "… squeaks" : `${pagination.items.length} squeaks`}
                         </span>
                         <span className="comment-feed-sort-label">Sort</span>
                         {(["hot", "new", "top"] as const).map(s => (
@@ -323,10 +296,10 @@ export default function Post() {
                         <>
                             <CommentGrid topic={board!} post={post!} comments={sortedComments} opToken={opToken} bc={bc} />
 
-                            {commentOffset + COMMENT_LIMIT < commentTotal && (
+                            {pagination.hasMore && (
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: dv(density, 16, 24, 32), paddingBottom: dv(density, 20, 32, 40) }}>
-                                    <button className="btn-ghost" onClick={loadMoreComments} disabled={loadingMore}>
-                                        {loadingMore ? "Loading…" : `Load more (${comments.length}/${commentTotal})`}
+                                    <button className="btn-ghost" onClick={loadMoreComments} disabled={pagination.loading}>
+                                        {pagination.loading ? "Loading…" : `Load more (${pagination.items.length}/${pagination.total})`}
                                     </button>
                                 </div>
                             )}

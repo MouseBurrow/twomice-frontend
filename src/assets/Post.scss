@@ -3,27 +3,9 @@
 .post-page[data-density="comfortable"] { padding: 0; }
 .post-page[data-density="spacious"]    { padding: 0; }
 
-.post-page[data-density="compact"] .post-back     { margin-bottom: 0.75rem; }
-.post-page[data-density="comfortable"] .post-back { margin-bottom: 1.25rem; }
-.post-page[data-density="spacious"] .post-back    { margin-bottom: 1.75rem; }
-
 /* ── Post detail card (used in OP left panel) ── */
-.post-detail {
-  background: var(--bg-surface);
-  border: 0.0625rem solid var(--border);
-  overflow: hidden;
-  transition: background-color .2s, border-color .2s;
-}
-
 .post-detail-inner {
   transition: background-color .2s;
-}
-
-.post-detail-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  flex-wrap: wrap;
 }
 
 .post-detail-time {
@@ -37,39 +19,12 @@
   letter-spacing: .04em;
 }
 
-.post-detail-title {
-  font-family: 'Fredoka One', cursive;
-  line-height: 1.15;
-  color: var(--text-primary);
-}
-
-.post-detail-content {
-  color: var(--text-muted);
-  line-height: 1.7;
-  white-space: pre-wrap;
-}
-
-.post-detail-footer {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
 /* ── Reply box wrapper ── */
 .post-reply-box {
   background: var(--bg-surface);
   border: 0.0625rem solid var(--border);
   border-radius: 0 0.75rem 0.75rem 0.75rem;
 }
-
-.post-guest-banner-wrap {
-  margin-bottom: 1rem;
-}
-
-.post-page[data-density="compact"] .post-guest-banner-wrap     { margin-bottom: 0.625rem; }
-.post-page[data-density="comfortable"] .post-guest-banner-wrap { margin-bottom: 1rem; }
-.post-page[data-density="spacious"] .post-guest-banner-wrap    { margin-bottom: 1.25rem; }
 
 /* ── Create comment ── */
 .comment-create {
@@ -485,7 +440,6 @@
   font-size: 0.75rem;
 }
 
-.load-more-replies,
 .load-more-nested {
   font-size: 0.6875rem;
   color: var(--accent);
@@ -496,7 +450,6 @@
   font-family: var(--font-body);
   transition: opacity 0.15s;
 }
-.load-more-replies:hover,
 .load-more-nested:hover {
   opacity: 0.7;
 }

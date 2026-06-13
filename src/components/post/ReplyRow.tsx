@@ -10,9 +10,11 @@ import ReplyList, { DOT_S, DOT_T, REM } from "./ReplyList";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import { autoResize } from "../../utils/autoResize";
+import { useOffsetPagination } from "../../hooks/useOffsetPagination";
 import "../../assets/components.scss";
 
 const MAX_DEPTH = 5;
+const NESTED_LIMIT = 10;
 
 type Props = {
     reply: ReplyData;
@@ -28,12 +30,7 @@ type Props = {
 };
 
 export default function ReplyRow({ reply, topic, post, commentHash, bc, connectorColor, depth = 0, isFirst = false, hasMoreSiblings = false, onUpdated }: Props) {
-    const [nested, setNested] = useState<ReplyData[]>(reply.children ?? []);
-    const [nestedLoading, setNestedLoading] = useState(false);
-    const [nestedOffset, setNestedOffset] = useState(reply.children?.length ?? 0);
-    const [nestedTotal, setNestedTotal] = useState(reply.children?.length ?? 0);
-    const NESTED_LIMIT = 10;
-    const nestedHasMore = nestedOffset + NESTED_LIMIT < nestedTotal;
+    const nestedPagination = useOffsetPagination<ReplyData>(NESTED_LIMIT);
     const [replyOpen, setReplyOpen] = useState(false);
     const [replyContent, setReplyContent] = useState("");
     const [replyBusy, setReplyBusy] = useState(false);
@@ -42,42 +39,26 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
         (reply.children?.length ?? 0) > 0 && (reply.children?.length ?? 0) <= 3
     );
 
-    const hasNested = nested.length > 0;
+    const hasNested = nestedPagination.items.length > 0;
 
     useEffect(() => {
-        const len = reply.children?.length ?? 0;
-        setNested(reply.children ?? []);
-        setNestedOffset(len);
-        setNestedTotal(len);
+        const children = reply.children ?? [];
+        nestedPagination.replace(children, children.length, children.length);
     }, [reply.children]);
 
     async function loadNested() {
         if (depth >= MAX_DEPTH) return;
-        setNestedLoading(true);
         try {
             const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, 0);
-            setNested(res.data);
-            setNestedOffset(0);
-            setNestedTotal(res.total);
-        } catch { /* ignore */ } finally {
-            setNestedLoading(false);
-        }
+            nestedPagination.replace(res.data, res.total, 0);
+        } catch { /* ignore */ }
     }
 
     async function loadMoreNested() {
         if (depth >= MAX_DEPTH) return;
-        try {
-            const nextOffset = nestedOffset + NESTED_LIMIT;
-            const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, nextOffset);
-            const existing = new Set(nested.map(r => r.hash));
-            const fresh = res.data.filter(r => !existing.has(r.hash));
-            if (fresh.length > 0) {
-                setNested(prev => [...prev, ...fresh]);
-                setNestedOffset(nextOffset);
-            } else {
-                setNestedOffset(nestedTotal);
-            }
-        } catch { /* ignore */ }
+        await nestedPagination.loadMore(
+            nextOffset => api.getReplies(topic, post, reply.hash, NESTED_LIMIT, nextOffset)
+        );
     }
 
     async function submitReply() {
@@ -88,8 +69,6 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
             await api.createReply(topic, post, commentHash, { content: replyContent, reply_hash: reply.hash });
             setReplyContent("");
             setReplyOpen(false);
-            setNested([]);
-            setNestedOffset(0);
             await loadNested();
             onUpdated();
         } catch (e) {
@@ -135,7 +114,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
                         <div className="comment-header-end">
                             {hasNested && (
                                 <button className="comment-collapse" onClick={() => setShowNested(!showNested)}>
-                                    {showNested ? '[–]' : `[+${nested.length}]`}
+                                    {showNested ? '[–]' : `[+${nestedPagination.items.length}]`}
                                 </button>
                             )}
                         </div>
@@ -187,16 +166,16 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
                     </div>
                 )}
 
-                {nestedLoading && <p className="comment-loading">Loading…</p>}
+                {nestedPagination.loading && <p className="comment-loading">Loading…</p>}
 
-                {showNested && nested.length > 0 && (
-                    <ReplyList hasMore={nestedHasMore} onLoadMore={loadMoreNested}>
-                        {nested.map((nr, i) => (
+                {showNested && nestedPagination.items.length > 0 && (
+                    <ReplyList hasMore={nestedPagination.hasMore} onLoadMore={loadMoreNested}>
+                        {nestedPagination.items.map((nr, i) => (
                             <ReplyRow key={nr.hash} reply={nr} topic={topic} post={post} commentHash={commentHash} bc={bc}
                                 connectorColor={myColor}
                                 depth={depth + 1}
                                 isFirst={i === 0}
-                                hasMoreSiblings={i < nested.length - 1 || nestedHasMore}
+                                hasMoreSiblings={i < nestedPagination.items.length - 1 || nestedPagination.hasMore}
                                 onUpdated={onUpdated} />
                         ))}
                     </ReplyList>

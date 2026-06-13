@@ -86,7 +86,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
         ? `color-mix(in srgb, ${rawColor} 10%, var(--bg-elevated))`
         : 'var(--bg-elevated)';
 
-    const myColor = reply.anon_token ? hashColor(reply.anon_token).dot : undefined;
+    const myColor = reply.anon_token ? hashColor(reply.anon_token.slice(0, 6)).dot : undefined;
 
     return (
         <div className="rl-item">
@@ -109,7 +109,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
             <div className="reply-row">
                 <div className="reply-card">
                     <div className="comment-header">
-                        {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} sm />}
+                        {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} isMe={!!reply.is_mine} sm />}
                         <span className="reply-card-inline-meta">{formatDate(reply.created_at)}</span>
                         <div className="comment-header-end">
                             {hasNested && (

@@ -82,7 +82,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
     const isMe = !!(comment.is_mine);
 
     const commentColor = comment.anon_token
-        ? hashColor(comment.anon_token).dot
+        ? hashColor(comment.anon_token.slice(0, 6)).dot
         : undefined;
 
     return (

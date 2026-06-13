@@ -199,7 +199,6 @@ export default function Post() {
                                             )}
                                             <span className="post-detail-time">{formattedTime}</span>
                                             <div className="post-op-meta-end">
-                                                <span className="post-detail-slug">#{postData.slug}</span>
                                                 <ModActions show={isAdmin} type="post" locked={locked}
                                                     onLock={() => setLocked(p => !p)}
                                                     onRemove={() => navigate(`/b/${board}`)} />

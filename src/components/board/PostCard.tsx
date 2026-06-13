@@ -75,7 +75,6 @@ export default function PostCard({ board, post }: Props) {
                             </div>
                         )}
                         {post.is_hot && <span style={{ fontSize: 9, lineHeight: 1 }}>🔥</span>}
-                        <span className="post-card-slug">#{post.slug}</span>
                         {post.anon_token && (
                             <AnonBadge token={post.anon_token} isMe={post.is_mine} sm />
                         )}

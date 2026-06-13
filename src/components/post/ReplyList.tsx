@@ -1,8 +1,6 @@
-const DOT_S = 9;
-const DOT_R = DOT_S / 2;
-const CENTER = 22;
-const DOT_T = Math.round(CENTER - DOT_R);
-const REM = (n: number) => `${n * 0.0625}rem`;
+function dotSize(depth: number): number {
+    return Math.max(8, 11 - depth);
+}
 
 type Props = {
     hasMore?: boolean;
@@ -23,4 +21,4 @@ export default function ReplyList({ hasMore, onLoadMore, children }: Props) {
     );
 }
 
-export { DOT_S, DOT_R, CENTER, DOT_T, REM };
+export { dotSize };

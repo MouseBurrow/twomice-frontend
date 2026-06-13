@@ -6,7 +6,7 @@ import ErrorMessage from "../ErrorMessage";
 import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
-import ReplyList, { DOT_S, DOT_T, REM } from "./ReplyList";
+import ReplyList, { dotSize } from "./ReplyList";
 import { formatDate } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import { autoResize } from "../../utils/autoResize";
@@ -88,25 +88,18 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
         : 'var(--bg-elevated)';
 
     const myColor = reply.anon_token ? hashColor(reply.anon_token.slice(0, 6)).dot : undefined;
+    const ds = dotSize(depth);
 
     return (
-        <div className="rl-item">
+        <div className="rl-item" style={{ '--dot-size': ds + 'px', '--line-clr': lineColor } as React.CSSProperties}>
             {isFirst && (
-                <div className="rl-line rl-line--top"
-                    style={{ borderLeftColor: lineColor }}
-                />
+                <div className="rl-line--top" />
             )}
-            <div className="rl-dot"
-                style={{ top: REM(DOT_T), width: REM(DOT_S), height: REM(DOT_S), background: dotFill, border: `0.125rem solid ${lineColor}` }}
-            />
+            <div className="rl-dot" style={{ background: dotFill, border: `2px solid ${lineColor}` }} />
             {hasMoreSiblings && (
-                <div className="rl-line rl-line--mid"
-                    style={{ borderLeftColor: lineColor }}
-                />
+                <div className="rl-line--mid" />
             )}
-            <div className="rl-connector"
-                style={{ borderColor: lineColor }}
-            />
+            <div className="rl-connector" />
             <div className="reply-row">
                 <div className="reply-card">
                     <div className="comment-header">

@@ -65,7 +65,6 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
             <div className="comment-outer">
                 <div className="comment-card comment-removed">
                     <div className="comment-header">
-                        <span className="comment-id">#{comment.hash.slice(0, 7)}</span>
                         <div className="comment-header-end">
                             <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
                         </div>
@@ -93,7 +92,6 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                         <AnonBadge token={comment.anon_token} isOp={isOp} isMe={isMe} sm />
                     )}
                     <span className="comment-time">{formatDate(comment.created_at)}</span>
-                    <span className="comment-id">#{comment.hash.slice(0, 7)}</span>
                     <div className="comment-header-end">
                         <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
                         {replyPagination.items.length > 0 && (

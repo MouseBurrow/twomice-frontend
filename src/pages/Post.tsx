@@ -15,7 +15,7 @@ import PushPin from "../components/shared/PushPin";
 import BoardTag from "../components/shared/BoardTag";
 import SkeletonLines from "../components/skeleton/SkeletonLines";
 import type { CommentData, PostData } from "../types";
-import { formatRelativeTime } from "../utils/date";
+import { useFormatRelativeTime } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
 import { dv } from "../utils/density";
 import { useOffsetPagination } from "../hooks/useOffsetPagination";
@@ -101,10 +101,7 @@ export default function Post() {
         }
     }
 
-    const formattedTime = postData?.created_at
-        ? formatRelativeTime(postData.created_at)
-        : "";
-
+    const formattedTime = useFormatRelativeTime(postData?.created_at ?? "");
     const opToken = postData?.anon_token;
 
     const myAnonToken = useMemo(() => {

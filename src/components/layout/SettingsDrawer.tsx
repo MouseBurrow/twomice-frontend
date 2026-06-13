@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
 import { availableModesFor } from "../../utils/themes";
 import { useDensity } from "../../contexts/DensityContext";
-import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DEFAULT_FONT, applyFont } from "../../constants/settings";
+import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DATE_FORMAT_OPTIONS, DEFAULT_FONT, applyFont } from "../../constants/settings";
 import MiniBtn from "../shared/MiniBtn";
 import Toggle from "../shared/Toggle";
+import { notifyDateFormatChange } from "../../utils/date";
 
 interface Props { onClose: () => void; }
 
@@ -13,6 +14,7 @@ export default function SettingsDrawer({ onClose }: Props) {
   const { density, setDensity } = useDensity();
 
   const [font, setFontState] = useState(() => localStorage.getItem("twomice_font") ?? DEFAULT_FONT);
+  const [dateFormat, setDateFormat] = useState(() => localStorage.getItem("twomice_dateformat") ?? "smart");
   const [notifications, setNotifications] = useState(true);
   const [markRead, setMarkRead] = useState(true);
   const [autoplayGifs, setAutoplayGifs] = useState(false);
@@ -88,6 +90,20 @@ export default function SettingsDrawer({ onClose }: Props) {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Date Format */}
+          <div className="set-group">
+            <div className="settings-section-title">Date Format</div>
+            <div className="set-btn-row">
+              {DATE_FORMAT_OPTIONS.map(d => (
+                <MiniBtn key={d.value} active={dateFormat === d.value}
+                  onClick={() => { setDateFormat(d.value); localStorage.setItem("twomice_dateformat", d.value); notifyDateFormatChange(); }}>
+                  {d.label}
+                </MiniBtn>
+              ))}
+            </div>
+            <div className="set-desc">{DATE_FORMAT_OPTIONS.find(d => d.value === dateFormat)?.desc}</div>
           </div>
 
           {/* Content toggles */}

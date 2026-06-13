@@ -7,7 +7,7 @@ import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
 import GreenText from "../shared/GreenText";
 import ReplyList, { dotSize } from "./ReplyList";
-import { formatDate } from "../../utils/date";
+import { useFormatRelativeTime } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import { autoResize } from "../../utils/autoResize";
 import { useOffsetPagination } from "../../hooks/useOffsetPagination";
@@ -34,6 +34,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
     const [replyContent, setReplyContent] = useState("");
     const [replyBusy, setReplyBusy] = useState(false);
     const [replyError, setReplyError] = useState<ApiError>();
+    const replyTime = useFormatRelativeTime(reply.created_at);
     const [showNested, setShowNested] = useState(
         (reply.children?.length ?? 0) > 0 && (reply.children?.length ?? 0) <= 3
     );
@@ -104,7 +105,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
                 <div className="reply-card">
                     <div className="comment-header">
                         {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} isMe={!!reply.is_mine} sm />}
-                        <span className="reply-card-inline-meta">{formatDate(reply.created_at)}</span>
+                        <span className="reply-card-inline-meta">{replyTime}</span>
                         <div className="comment-header-end">
                             {hasNested && (
                                 <button className="comment-collapse" onClick={() => { setShowNested(!showNested); manuallyCollapsed.current = !showNested; }}>

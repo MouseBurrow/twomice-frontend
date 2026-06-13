@@ -9,7 +9,7 @@ import PushPin from "../shared/PushPin";
 import BoardTag from "../shared/BoardTag";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
-import { formatRelativeTime } from "../../utils/date";
+import { useFormatRelativeTime } from "../../utils/date";
 import { hashPostId, SCRAP_ROTS, NEST_CORNERS, boardColorFromName } from "../../utils/hash";
 import "../../assets/components.scss";
 
@@ -46,6 +46,7 @@ export default function PostCard({ board, post }: Props) {
         ? `${shadowX}px 8px 20px var(--shadow), 0 1px 4px var(--shadow)`
         : 'none';
     const bc = post.board_id ? boardColorFromName(post.board_id) : 'var(--accent)';
+    const relTime = useFormatRelativeTime(post.created_at);
 
     return (
         <div className={`pcard-wrap${scrap ? ' scrap' : ''}`}>
@@ -82,7 +83,7 @@ export default function PostCard({ board, post }: Props) {
                             <span className="locked-badge">🔒 locked</span>
                         )}
                         <span className="post-card-date">
-                            {formatRelativeTime(post.created_at)}
+                            {relTime}
                         </span>
                     </div>
 

@@ -10,7 +10,7 @@ import ModActions from "../shared/ModActions";
 import CreateCard from "./CreateCard";
 import ReplyList from "./ReplyList";
 import ReplyRow from "./ReplyRow";
-import { formatDate } from "../../utils/date";
+import { useFormatRelativeTime } from "../../utils/date";
 import { hashColor } from "../../utils/hash";
 import { useAuth } from "../../contexts/AuthContext";
 import { useOffsetPagination } from "../../hooks/useOffsetPagination";
@@ -36,6 +36,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
     const isAdmin = auth.status === "admin";
     const replyPagination = useOffsetPagination<ReplyData>(REPLY_LIMIT);
+    const commentTime = useFormatRelativeTime(comment.created_at);
 
     async function loadReplies() {
         try {
@@ -91,7 +92,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                     {comment.anon_token && (
                         <AnonBadge token={comment.anon_token} isOp={isOp} isMe={isMe} sm />
                     )}
-                    <span className="comment-time">{formatDate(comment.created_at)}</span>
+                    <span className="comment-time">{commentTime}</span>
                     <div className="comment-header-end">
                         <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
                         {replyPagination.items.length > 0 && (

@@ -7,7 +7,7 @@ import type { PostData, UserStats, FollowedBoardInfo } from "../types";
 import PostCard from "../components/board/PostCard";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import BallPin from "../components/shared/BallPin";
-import { formatRelativeTime } from "../utils/date";
+import { useFormatRelativeTime } from "../utils/date";
 import "../assets/Profile.scss";
 import { FORCE_SKELETON } from "../debug";
 import { useShowLoading } from "../utils/useShowLoading";
@@ -28,6 +28,9 @@ export default function Profile() {
     const showPostsLoading = FORCE_SKELETON || useShowLoading(postsLoading);
 
     const [prevTab, setPrevTab] = useState(tab);
+    const joinedTime = useFormatRelativeTime(
+        auth.status === "user" || auth.status === "admin" ? auth.info.created_at : ""
+    );
     if (prevTab !== tab) {
         setPrevTab(tab);
         if (tab === "posts") {
@@ -99,7 +102,7 @@ export default function Profile() {
         { label: "Squeaks", val: stats?.squeak_count ?? 0 },
         { label: "Upvotes", val: stats?.upvote_count ?? 0 },
         { label: "Following", val: stats?.following_count ?? followedBoards.length },
-        { label: "Joined", val: formatRelativeTime(auth.info.created_at) },
+        { label: "Joined", val: joinedTime },
     ];
 
     return (

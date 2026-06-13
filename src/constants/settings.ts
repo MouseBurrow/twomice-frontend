@@ -28,6 +28,12 @@ export const FONT_OPTIONS: { id: string; label: string; desc: string }[] = [
     { id: "OpenDyslexic",          label: "OpenDyslexic",          desc: "Dyslexia-friendly" },
 ];
 
+export const DATE_FORMAT_OPTIONS: { value: string; label: string; desc: string }[] = [
+    { value: "smart",     label: "Smart",     desc: "Relative for recent, absolute for old" },
+    { value: "relative",  label: "Relative",  desc: "Always relative (5m ago, 2w ago, 1y ago)" },
+    { value: "absolute",  label: "Absolute",  desc: "Always locale date (6/13/2026)" },
+];
+
 export function applyFont(font: string) {
     localStorage.setItem("twomice_font", font);
     const fontValue = `'${font}', sans-serif`;

@@ -35,27 +35,27 @@ export default function SkeletonPostCard() {
             >
                 <div className="post-card-inner">
                     <div className="post-card-meta-row">
-                        <span className="shimmer-line" style={{ width: "3.5rem", height: "0.75rem" }} />
-                        <span className="shimmer-line" style={{ width: "5rem", height: "0.75rem" }} />
+                        <span className="shimmer-line shimmer-meta-sm" />
+                        <span className="shimmer-line shimmer-meta-lg" />
                     </div>
 
                     <div className="post-card-title">
-                        <span className="shimmer-line" style={{ width: "65%" }} />
+                        <span className="shimmer-line shimmer-title" />
                     </div>
 
                     {!isCompact && (
                         <div className="post-card-preview">
-                            <span className="shimmer-line" style={{ width: "95%", marginBottom: "0.375rem" }} />
-                            <span className="shimmer-line" style={{ width: "72%" }} />
+                            <span className="shimmer-line shimmer-prev-lg" />
+                            <span className="shimmer-line shimmer-prev-sm" />
                         </div>
                     )}
 
                     <div className="pcard-footer">
                         <div className="skeleton-votes">
-                            <span className="shimmer-line" style={{ width: "3.5rem", height: "1rem" }} />
+                            <span className="shimmer-line shimmer-votes" />
                         </div>
                         <div className="pcard-footer-end">
-                            <span className="shimmer-line" style={{ width: "4rem", height: "0.75rem" }} />
+                            <span className="shimmer-line shimmer-footer" />
                         </div>
                     </div>
                 </div>

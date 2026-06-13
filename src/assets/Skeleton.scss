@@ -3,6 +3,11 @@
   100% { background-position: 37.5rem 0; }
 }
 
+@keyframes skeleton-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .shimmer-line {
   display: block;
   height: 0.8em;
@@ -17,12 +22,20 @@
   animation: shimmer 1.5s linear infinite;
 }
 
+.shimmer-meta-sm  { width: 3.5rem; height: 0.75rem; }
+.shimmer-meta-lg  { width: 5rem;   height: 0.75rem; }
+.shimmer-title    { width: 65%; }
+.shimmer-prev-lg  { width: 95%; }
+.shimmer-prev-sm  { width: 72%; }
+.shimmer-votes    { width: 3.5rem; height: 1rem; }
+.shimmer-footer   { width: 4rem;  height: 0.75rem; }
+
 .skeleton-block {
   background: var(--bg-surface);
   border: 0.0625rem solid var(--border-soft);
   border-radius: 0 0.75rem 0.75rem 0.75rem;
   padding: 1.25rem;
-  transition: opacity 0.2s ease;
+  animation: skeleton-fade-in 0.2s ease;
 }
 
 .skeleton-pin {
@@ -39,5 +52,9 @@
 }
 
 .pcard-wrap.scrap {
-  transition: opacity 0.2s ease;
+  animation: skeleton-fade-in 0.2s ease;
+}
+
+.board-hero {
+  animation: skeleton-fade-in 0.2s ease;
 }

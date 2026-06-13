@@ -154,32 +154,8 @@ export default function Post() {
     const infoPad = dv(density, '0.5rem 0.625rem 0.375rem', '0.625rem 0.875rem 0.5rem', '0.75rem 1rem 0.625rem');
     const widgetHd = dv(density, '0.4375rem 0.625rem', '0.5625rem 0.875rem', '0.6875rem 1rem');
 
-    if (showLoading) {
-        return (
-            <div className="post-page" data-density={density}>
-                <div className="post-dblend" style={{ padding: pagePad, gap: panelGap }}>
-                    <div className="post-dblend-left" style={{ width: leftW }}>
-                        <SkeletonLines lines={4} />
-                    </div>
-                    <div className="post-dblend-right">
-                        <SkeletonLines lines={5} />
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (!postData) {
-        return (
-            <div className="post-page" data-density={density}>
-                <div className="post-breadcrumb" style={{ justifyContent: 'center', paddingTop: 60 }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 24, marginBottom: 8 }}>Post not found</div>
-                        <button className="btn-ghost" onClick={() => navigate(`/b/${board}`)}>← Back to board</button>
-                    </div>
-                </div>
-            </div>
-        );
+    if (auth.status === "unknown") {
+        return <div className="post-page" data-density={density}><div className="page-loading" /></div>;
     }
 
     return (
@@ -195,95 +171,128 @@ export default function Post() {
                             onClick={() => navigate(`/b/${board}`)}>
                             ← {board}
                         </button>
-                        {locked && <span className="locked-badge">🔒 locked</span>}
+                        {!showLoading && postData?.is_locked && <span className="locked-badge">🔒 locked</span>}
                     </div>
 
-                    <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
-                        <PushPin color={bc} glow={!!postData.is_hot} />
-                        <div className="post-op-card" style={{ '--bc': bc } as React.CSSProperties}>
-                            <div className="post-detail-inner" style={{ padding: cardPad }}>
-                                <div className="post-op-meta" style={{ marginBottom: dv(density, 8, 10, 12) }}>
-                                    {postData.anon_token && (
-                                        <AnonBadge token={postData.anon_token} isOp isMe={postData.is_mine} />
-                                    )}
-                                    <span className="post-detail-time">OP · {formattedTime}</span>
-                                    <div className="post-op-meta-end">
-                                        {board && <BoardChip boardName={board} />}
-                                        <span className="post-detail-slug">#{postData.slug}</span>
-                                        <ModActions show={isAdmin} type="post" locked={locked}
-                                            onLock={() => setLocked(p => !p)}
-                                            onRemove={() => navigate(`/b/${board}`)} />
-                                    </div>
-                                </div>
-
-                                <div className="post-op-title" style={{ fontSize: dv(density, 16, 20, 24), marginBottom: dv(density, 8, 10, 12) }}>
-                                    {postData.title}
-                                </div>
-
-                                <div className="post-op-body" style={{ fontSize: dv(density, 12, 13, 14) }}>
-                                    {postData.content}
-                                </div>
-
-                                <div className="post-op-footer" style={{ paddingTop: 8, marginTop: dv(density, 8, 10, 12) }}>
-                                    <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={comments.length} />
-                                    {postData.tags?.map(t => <span key={t} className="bc-tag" style={{
-                                        color: bc,
-                                        background: `color-mix(in srgb,${bc} 12%,transparent)`,
-                                        border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
-                                    }}>#{t}</span>)}
+                    {showLoading ? (
+                        <>
+                            <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
+                                <div className="post-op-card" style={{ '--bc': bc } as React.CSSProperties}>
+                                    <SkeletonLines lines={5} style={{ marginBottom: "0.75rem" }} />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="post-board-widget">
-                        <div className="post-board-widget-header" style={{ padding: widgetHd }}>
-                            <span className="post-board-dot" style={{ background: bc }} />
-                            <span className="post-board-name" style={{ fontSize: dv(density, 12, 14, 15) }}>b/{board}</span>
-                        </div>
-                        <div className="post-board-widget-body" style={{ padding: infoPad }}>
-                            {postData.tags && postData.tags.length > 0 && (
-                                <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
-                                    {postData.tags.map(tag => <span key={tag} className="bc-tag" style={{
-                                        color: bc,
-                                        background: `color-mix(in srgb,${bc} 12%,transparent)`,
-                                        border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
-                                    }}>#{tag}</span>)}
+                            <div className="post-board-widget">
+                                <div className="post-board-widget-header" style={{ padding: widgetHd }}>
+                                    <span className="post-board-dot" style={{ background: bc }} />
+                                    <span className="post-board-name">b/{board}</span>
                                 </div>
+                                <div className="post-board-widget-body" style={{ padding: infoPad }}>
+                                    <SkeletonLines lines={3} />
+                                </div>
+                            </div>
+                            {!isGuest ? (
+                                <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
+                                    <CreateCommentCard topic={board!} post={post!} myToken={undefined} onCreated={async () => {}} />
+                                </div>
+                            ) : (
+                                <GuestBanner onLogin={() => navigate("/auth")} />
                             )}
-
-                            {relatedPosts.length > 0 && (
-                                <div>
-                                    <div className="related-header" style={{ marginBottom: dv(density, 5, 7, 8) }}>
-                                        More in b/{board}
-                                    </div>
-                                    {relatedPosts.map(rp => (
-                                        <div key={rp.slug} className="related-item"
-                                            onClick={() => navigate(`/b/${board}/nib/${rp.slug}`)}
-                                            style={{ padding: `${dv(density, 8, 10, 12)}px 0` }}
-                                        >
-                                            <div className="related-title" style={{ fontSize: dv(density, 11, 12, 12) }}>
-                                                {rp.title}
-                                            </div>
-                                            <div className="related-stats" style={{ marginTop: 2 }}>
-                                                <span>▲ {rp.vote_count ?? 0}</span>
-                                                <span>💬 {rp.reply_count ?? 0}</span>
+                        </>
+                    ) : !postData ? (
+                        <div style={{ textAlign: 'center', paddingTop: 60 }}>
+                            <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 24, marginBottom: 8 }}>Post not found</div>
+                            <button className="btn-ghost" onClick={() => navigate(`/b/${board}`)}>← Back to board</button>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
+                                <PushPin color={bc} glow={!!postData.is_hot} />
+                                <div className="post-op-card" style={{ '--bc': bc } as React.CSSProperties}>
+                                    <div className="post-detail-inner" style={{ padding: cardPad }}>
+                                        <div className="post-op-meta" style={{ marginBottom: dv(density, 8, 10, 12) }}>
+                                            {postData.anon_token && (
+                                                <AnonBadge token={postData.anon_token} isOp isMe={postData.is_mine} />
+                                            )}
+                                            <span className="post-detail-time">OP · {formattedTime}</span>
+                                            <div className="post-op-meta-end">
+                                                {board && <BoardChip boardName={board} />}
+                                                <span className="post-detail-slug">#{postData.slug}</span>
+                                                <ModActions show={isAdmin} type="post" locked={locked}
+                                                    onLock={() => setLocked(p => !p)}
+                                                    onRemove={() => navigate(`/b/${board}`)} />
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
 
-                    {!isGuest && !locked ? (
-                        <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
-                            <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
-                        </div>
-                    ) : isGuest ? (
-                        <GuestBanner onLogin={() => navigate("/auth")} />
-                    ) : (
-                        <div className="locked-notice">🔒 This burrow is locked.</div>
+                                        <div className="post-op-title" style={{ fontSize: dv(density, 16, 20, 24), marginBottom: dv(density, 8, 10, 12) }}>
+                                            {postData.title}
+                                        </div>
+
+                                        <div className="post-op-body" style={{ fontSize: dv(density, 12, 13, 14) }}>
+                                            {postData.content}
+                                        </div>
+
+                                        <div className="post-op-footer" style={{ paddingTop: 8, marginTop: dv(density, 8, 10, 12) }}>
+                                            <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={comments.length} />
+                                            {postData.tags?.map(t => <span key={t} className="bc-tag" style={{
+                                                color: bc,
+                                                background: `color-mix(in srgb,${bc} 12%,transparent)`,
+                                                border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
+                                            }}>#{t}</span>)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="post-board-widget">
+                                <div className="post-board-widget-header" style={{ padding: widgetHd }}>
+                                    <span className="post-board-dot" style={{ background: bc }} />
+                                    <span className="post-board-name" style={{ fontSize: dv(density, 12, 14, 15) }}>b/{board}</span>
+                                </div>
+                                <div className="post-board-widget-body" style={{ padding: infoPad }}>
+                                    {postData.tags && postData.tags.length > 0 && (
+                                        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
+                                            {postData.tags.map(tag => <span key={tag} className="bc-tag" style={{
+                                                color: bc,
+                                                background: `color-mix(in srgb,${bc} 12%,transparent)`,
+                                                border: `1px solid color-mix(in srgb,${bc} 28%,transparent)`,
+                                            }}>#{tag}</span>)}
+                                        </div>
+                                    )}
+
+                                    {relatedPosts.length > 0 && (
+                                        <div>
+                                            <div className="related-header" style={{ marginBottom: dv(density, 5, 7, 8) }}>
+                                                More in b/{board}
+                                            </div>
+                                            {relatedPosts.map(rp => (
+                                                <div key={rp.slug} className="related-item"
+                                                    onClick={() => navigate(`/b/${board}/nib/${rp.slug}`)}
+                                                    style={{ padding: `${dv(density, 8, 10, 12)}px 0` }}
+                                                >
+                                                    <div className="related-title" style={{ fontSize: dv(density, 11, 12, 12) }}>
+                                                        {rp.title}
+                                                    </div>
+                                                    <div className="related-stats" style={{ marginTop: 2 }}>
+                                                        <span>▲ {rp.vote_count ?? 0}</span>
+                                                        <span>💬 {rp.reply_count ?? 0}</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {!isGuest && !locked ? (
+                                <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
+                                    <CreateCommentCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
+                                </div>
+                            ) : isGuest ? (
+                                <GuestBanner onLogin={() => navigate("/auth")} />
+                            ) : (
+                                <div className="locked-notice">🔒 This burrow is locked.</div>
+                            )}
+                        </>
                     )}
                 </div>
 
@@ -291,27 +300,38 @@ export default function Post() {
                 <div className="post-dblend-right">
                     <div className="comment-feed-header" style={{ gap: dv(density, 8, 10, 12), marginBottom: dv(density, 12, 16, 20) }}>
                         <span className="comment-feed-count" style={{ fontSize: dv(density, 14, 16, 18) }}>
-                            {comments.length} squeaks
+                            {showLoading ? "… squeaks" : `${comments.length} squeaks`}
                         </span>
                         <span className="comment-feed-sort-label">Sort</span>
                         {(["hot", "new", "top"] as const).map(s => (
-                            <MiniBtn key={s} active={commentSort === s} onClick={() => setCommentSort(s)}>
+                            <MiniBtn key={s} active={commentSort === s} onClick={() => !showLoading && setCommentSort(s)}>
                                 {COMMENT_SORT_LABELS[s]}
                             </MiniBtn>
                         ))}
                     </div>
 
-                    <CommentGrid topic={board!} post={post!} comments={sortedComments} opToken={opToken} bc={bc} />
-
-                    {commentOffset + COMMENT_LIMIT < commentTotal && (
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: dv(density, 16, 24, 32), paddingBottom: dv(density, 20, 32, 40) }}>
-                            <button className="btn-ghost" onClick={loadMoreComments} disabled={loadingMore}>
-                                {loadingMore ? "Loading…" : `Load more (${comments.length}/${commentTotal})`}
-                            </button>
+                    {showLoading ? (
+                        Array.from({ length: 6 }, (_, i) => (
+                            <SkeletonLines key={i} lines={3} style={{ marginBottom: "0.625rem" }} />
+                        ))
+                    ) : error ? (
+                        <div className="post-error">
+                            <span>Failed to load comments.</span>
+                            <button className="btn-ghost" onClick={() => setReloadVersion(v => v + 1)}>Retry</button>
                         </div>
-                    )}
+                    ) : (
+                        <>
+                            <CommentGrid topic={board!} post={post!} comments={sortedComments} opToken={opToken} bc={bc} />
 
-                    {error && <p className="post-error">Failed to load comments.</p>}
+                            {commentOffset + COMMENT_LIMIT < commentTotal && (
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: dv(density, 16, 24, 32), paddingBottom: dv(density, 20, 32, 40) }}>
+                                    <button className="btn-ghost" onClick={loadMoreComments} disabled={loadingMore}>
+                                        {loadingMore ? "Loading…" : `Load more (${comments.length}/${commentTotal})`}
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </div>

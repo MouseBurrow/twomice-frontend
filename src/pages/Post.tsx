@@ -175,9 +175,7 @@ export default function Post() {
                                 </div>
                             </div>
                             {!isGuest ? (
-                                <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
-                                    <CreateCard topic={board!} post={post!} myToken={undefined} onCreated={async () => {}} />
-                                </div>
+                                <CreateCard topic={board!} post={post!} bc={bc} myToken={undefined} onCreated={async () => {}} />
                             ) : (
                                 <GuestBanner onLogin={() => navigate("/auth")} />
                             )}
@@ -258,9 +256,7 @@ export default function Post() {
                             </div>
 
                             {!isGuest && !locked ? (
-                                <div className="post-reply-box" style={{ padding: dv(density, '0.625rem 0.75rem', '0.75rem 1rem', '0.875rem 1.125rem') }}>
-                                    <CreateCard topic={board!} post={post!} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
-                                </div>
+                                <CreateCard topic={board!} post={post!} bc={bc} myToken={myAnonToken} onCreated={async () => { setReloadVersion(v => v + 1); }} />
                             ) : isGuest ? (
                                 <GuestBanner onLogin={() => navigate("/auth")} />
                             ) : (

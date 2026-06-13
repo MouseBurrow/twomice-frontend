@@ -176,7 +176,7 @@ export default function Board() {
 
             <div className="board-layout">
                 <div className="board-layout-main">
-                    <CreatePostCard topicName={board ?? ""} onCreated={async () => { setReloadVersion(v => v + 1); }} />
+                    <CreatePostCard topicName={board ?? ""} bc={heroColor} onCreated={() => { setReloadVersion(v => v + 1); }} />
                     <div className="board-posts">
                         {showLoading ? (
                             Array.from({ length: 5 }, (_, i) => <SkeletonPostCard key={i} />)

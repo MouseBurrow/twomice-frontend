@@ -23,7 +23,7 @@ type Props = {
     post: string;
     comment: CommentData;
     opToken?: string;
-    bc?: string;
+    bc: string;
 };
 
 export default function CommentCard({ topic, post, comment, opToken, bc }: Props) {
@@ -120,6 +120,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                     <CreateCard
                         topic={topic}
                         post={post}
+                        bc={bc}
                         commentHash={comment.hash}
                         myToken={comment.is_mine ? comment.anon_token : undefined}
                         onCreated={async () => {

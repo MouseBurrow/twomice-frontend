@@ -78,8 +78,11 @@ export const api = {
         request<BoardData[]>("/b"),
 
     // ── Posts ─────────────────────────────────────────────────────────
-    createPost: (topic: string, body: { title: string; content: string }) =>
+    createPost: (topic: string, body: { title: string; content: string; tags?: string[] }) =>
         request<void>(`/b/${topic}/nib`, { method: "POST", body: JSON.stringify(body) }),
+
+    getBoardTags: (topic: string) =>
+        request<string[]>(`/b/${topic}/tags`),
 
     getPost: (topic: string, postId: string) =>
         request<PostData>(`/b/${topic}/nib/${postId}`),

@@ -4,24 +4,31 @@ import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import { useAuth } from "../../contexts/AuthContext";
 import { autoResize } from "../../utils/autoResize";
+import { useDensity } from "../../contexts/DensityContext";
+import { dv } from "../../utils/density";
 import AnonBadge from "../shared/AnonBadge";
 import ErrorMessage from "../ErrorMessage";
 
 type Props = {
     topic: string;
     post: string;
+    bc: string;
     myToken?: string;
     commentHash?: string;
+    replyTo?: string;
+    onClearReply?: () => void;
     onCreated: () => Promise<void>;
 };
 
-export default function CreateCard({ topic, post, myToken, commentHash, onCreated }: Props) {
+export default function CreateCard({ topic, post, bc, myToken, commentHash, replyTo, onClearReply, onCreated }: Props) {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError>();
     const { isGuest } = useAuth();
     const navigate = useNavigate();
+    const { density: d } = useDensity();
     const isReply = !!commentHash;
+    const bcDashed = `color-mix(in srgb, ${bc} 36%, var(--border))`;
 
     async function submit() {
         try {
@@ -52,7 +59,7 @@ export default function CreateCard({ topic, post, myToken, commentHash, onCreate
         return (
             <div className="comment-auth-cta">
                 <span className="comment-auth-icon" aria-hidden="true">🐭</span>
-                <p>Add your squeak</p>
+                <p>Leave a squeak</p>
                 <span>Sign in to join the mischief.</span>
                 <button type="button" onClick={() => navigate("/auth")}>Sign in</button>
             </div>
@@ -60,31 +67,75 @@ export default function CreateCard({ topic, post, myToken, commentHash, onCreate
     }
 
     return (
-        <div className={isReply ? "reply-create" : "comment-create"}>
-            {myToken && (
-                <div className={isReply ? "reply-create-identity" : "comment-create-identity"}>
+        <div
+            className={isReply ? "reply-create" : "comment-create"}
+            style={{
+                '--card-accent': bc,
+                '--card-bg': 'var(--bg-surface)',
+                '--card-bd': bcDashed,
+                '--card-pad': isReply
+                    ? dv(d, '8px 10px', '10px 12px', '12px 14px')
+                    : dv(d, '10px 12px', '12px 16px', '14px 18px'),
+                '--card-header-mb': isReply ? 0 : dv(d, 6, 8, 10),
+                '--card-textarea-minh': isReply ? dv(d, 36, 40, 44) : dv(d, 52, 64, 76),
+                '--card-textarea-mb': dv(d, 6, 8, 10),
+                '--card-textarea-pad': `${dv(d, 4, 5, 6)}px 0`,
+                '--card-textarea-fs': isReply ? dv(d, 11, 12, 12) : dv(d, 12, 13, 13),
+                '--card-submit-fs': dv(d, 11, 12, 13),
+                '--card-submit-pad': isReply
+                    ? dv(d, '3px 10px', '4px 12px', '5px 14px')
+                    : dv(d, '5px 14px', '6px 18px', '7px 20px'),
+            } as React.CSSProperties}
+        >
+            {!isReply && (
+                <div className="create-card-header">
+                    <svg width="11" height="11" viewBox="0 0 14 14" fill="none" className="create-card-pencil">
+                        <path d="M9.8 1.4l2.8 2.8L3.8 13H1v-2.8L9.8 1.4z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" fill="none" />
+                        <path d="M8.4 2.8l2.8 2.8" stroke="currentColor" strokeWidth="1.3" />
+                    </svg>
+                    <span className="create-card-header-label">Leave a Squeak</span>
+                    <div className="create-card-header-end">
+                        {myToken && <AnonBadge token={myToken} isMe sm />}
+                        {replyTo && (
+                            <span className="reply-to-label">
+                                → #{replyTo.slice(0, 7)} ·{' '}
+                                <button className="reply-to-clear" onClick={onClearReply}>clear</button>
+                            </span>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {isReply && myToken && (
+                <div className="reply-create-identity">
                     <AnonBadge token={myToken} isMe sm />
-                    <span className={isReply ? "reply-create-context" : "comment-create-identity-label"}>
-                        {isReply ? `replying to #${commentHash!.slice(0, 7)}` : "posting anonymously · identity is private"}
+                    <span className="reply-create-context">
+                        replying to #{commentHash!.slice(0, 7)}
                     </span>
                 </div>
             )}
+
             <textarea
-                placeholder="Start with > to quote…"
+                placeholder="Start with > to greentext…"
                 onInput={autoResize}
                 value={content}
                 onChange={e => setContent(e.target.value)}
                 rows={isReply ? 2 : 3}
+                className="create-card-textarea"
             />
-            <button
-                type="button"
-                className={isReply ? "" : "comment-submit"}
-                onClick={submit}
-                disabled={!content || loading}
-            >
-                {!isReply && loading && <span className="comment-spinner" />}
-                {loading ? (isReply ? "Echoing…" : "Posting…") : (isReply ? "Echo" : "Post Reply")}
-            </button>
+            <div className="create-card-footer">
+                <button
+                    className="create-card-submit"
+                    disabled={!content || loading}
+                    onClick={submit}
+                >
+                    {loading ? (
+                        <span className="btn-loading"><span className="spin-dot" />{isReply ? "Echoing…" : "Squeaking…"}</span>
+                    ) : (
+                        isReply ? "Echo" : "Squeak!"
+                    )}
+                </button>
+            </div>
             <ErrorMessage error={error} />
         </div>
     );

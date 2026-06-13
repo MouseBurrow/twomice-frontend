@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api";
-import { ApiError } from "../../apiError";
+import { useCreateNibble } from "../../hooks/useCreateNibble";
 import { autoResize } from "../../utils/autoResize";
+import { boardColorFromName } from "../../utils/hash";
 import type { BoardData } from "../../types";
+import ErrorMessage from "../ErrorMessage";
+import TagSelector from "./TagSelector";
 
 interface Props {
   onClose: () => void;
@@ -11,11 +14,13 @@ interface Props {
 
 export default function ComposeModal({ onClose, defaultBoard }: Props) {
   const [board, setBoard] = useState(defaultBoard ?? "");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [busy, setBusy] = useState(false);
   const [boards, setBoards] = useState<BoardData[]>([]);
-  const [error, setError] = useState<string | null>(null);
+
+  const { title, setTitle, content, setContent, tags, setTags, loading: busy, error, submit } = useCreateNibble({
+    board,
+    onSuccess: onClose,
+    contentRequired: true,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -30,21 +35,6 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
     return () => { cancelled = true; };
   }, [defaultBoard]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !content.trim() || busy) return;
-    setBusy(true);
-    setError(null);
-    try {
-      await api.createPost(board, { title, content });
-      onClose();
-    } catch (err: unknown) {
-      setError(err instanceof ApiError ? err.message : "Failed to post");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const canSubmit = title.trim() && content.trim() && !busy;
 
   return (
@@ -52,10 +42,10 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         <div className="modal-stripe" />
         <div className="modal-header">
-          <div className="modal-title">New Squeak</div>
+          <div className="modal-title">New Nibble</div>
         </div>
 
-        <form className="modal-body" onSubmit={handleSubmit}>
+        <form className="modal-body" onSubmit={e => { e.preventDefault(); submit(); }}>
           <div className="field">
             <label className="field-label">Board</label>
             <select className="field-select" value={board} onChange={e => setBoard(e.target.value)}>
@@ -71,13 +61,16 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
           <div className="field">
             <label className="field-label">Message</label>
             <textarea className="field-textarea" onInput={autoResize} placeholder="Start a line with > for greentext…" value={content} onChange={e => setContent(e.target.value)} />
-            {error && <div className="field-error">{error}</div>}
           </div>
+
+          <TagSelector board={board} bc={boardColorFromName(board || "general")} selected={tags} onChange={setTags} />
+
+          <ErrorMessage error={error}/>
         </form>
 
         <div className="modal-footer">
           <button type="button" className="modal-cancel" onClick={onClose}>Cancel</button>
-          <button type="button" className="modal-submit" onClick={handleSubmit} disabled={!canSubmit}>
+          <button type="button" className="modal-submit" onClick={submit} disabled={!canSubmit}>
             {busy ? <><div className="modal-spinner" />Posting…</> : "Post Anonymously"}
           </button>
         </div>

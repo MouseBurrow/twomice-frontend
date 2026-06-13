@@ -1,21 +1,22 @@
-import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { api } from "../api";
-import type { ApiError } from "../apiError";
+import { useCreateNibble } from "../hooks/useCreateNibble";
 import { autoResize } from "../utils/autoResize";
 import { useAuth } from "../contexts/AuthContext";
+import { boardColorFromName } from "../utils/hash";
 import ErrorMessage from "../components/ErrorMessage";
+import TagSelector from "../components/shared/TagSelector";
 import "../assets/CreatePost.scss";
 
 export default function CreatePost() {
     const { board } = useParams<{ board: string }>();
     const { isGuest } = useAuth();
     const navigate = useNavigate();
+    const bc = boardColorFromName(board ?? "");
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<ApiError | undefined>(undefined);
+    const { title, setTitle, content, setContent, tags, setTags, loading, error, submit } = useCreateNibble({
+        board: board ?? "",
+        onSuccess: () => navigate(`/b/${board}`),
+    });
 
     if (isGuest) {
         return (
@@ -32,25 +33,11 @@ export default function CreatePost() {
 
     if (!board) return null;
 
-    async function handleSubmit() {
-        if (!title.trim() || loading) return;
-        setError(undefined);
-        setLoading(true);
-        try {
-            await api.createPost(board!, { title: title.trim(), content: content.trim() });
-            navigate(`/b/${board}`);
-        } catch (e) {
-            setError(e as ApiError);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     return (
         <div className="create-post-page">
             <div className="create-post-board">
                 <div className="create-post-header">
-                    <h1>New Squeak</h1>
+                    <h1>New Nibble</h1>
                     <p>b/{board}</p>
                 </div>
 
@@ -76,12 +63,14 @@ export default function CreatePost() {
                         onChange={e => setContent(e.target.value)}
                     />
 
+                    <TagSelector board={board} bc={bc} selected={tags} onChange={setTags} />
+
                     <div className="create-post-actions">
                         <button
                             type="button"
                             className="create-post-submit"
                             disabled={!title.trim() || loading}
-                            onClick={handleSubmit}
+                            onClick={submit}
                         >
                             {loading && <span className="create-post-spinner" aria-hidden="true"/>}
                             {loading ? "Posting…" : "Post"}

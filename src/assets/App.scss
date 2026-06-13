@@ -150,6 +150,70 @@ input, textarea {
   border: 0.0625rem solid var(--border);
 }
 
+/* ── Tag selector ── */
+.tag-selector {
+  margin-bottom: 0.75rem;
+}
+
+.tag-selector-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag-selector-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.tag-selector-count {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  background: var(--bg-surface);
+  border: 0.0625rem solid var(--border);
+  border-radius: 6.1875rem;
+  padding: 0.0625rem 0.375rem;
+  line-height: 1.2;
+}
+
+.tag-selector-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3125rem;
+}
+
+.nibble-tag-btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  padding: 3px 9px;
+  border-radius: 0 5px 5px 5px;
+  cursor: pointer;
+  transition: all .12s;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled)[data-sel="false"] {
+    border-color: var(--tag-bc) !important;
+    color: var(--tag-bc) !important;
+    background: color-mix(in srgb, var(--tag-bc) 8%, transparent) !important;
+  }
+
+  &:hover:not(:disabled)[data-sel="true"] {
+    opacity: 0.8;
+  }
+}
+
 /* ── Post card ── */
 .post-card {
   background: var(--bg-surface);

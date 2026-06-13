@@ -2,7 +2,7 @@ import type { CommentData } from "../../types";
 import CommentCard from "./CommentCard";
 import "../../assets/components.scss";
 
-type Props = { topic: string; post: string; comments: CommentData[]; opToken?: string; bc?: string };
+type Props = { topic: string; post: string; comments: CommentData[]; opToken?: string; bc: string };
 
 const NC = [
     '0 1rem 1rem 1rem', '1rem 0 1rem 1rem',

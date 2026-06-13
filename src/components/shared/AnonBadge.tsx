@@ -17,8 +17,8 @@ export default function AnonBadge({ token, isOp, isMe, sm }: Props) {
         >
             <span className="anon-badge-dot" style={{ background: c.dot }} />
             {shortId}
-            {isOp && !isMe && <span className="anon-badge-tag anon-badge-tag--op">OP</span>}
-            {isMe && <span className="anon-badge-tag anon-badge-tag--me" style={{ color: c.dot }}>YOU</span>}
+            {isOp && !isMe && <span className="anon-badge-tag" style={{ color: c.dot }}>OP</span>}
+            {isMe && <span className="anon-badge-tag" style={{ color: c.dot }}>YOU</span>}
         </span>
     );
 }

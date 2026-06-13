@@ -48,6 +48,82 @@
   gap: 0.75rem;
 }
 
+.board-hero-row-left {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.board-hero-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  display: inline-block;
+  border: 0.125rem solid rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+
+.board-hero-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.sk-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--bg-surface);
+}
+
+.sk-name {
+  width: 6rem;
+  height: 1.25rem;
+  display: inline-block;
+  background: var(--bg-surface);
+  border-radius: 0.1875rem;
+}
+
+.sk-line {
+  display: block;
+  height: 0.8em;
+  border-radius: 0.1875rem;
+  background: var(--bg-surface);
+}
+
+.sk-line--wide {
+  width: 55%;
+}
+
+.sk-line--stat {
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.sk-line--stat-lg {
+  width: 4rem;
+  height: 1.5rem;
+}
+
+.board-hero-follow-btn {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.875rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.board-hero-follow-error {
+  font-size: 0.6875rem;
+  color: var(--danger);
+  margin-bottom: 0.5rem;
+}
+
+.board-layout-main {
+  flex: 1;
+  min-width: 0;
+}
+
 .board-hero-name {
   font-family: 'Fredoka One', cursive;
   color: var(--text-primary);
@@ -126,6 +202,18 @@
   padding: 2.5rem 1.25rem;
   color: var(--text-muted);
   column-span: all;
+}
+
+.board-empty-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.375rem;
+}
+
+.board-empty-action {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
 }
 
 /* ── Create form ── */
@@ -223,10 +311,32 @@
   }
 }
 
-.board-error {
-  color: var(--accent);
-  font-size: 0.8125rem;
+
+.board-error-card {
+  background: var(--bg-surface);
+  border: 0.0625rem dashed var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  padding: 2.5rem 1.5rem;
   text-align: center;
+  margin-top: 0.75rem;
+}
+
+.board-error-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.board-error-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.board-error-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
 /* ── Grid / flex layout for board page ── */

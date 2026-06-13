@@ -22,7 +22,7 @@ export default function Profile() {
     const [stats, setStats] = useState<UserStats | null>(null);
     const [posts, setPosts] = useState<PostData[]>([]);
     const [followedBoards, setFollowedBoards] = useState<FollowedBoardInfo[]>([]);
-    const [postsLoading, setPostsLoading] = useState(false);
+    const [postsLoading, setPostsLoading] = useState(true);
     const [followingLoading, setFollowingLoading] = useState(false);
     const [unfollowingIds, setUnfollowingIds] = useState<Set<string>>(new Set());
     const showPostsLoading = FORCE_SKELETON || useShowLoading(postsLoading);

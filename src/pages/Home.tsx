@@ -10,7 +10,7 @@ import GuestBanner from "../components/shared/GuestBanner";
 import "../assets/Home.scss";
 
 export default function Home() {
-    const { isGuest } = useAuth();
+    const { auth, isGuest } = useAuth();
     const { density } = useDensity();
     const navigate = useNavigate();
     const [followed, setFollowed] = useState<FollowedBoardInfo[]>([]);
@@ -32,6 +32,10 @@ export default function Home() {
         : !hasFollowed
             ? "Nothing's squeaking yet. Go follow some burrows."
             : undefined;
+
+    if (auth.status === "unknown") {
+        return <div className="home-page" data-density={density}><div className="page-loading" /></div>;
+    }
 
     return (
         <div className="home-page" data-density={density}>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { PostData } from "../../types";
@@ -16,17 +17,19 @@ type Props = {
 };
 
 export default function PostFeed({ title, note }: Props) {
+    const navigate = useNavigate();
     const [sort, setSort] = useState<Sort>("hot");
     const [posts, setPosts] = useState<PostData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ApiError>();
+    const [retryKey, setRetryKey] = useState(0);
     const showLoading = FORCE_SKELETON || useShowLoading(loading);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         setError(undefined);
-    }, [sort]);
+    }, [sort, retryKey]);
 
     useEffect(() => {
         let cancelled = false;
@@ -42,7 +45,7 @@ export default function PostFeed({ title, note }: Props) {
                 setLoading(false);
             });
         return () => { cancelled = true; };
-    }, [sort]);
+    }, [sort, retryKey]);
 
     return (
         <div className="post-feed">
@@ -68,9 +71,15 @@ export default function PostFeed({ title, note }: Props) {
                     {Array.from({ length: 6 }, (_, i) => <SkeletonPostCard key={i} />)}
                 </div>
             ) : error ? (
-                <p className="post-feed-error">Failed to load feed.</p>
+                <div className="post-feed-error">
+                    <div className="post-feed-error-text">Failed to load feed.</div>
+                    <button className="btn-ghost" onClick={() => setRetryKey(k => k + 1)}>Retry</button>
+                </div>
             ) : posts.length === 0 ? (
-                <p className="post-feed-empty">Nothing here yet.</p>
+                <div className="post-feed-empty">
+                    <div className="post-feed-empty-text">Nothing squeaking yet.</div>
+                    <button className="btn-ghost" onClick={() => navigate("/")}>Browse burrows →</button>
+                </div>
             ) : (
                 <div className="post-feed-grid">
                     {posts.map(item => (

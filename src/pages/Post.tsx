@@ -25,6 +25,7 @@ import { FORCE_SKELETON } from "../debug";
 import { useShowLoading } from "../utils/useShowLoading";
 
 const COMMENT_LIMIT = 25;
+const COMMENT_SORT_LABELS: Record<string, string> = { hot: "Hot", new: "Fresh", top: "Buried" };
 
 export default function Post() {
     const { board, post } = useParams<{ board: string; post: string }>();
@@ -51,9 +52,7 @@ export default function Post() {
     useEffect(() => {
         let cancelled = false;
         (async () => {
-            setLoading(true);
             setError(undefined);
-            pagination.replace([], 0);
             try {
                 const [postResult, commentRes, boardPosts] = await Promise.all([
                     api.getPost(board!, post!),
@@ -129,7 +128,6 @@ export default function Post() {
         return sorted;
     }, [pagination.items, commentSort]);
 
-    const COMMENT_SORT_LABELS: Record<string, string> = { hot: "Hot", new: "Fresh", top: "Buried" };
     const sidebarTop = dv(density, '3.625rem', '4.5rem', '5.5rem');
     const pagePad = dv(density, '1rem 1rem 2.5rem', '1.5rem 1rem 3.75rem', '2rem 1rem 5rem');
     const leftW = dv(density, '18.75rem', '23.75rem', '27.5rem');

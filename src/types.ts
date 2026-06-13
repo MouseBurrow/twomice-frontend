@@ -16,6 +16,7 @@ export type BoardData = {
     description: string;
     created_at: string;
     deleted: boolean;
+    post_count?: number;
 };
 
 /** Lightweight board summary returned by feed/sidebar endpoints */

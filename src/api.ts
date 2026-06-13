@@ -84,6 +84,8 @@ export const api = {
     getBoardTags: (topic: string) =>
         request<string[]>(`/b/${topic}/tags`),
 
+
+
     getPost: (topic: string, postId: string) =>
         request<PostData>(`/b/${topic}/nib/${postId}`),
 

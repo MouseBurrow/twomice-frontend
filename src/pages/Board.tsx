@@ -11,6 +11,7 @@ import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import Sidebar from "../components/board/Sidebar";
 import GuestBanner from "../components/shared/GuestBanner";
 import SortBar from "../components/home/SortBar";
+import BoardTag from "../components/shared/BoardTag";
 import { boardColorFromName } from "../utils/hash";
 import { useShowLoading } from "../utils/useShowLoading";
 import { FORCE_SKELETON } from "../debug";
@@ -24,6 +25,7 @@ export default function Board() {
 
     const [boardData, setBoardData] = useState<BoardData>();
     const [posts, setPosts] = useState<PostData[]>([]);
+    const [boardTags, setBoardTags] = useState<string[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
     const [sort, setSort] = useState<"hot" | "new" | "top">("hot");
@@ -63,6 +65,15 @@ export default function Board() {
     }, [board, reloadVersion]);
 
     useEffect(() => {
+        if (!board) return;
+        let cancelled = false;
+        api.getBoardTags(board)
+            .then(tags => { if (!cancelled) setBoardTags(tags); })
+            .catch(() => { if (!cancelled) setBoardTags([]); });
+        return () => { cancelled = true; };
+    }, [board]);
+
+    useEffect(() => {
         if (isGuest || !board) return;
         let cancelled = false;
         api.getFollowedBoards()
@@ -98,10 +109,29 @@ export default function Board() {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }), [posts, sort]);
 
+    const todayCount = useMemo(
+        () => posts.filter(p => new Date(p.created_at).toDateString() === new Date().toDateString()).length,
+        [posts],
+    );
+
     const heroColor = boardData ? boardColorFromName(boardData.name) : board ? boardColorFromName(board) : 'var(--accent)';
 
     if (auth.status === "unknown") {
         return <div className="board-page" data-density={density}><div className="page-loading" /></div>;
+    }
+
+    if (!showLoading && error) {
+        return (
+            <div className="board-page" data-density={density}>
+                <div className="board-not-found-card">
+                    <span className="board-not-found-icon">🕳️</span>
+                    <div className="board-not-found-text">This burrow doesn't exist.</div>
+                    <div className="board-not-found-actions">
+                        <button className="btn-pill" onClick={() => navigate("/")}>← Back to the hole</button>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -109,6 +139,7 @@ export default function Board() {
             {!showLoading && isGuest && <GuestBanner onLogin={() => navigate("/auth")} />}
 
             {/* ── Hero ── */}
+            {boardData && (
             <div className="board-hero" style={{ borderTop: `3px solid ${heroColor}` }}>
                 <div className="board-hero-body">
                     <div className="board-hero-row">
@@ -119,8 +150,8 @@ export default function Board() {
                             </div>
                         ) : (
                             <div className="board-hero-row-left">
-                                <span className="board-hero-dot" style={{ background: boardColorFromName(boardData!.name), boxShadow: `0 0 0 3px color-mix(in srgb,${boardColorFromName(boardData!.name)} 18%,transparent)` }} />
-                                <div className="board-hero-name" style={{ color: boardColorFromName(boardData!.name) }}>b/{boardData!.name}</div>
+                                <span className="board-hero-dot" style={{ background: heroColor, boxShadow: `0 0 0 3px color-mix(in srgb,${heroColor} 18%,transparent)` }} />
+                                <div className="board-hero-name" style={{ color: heroColor }}>b/{boardData.name}</div>
                             </div>
                         )}
                         {!isGuest && (
@@ -142,7 +173,14 @@ export default function Board() {
                             <span className="sk-line sk-line--wide" />
                         </div>
                     ) : (
-                        <div className="board-hero-desc">{boardData!.description}</div>
+                        <div className="board-hero-desc">{boardData.description}</div>
+                    )}
+                    {!showLoading && boardTags.length > 0 && (
+                        <div className="board-hero-tags">
+                            {boardTags.map(tag => (
+                                <BoardTag key={tag} tag={tag} bc={heroColor} />
+                            ))}
+                        </div>
                     )}
                     <div className="board-hero-stats">
                         {showLoading ? (
@@ -151,27 +189,35 @@ export default function Board() {
                                     <span className="sk-line sk-line--stat" />
                                 </div>
                                 <div className="board-hero-stat">
-                                    <span className="sk-line sk-line--stat-lg" />
+                                    <span className="sk-line sk-line--stat" />
+                                </div>
+                                <div className="board-hero-stat">
+                                    <span className="sk-line sk-line--stat" />
                                 </div>
                             </>
                         ) : (
                             <>
                                 <div className="board-hero-stat">
-                                    <div className="board-hero-stat-value" style={{ color: boardColorFromName(boardData!.name) }}>{sortedPosts.length}</div>
+                                    <div className="board-hero-stat-value" style={{ color: heroColor }}>{todayCount}</div>
                                     <div className="board-hero-stat-label">Nibbles today</div>
                                 </div>
-                                {sortedPosts.length > 0 && (
-                                    <div className="board-hero-stat">
-                                        <div className="board-hero-stat-value" style={{ color: boardColorFromName(boardData!.name) }}>{(sortedPosts.length * 210 + 841).toLocaleString()}</div>
-                                        <div className="board-hero-stat-label">Tunnels</div>
-                                    </div>
-                                )}
+                                <div className="board-hero-stat">
+                                    <div className="board-hero-stat-value" style={{ color: heroColor }}>{boardData.post_count ?? sortedPosts.length}</div>
+                                    <div className="board-hero-stat-label">Posts total</div>
+                                </div>
+                                <div className="board-hero-stat">
+                                    <div className="board-hero-stat-value" style={{ color: heroColor }}>0</div>
+                                    <div className="board-hero-stat-label">Followers</div>
+                                </div>
                             </>
                         )}
                     </div>
                 </div>
             </div>
+            )}
 
+            {boardData && (
+            <>
             <SortBar sort={sort} onSort={setSort} />
 
             <div className="board-layout">
@@ -187,7 +233,7 @@ export default function Board() {
                                 <div className="board-empty-action">Post the first one above ↑</div>
                             </div>
                         ) : (
-                            sortedPosts.map(post => <PostCard key={post.slug} board={boardData!.name} post={post} />)
+                            sortedPosts.map(post => <PostCard key={post.slug} board={boardData.name} post={post} />)
                         )}
                     </div>
                 </div>
@@ -195,16 +241,7 @@ export default function Board() {
                     <Sidebar />
                 </div>
             </div>
-
-            {!showLoading && error && (
-                <div className="board-error-card">
-                    <span className="board-error-icon">⚠</span>
-                    <div className="board-error-text">Couldn't reach this burrow.</div>
-                    <div className="board-error-actions">
-                        <button className="btn-pill" onClick={() => setReloadVersion(v => v + 1)}>Retry</button>
-                        <button className="btn-ghost" onClick={() => navigate("/")}>← Home</button>
-                    </div>
-                </div>
+            </>
             )}
         </div>
     );

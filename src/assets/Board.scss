@@ -133,6 +133,14 @@
   color: var(--text-muted);
 }
 
+.board-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3125rem;
+  margin-top: 0.625rem;
+  margin-bottom: 0.75rem;
+}
+
 .board-hero-stats {
   display: flex;
   flex-wrap: wrap;
@@ -435,6 +443,30 @@
   }
 }
 
+
+.board-not-found-card {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.board-not-found-icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.board-not-found-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.board-not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.625rem;
+}
 
 .board-error-card {
   background: var(--bg-surface);

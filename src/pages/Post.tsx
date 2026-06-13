@@ -8,7 +8,6 @@ import CommentGrid from "../components/post/CommentGrid";
 import CreateCard from "../components/post/CreateCard";
 import AnonBadge from "../components/shared/AnonBadge";
 import VoteButtons from "../components/shared/VoteButtons";
-import BoardChip from "../components/shared/BoardChip";
 import MiniBtn from "../components/shared/MiniBtn";
 import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
@@ -111,7 +110,11 @@ export default function Post() {
 
     const myAnonToken = useMemo(() => {
         if (postData?.is_mine && postData.anon_token) return postData.anon_token;
-        return pagination.items.find(c => c.is_mine)?.anon_token;
+        const mine = pagination.items.filter(c => c.is_mine);
+        if (mine.length === 0) return undefined;
+        return mine.reduce((a, b) =>
+            new Date(a.created_at) > new Date(b.created_at) ? a : b
+        ).anon_token;
     }, [postData, pagination.items]);
 
     const bc = board ? boardColorFromName(board) : 'var(--accent)';
@@ -148,9 +151,14 @@ export default function Post() {
                 >
                     <div className="post-breadcrumb">
                         <button className="btn-ghost"
-                            style={{ padding: dv(density, '3px 8px', '4px 10px', '5px 12px'), fontSize: dv(density, 11, 12, 13) }}
+                            style={{
+                                padding: dv(density, '3px 8px', '4px 10px', '5px 12px'),
+                                fontSize: dv(density, 11, 12, 13),
+                                background: `color-mix(in srgb, ${bc} 12%, transparent)`,
+                                borderColor: `color-mix(in srgb, ${bc} 28%, transparent)`,
+                            }}
                             onClick={() => navigate(`/b/${board}`)}>
-                            ← {board}
+                            ← b/{board}
                         </button>
                         {!showLoading && postData?.is_locked && <span className="locked-badge">🔒 locked</span>}
                     </div>
@@ -194,9 +202,8 @@ export default function Post() {
                                             {postData.anon_token && (
                                                 <AnonBadge token={postData.anon_token} isOp isMe={postData.is_mine} />
                                             )}
-                                            <span className="post-detail-time">OP · {formattedTime}</span>
+                                            <span className="post-detail-time">{formattedTime}</span>
                                             <div className="post-op-meta-end">
-                                                {board && <BoardChip boardName={board} />}
                                                 <span className="post-detail-slug">#{postData.slug}</span>
                                                 <ModActions show={isAdmin} type="post" locked={locked}
                                                     onLock={() => setLocked(p => !p)}

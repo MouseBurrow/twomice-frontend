@@ -188,9 +188,9 @@ export default function Post() {
                             )}
                         </>
                     ) : !postData ? (
-                        <div style={{ textAlign: 'center', paddingTop: 60 }}>
-                            <div style={{ fontFamily: "'Fredoka One',cursive", fontSize: 24, marginBottom: 8 }}>Post not found</div>
-                            <button className="btn-ghost" onClick={() => navigate(`/b/${board}`)}>← Back to board</button>
+                        <div className="post-not-found-card" style={{ marginTop: dv(density, 16, 20, 24) }}>
+                            <div className="post-not-found-text">This nib may have been removed or never existed.</div>
+                            <button className="btn-ghost" onClick={() => navigate(`/b/${board}`)}>← Back to b/{board}</button>
                         </div>
                     ) : (
                         <>
@@ -295,9 +295,11 @@ export default function Post() {
                             <SkeletonLines key={i} lines={3} style={{ marginBottom: "0.625rem" }} />
                         ))
                     ) : error ? (
-                        <div className="post-error">
-                            <span>Failed to load comments.</span>
-                            <button className="btn-ghost" onClick={() => setReloadVersion(v => v + 1)}>Retry</button>
+                        <div className="post-error-card">
+                            <div className="post-error-card-text">Couldn't load squeaks.</div>
+                            <div className="post-error-card-actions">
+                                <button className="btn-pill" onClick={() => setReloadVersion(v => v + 1)}>Retry</button>
+                            </div>
                         </div>
                     ) : (
                         <>

@@ -414,15 +414,39 @@
   }
 }
 
-.post-error {
-  color: var(--accent);
-  font-size: 0.8125rem;
+.post-not-found-card {
+  background: var(--bg-surface);
+  border: 0.0625rem dashed var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  padding: 2.5rem 1.5rem;
   text-align: center;
+}
+
+.post-not-found-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.post-error-card {
+  background: var(--bg-surface);
+  border: 0.0625rem dashed var(--border);
+  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.post-error-card-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.post-error-card-actions {
   display: flex;
-  align-items: center;
+  gap: 0.5rem;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
 }
 
 .locked-notice {

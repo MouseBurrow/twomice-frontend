@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { ReplyData } from "../../types";
@@ -26,10 +26,9 @@ type Props = {
     depth?: number;
     isFirst?: boolean;
     hasMoreSiblings?: boolean;
-    onUpdated: () => void;
 };
 
-export default function ReplyRow({ reply, topic, post, commentHash, bc, connectorColor, depth = 0, isFirst = false, hasMoreSiblings = false, onUpdated }: Props) {
+export default function ReplyRow({ reply, topic, post, commentHash, bc, connectorColor, depth = 0, isFirst = false, hasMoreSiblings = false }: Props) {
     const nestedPagination = useOffsetPagination<ReplyData>(NESTED_LIMIT);
     const [replyOpen, setReplyOpen] = useState(false);
     const [replyContent, setReplyContent] = useState("");
@@ -38,21 +37,15 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
     const [showNested, setShowNested] = useState(
         (reply.children?.length ?? 0) > 0 && (reply.children?.length ?? 0) <= 3
     );
+    const manuallyCollapsed = useRef(false);
 
     const hasNested = nestedPagination.items.length > 0;
 
     useEffect(() => {
         const children = reply.children ?? [];
-        nestedPagination.replace(children, children.length, children.length);
+        const len = children.length;
+        nestedPagination.replace(children, len, len);
     }, [reply.children]);
-
-    async function loadNested() {
-        if (depth >= MAX_DEPTH) return;
-        try {
-            const res = await api.getReplies(topic, post, reply.hash, NESTED_LIMIT, 0);
-            nestedPagination.replace(res.data, res.total, 0);
-        } catch { /* ignore */ }
-    }
 
     async function loadMoreNested() {
         if (depth >= MAX_DEPTH) return;
@@ -66,11 +59,19 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
         setReplyBusy(true);
         setReplyError(undefined);
         try {
+            const optimistic: ReplyData = {
+                hash: 'opt_' + Date.now(),
+                content: replyContent,
+                created_at: new Date().toISOString(),
+                deleted: false,
+                is_mine: true,
+                children: [],
+            };
+            nestedPagination.setItems(prev => [...prev, optimistic]);
+            setShowNested(true);
             await api.createReply(topic, post, commentHash, { content: replyContent, reply_hash: reply.hash });
             setReplyContent("");
             setReplyOpen(false);
-            await loadNested();
-            onUpdated();
         } catch (e) {
             setReplyError(e as ApiError);
         } finally {
@@ -113,7 +114,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
                         <span className="reply-card-inline-meta">{formatDate(reply.created_at)}</span>
                         <div className="comment-header-end">
                             {hasNested && (
-                                <button className="comment-collapse" onClick={() => setShowNested(!showNested)}>
+                                <button className="comment-collapse" onClick={() => { setShowNested(!showNested); manuallyCollapsed.current = !showNested; }}>
                                     {showNested ? '[–]' : `[+${nestedPagination.items.length}]`}
                                 </button>
                             )}
@@ -175,8 +176,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
                                 connectorColor={myColor}
                                 depth={depth + 1}
                                 isFirst={i === 0}
-                                hasMoreSiblings={i < nestedPagination.items.length - 1 || nestedPagination.hasMore}
-                                onUpdated={onUpdated} />
+                                hasMoreSiblings={i < nestedPagination.items.length - 1 || nestedPagination.hasMore} />
                         ))}
                     </ReplyList>
                 )}

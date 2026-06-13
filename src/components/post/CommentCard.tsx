@@ -124,7 +124,6 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                         onCreated={async () => {
                             setReplyOpen(false);
                             await loadReplies();
-                            setCol(true);
                         }}
                     />
                 )}
@@ -147,7 +146,6 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
                                 depth={0}
                                 isFirst={i === 0}
                                 hasMoreSiblings={i < replyPagination.items.length - 1 || replyPagination.hasMore}
-                                onUpdated={() => loadReplies()}
                             />
                         ))}
                     </ReplyList>

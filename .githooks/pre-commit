@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+echo "=== Frontend checks ==="
+
+echo "  Linting..."
+npm run lint 2>&1 || exit $?
+
+echo "  Typecheck..."
+npx tsc -b 2>&1 || exit $?
+
+echo "=== All checks passed ==="

@@ -84,7 +84,7 @@ export default function Board() {
             })
             .catch(() => {});
         return () => { cancelled = true; };
-    }, [board, isGuest]);
+    }, [board, isGuest, boardData]);
 
     async function handleFollow() {
         if (isGuest || !board) return;
@@ -149,8 +149,8 @@ export default function Board() {
         <div className="board-page" data-density={density}>
             {!showLoading && isGuest && <GuestBanner onLogin={() => navigate("/auth")} />}
 
-            {/* ── Hero ── */}
             {boardData && (
+            <>
             <div className="board-hero" style={{ borderTop: `3px solid ${heroColor}` }}>
                 <div className="board-hero-body">
                     <div className="board-hero-row">
@@ -225,10 +225,7 @@ export default function Board() {
                     </div>
                 </div>
             </div>
-            )}
 
-            {boardData && (
-            <>
             <SortBar sort={sort} onSort={setSort} />
 
             <div className="board-layout">

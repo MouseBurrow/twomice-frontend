@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useCreateNibble } from "../../hooks/useCreateNibble";
 import { useAuth } from "../../contexts/AuthContext";
 import { autoResize } from "../../utils/autoResize";
@@ -55,31 +55,33 @@ export default function CreatePostCard({ topicName, bc, onCreated }: Props) {
     const canSubmit = title.trim() !== "";
     const titleMb = expanded ? dv(d, 10, 12, 13) : 0;
 
+    const cardStyle = useMemo(() => ({
+        '--card-mt': dv(d, 20, 24, 28),
+        '--card-mb': dv(d, 16, 20, 24),
+        '--card-accent': bc,
+        '--card-bg': 'var(--bg-surface)',
+        '--card-bd': bcDashed,
+        '--card-shadow-idle': '-2px 4px 10px rgba(0,0,0,.05)',
+        '--card-shadow-focus': `0 4px 22px color-mix(in srgb, ${bc} 12%, transparent), -2px 6px 14px rgba(0,0,0,.06)`,
+        '--card-pad': dv(d, '11px 13px', '13px 17px', '15px 21px'),
+        '--card-header-mb': dv(d, 8, 10, 11),
+        '--card-title-fs': dv(d, 15, 17, 19),
+        '--card-title-pad': `${dv(d, 4, 5, 6)}px 0`,
+        '--card-title-bd': `1px solid color-mix(in srgb, ${bc} 22%, var(--border))`,
+        '--card-title-mb': titleMb,
+        '--card-body-fs': dv(d, 12, 13, 13),
+        '--card-body-pad': `${dv(d, 4, 5, 6)}px 0`,
+        '--card-body-mb': dv(d, 12, 14, 16),
+        '--card-body-minh': dv(d, 52, 62, 70),
+        '--card-submit-fs': dv(d, 11, 12, 13),
+        '--card-submit-pad': dv(d, '5px 14px', '6px 16px', '7px 18px'),
+        '--card-cursor': expanded ? 'default' : isGuest ? 'default' : 'text',
+    } as React.CSSProperties), [d, bc, bcDashed, expanded, isGuest, titleMb]);
+
     return (
         <div
             className="create-post-card"
-            style={{
-                '--card-mt': dv(d, 20, 24, 28),
-                '--card-mb': dv(d, 16, 20, 24),
-                '--card-accent': bc,
-                '--card-bg': 'var(--bg-surface)',
-                '--card-bd': bcDashed,
-                '--card-shadow-idle': '-2px 4px 10px rgba(0,0,0,.05)',
-                '--card-shadow-focus': `0 4px 22px color-mix(in srgb, ${bc} 12%, transparent), -2px 6px 14px rgba(0,0,0,.06)`,
-                '--card-pad': dv(d, '11px 13px', '13px 17px', '15px 21px'),
-                '--card-header-mb': dv(d, 8, 10, 11),
-                '--card-title-fs': dv(d, 15, 17, 19),
-                '--card-title-pad': `${dv(d, 4, 5, 6)}px 0`,
-                '--card-title-bd': `1px solid color-mix(in srgb, ${bc} 22%, var(--border))`,
-                '--card-title-mb': titleMb,
-                '--card-body-fs': dv(d, 12, 13, 13),
-                '--card-body-pad': `${dv(d, 4, 5, 6)}px 0`,
-                '--card-body-mb': dv(d, 12, 14, 16),
-                '--card-body-minh': dv(d, 52, 62, 70),
-                '--card-submit-fs': dv(d, 11, 12, 13),
-                '--card-submit-pad': dv(d, '5px 14px', '6px 16px', '7px 18px'),
-                '--card-cursor': expanded ? 'default' : isGuest ? 'default' : 'text',
-            } as React.CSSProperties}
+            style={cardStyle}
         >
             <DraftMarker color={bc} />
 

@@ -34,7 +34,7 @@ export function useCreateNibble({ board, onSuccess, contentRequired = false }: O
     } finally {
       setLoading(false);
     }
-  }, [board, title, content, tags, canSubmit, loading]);
+  }, [board, title, content, tags]);
 
   function reset() {
     setTitle("");

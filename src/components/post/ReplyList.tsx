@@ -1,7 +1,3 @@
-function dotSize(depth: number): number {
-    return Math.max(8, 11 - depth);
-}
-
 type Props = {
     hasMore?: boolean;
     onLoadMore?: () => void;
@@ -20,5 +16,3 @@ export default function ReplyList({ hasMore, onLoadMore, children }: Props) {
         </div>
     );
 }
-
-export { dotSize };

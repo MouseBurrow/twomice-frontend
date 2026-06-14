@@ -37,7 +37,8 @@ export default function Post() {
     const [relatedPosts, setRelatedPosts] = useState<PostData[]>([]);
     const [error, setError] = useState<ApiError>();
     const [loading, setLoading] = useState(true);
-    const showLoading = FORCE_SKELETON || useShowLoading(loading);
+    const showLoad = useShowLoading(loading);
+    const showLoading = FORCE_SKELETON || showLoad;
     const [reloadVersion, setReloadVersion] = useState(0);
     const [locked, setLocked] = useState(false);
     const [commentSort, setCommentSort] = useState<"hot" | "new" | "top">("hot");
@@ -46,6 +47,7 @@ export default function Post() {
     const pagination = useOffsetPagination<CommentData>(COMMENT_LIMIT);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (postData) setLocked(postData.is_locked ?? false);
     }, [postData]);
 

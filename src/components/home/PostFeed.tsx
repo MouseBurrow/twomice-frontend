@@ -23,7 +23,8 @@ export default function PostFeed({ title, note }: Props) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ApiError>();
     const [retryKey, setRetryKey] = useState(0);
-    const showLoading = FORCE_SKELETON || useShowLoading(loading);
+    const showLoad = useShowLoading(loading);
+    const showLoading = FORCE_SKELETON || showLoad;
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect

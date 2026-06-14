@@ -15,6 +15,7 @@ export function useShowLoading(loading: boolean, minDisplay = 300): boolean {
         if (loading) {
             if (timerRef.current) clearTimeout(timerRef.current);
             showRef.current = true;
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setShow(true);
             shownAtRef.current = Date.now();
         } else {

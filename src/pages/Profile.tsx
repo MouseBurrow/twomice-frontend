@@ -25,7 +25,8 @@ export default function Profile() {
     const [postsLoading, setPostsLoading] = useState(true);
     const [followingLoading, setFollowingLoading] = useState(false);
     const [unfollowingIds, setUnfollowingIds] = useState<Set<string>>(new Set());
-    const showPostsLoading = FORCE_SKELETON || useShowLoading(postsLoading);
+    const showPostsLoad = useShowLoading(postsLoading);
+    const showPostsLoading = FORCE_SKELETON || showPostsLoad;
 
     const [prevTab, setPrevTab] = useState(tab);
     const joinedTime = useFormatRelativeTime(
@@ -51,6 +52,7 @@ export default function Profile() {
         if (auth.status !== "user" && auth.status !== "admin") return;
         let cancelled = false;
         if (tab === "posts") {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setPostsLoading(true);
             api.getUserPosts()
                 .then(data => { if (!cancelled) { setPosts(data.filter(item => !item.deleted)); setPostsLoading(false); } })

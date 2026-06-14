@@ -34,7 +34,8 @@ export default function Board() {
     const [followError, setFollowError] = useState<string | null>(null);
 
     const [reloadVersion, setReloadVersion] = useState(0);
-    const showLoading = FORCE_SKELETON || useShowLoading(loading);
+    const showLoad = useShowLoading(loading);
+    const showLoading = FORCE_SKELETON || showLoad;
 
     useEffect(() => {
         setLoading(true);

@@ -29,6 +29,8 @@ export default function PostCard({ board, post }: Props) {
     const [locked, setLocked] = useState(post.is_locked ?? false);
     const [removed, setRemoved] = useState(false);
 
+    const relTime = useFormatRelativeTime(post.created_at);
+
     const isAdmin = auth.status === "admin";
 
     if (removed) return null;
@@ -46,7 +48,6 @@ export default function PostCard({ board, post }: Props) {
         ? `${shadowX}px 8px 20px var(--shadow), 0 1px 4px var(--shadow)`
         : 'none';
     const bc = post.board_id ? boardColorFromName(post.board_id) : 'var(--accent)';
-    const relTime = useFormatRelativeTime(post.created_at);
 
     return (
         <div className={`pcard-wrap${scrap ? ' scrap' : ''}`}>

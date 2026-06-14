@@ -252,6 +252,12 @@ export default function Post() {
                                             ))}
                                         </div>
                                     )}
+
+                                    {(!postData.tags || postData.tags.length === 0) && relatedPosts.length === 0 && (
+                                        <div className="related-header" style={{ textAlign: 'center', padding: '0.5rem 0' }}>
+                                            No more nibbles in this burrow.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

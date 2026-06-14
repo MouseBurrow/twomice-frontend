@@ -65,16 +65,17 @@ export default function Board() {
     }, [board, reloadVersion]);
 
     useEffect(() => {
-        if (!board) return;
+        if (!boardData || !board) return;
         let cancelled = false;
         api.getBoardTags(board)
             .then(tags => { if (!cancelled) setBoardTags(tags); })
             .catch(() => { if (!cancelled) setBoardTags([]); });
         return () => { cancelled = true; };
-    }, [board]);
+    }, [board, boardData]);
 
     useEffect(() => {
         if (isGuest || !board) return;
+        if (!boardData) return;
         let cancelled = false;
         api.getFollowedBoards()
             .then(followedBoards => {
@@ -121,13 +122,22 @@ export default function Board() {
     }
 
     if (!showLoading && error) {
+        const is404 = error.status === 404;
         return (
             <div className="board-page" data-density={density}>
-                <div className="board-not-found-card">
-                    <span className="board-not-found-icon">🕳️</span>
-                    <div className="board-not-found-text">This burrow doesn't exist.</div>
-                    <div className="board-not-found-actions">
-                        <button className="btn-pill" onClick={() => navigate("/")}>← Back to the hole</button>
+                <div className="board-error-card">
+                    <div className="board-error-text">
+                        {is404 ? "This burrow doesn't exist." : "Couldn't reach this burrow."}
+                    </div>
+                    <div className="board-error-actions">
+                        {is404 ? (
+                            <button className="btn-pill" onClick={() => navigate("/")}>← Back to the hole</button>
+                        ) : (
+                            <>
+                                <button className="btn-pill" onClick={() => setReloadVersion(v => v + 1)}>Retry</button>
+                                <button className="btn-ghost" onClick={() => navigate("/")}>← Home</button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

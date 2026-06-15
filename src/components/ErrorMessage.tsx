@@ -9,6 +9,10 @@ const ERROR_MESSAGES: Record<string, Record<string, string>> = {
     "/signup": {
         username_exists: "That username is already taken",
     },
+    "/forgot": {
+        user_not_found: "That user does not exist",
+        invalid_backup_code: "Invalid backup code",
+    },
     "/mcf": {
         invalid_name: "Topic name may contain only letters, digits, and underscores",
         topic_already_exists: "That topic already exists",

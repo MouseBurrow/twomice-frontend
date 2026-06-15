@@ -67,6 +67,9 @@ export const api = {
     account: () =>
         request<AccountData>("/account"),
 
+    forgotPassword: (body: { username: string; backupCode: string }) =>
+        request<void>("/forgot", { method: "POST", body: JSON.stringify(body) }),
+
     // ── Boards ───────────────────────────────────────────────────────
     createBoard: (body: { name: string; description: string }) =>
         request<void>("/b", { method: "POST", body: JSON.stringify(body) }),

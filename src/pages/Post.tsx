@@ -46,6 +46,7 @@ export default function Post() {
 
     const isAdmin = auth.status === "admin";
     const pagination = useOffsetPagination<CommentData>(COMMENT_LIMIT);
+    const { replace: replaceComments } = pagination;
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -64,7 +65,7 @@ export default function Post() {
                 ]);
                 if (cancelled) return;
                 setPostData(postResult);
-                pagination.replace(commentRes.data, commentRes.total, commentRes.offset);
+                replaceComments(commentRes.data, commentRes.total, commentRes.offset);
                 setRelatedPosts(
                     boardPosts
                         .filter(p => p.slug !== post && !p.deleted)
@@ -79,7 +80,7 @@ export default function Post() {
             }
         })();
         return () => { cancelled = true; };
-    }, [board, post, reloadVersion, commentSort]);
+    }, [board, post, reloadVersion, commentSort, replaceComments]);
 
     useEffect(() => {
         if (!postData) return;
@@ -88,11 +89,11 @@ export default function Post() {
             try {
                 const res = await api.getAllComments(board!, post!, COMMENT_LIMIT, 0, commentSort);
                 if (cancelled) return;
-                pagination.replace(res.data, res.total, res.offset);
+                replaceComments(res.data, res.total, res.offset);
             } catch { /* ignore */ }
         })();
         return () => { cancelled = true; };
-    }, [commentSort]);
+    }, [commentSort, board, post, postData, replaceComments]);
 
     async function loadMoreComments() {
         const scrollY = window.scrollY;

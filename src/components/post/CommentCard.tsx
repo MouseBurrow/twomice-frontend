@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "../../api";
 import type { ApiError } from "../../apiError";
 import type { CommentData, ReplyData } from "../../types";
@@ -36,20 +36,21 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
     const isAdmin = auth.status === "admin";
     const replyPagination = useOffsetPagination<ReplyData>(REPLY_LIMIT);
+    const { replace: replaceReplies } = replyPagination;
     const commentTime = useFormatRelativeTime(comment.created_at);
 
-    async function loadReplies() {
+    const loadReplies = useCallback(async () => {
         try {
             setLoading(true);
             setError(undefined);
             const res = await api.getReplies(topic, post, comment.hash, REPLY_LIMIT, 0);
-            replyPagination.replace(res.data, res.total, 0);
+            replaceReplies(res.data, res.total, 0);
         } catch (e) {
             setError(e as ApiError);
         } finally {
             setLoading(false);
         }
-    }
+    }, [topic, post, comment.hash, replaceReplies]);
 
     async function loadMoreReplies() {
         await replyPagination.loadMore(
@@ -59,7 +60,7 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
 
     useEffect(() => {
         loadReplies();
-    }, []);
+    }, [loadReplies]);
 
     if (removed || comment.deleted) {
         return (

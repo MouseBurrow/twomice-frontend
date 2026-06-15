@@ -31,6 +31,7 @@ type Props = {
 
 export default function ReplyRow({ reply, topic, post, commentHash, bc, connectorColor, depth = 0, isFirst = false, hasMoreSiblings = false }: Props) {
     const nestedPagination = useOffsetPagination<ReplyData>(NESTED_LIMIT);
+    const { replace: replaceNested } = nestedPagination;
     const [replyOpen, setReplyOpen] = useState(false);
     const [replyContent, setReplyContent] = useState("");
     const [replyBusy, setReplyBusy] = useState(false);
@@ -46,8 +47,8 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
     useEffect(() => {
         const children = reply.children ?? [];
         const len = children.length;
-        nestedPagination.replace(children, len, len);
-    }, [reply.children]);
+        replaceNested(children, len, len);
+    }, [reply.children, replaceNested]);
 
     async function loadMoreNested() {
         if (depth >= MAX_DEPTH) return;

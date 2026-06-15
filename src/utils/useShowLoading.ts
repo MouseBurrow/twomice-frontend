@@ -32,7 +32,7 @@ export function useShowLoading(loading: boolean, minDisplay = 300): boolean {
             }
         }
         return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-    }, [loading]);
+    }, [loading, minDisplay]);
 
     return show;
 }

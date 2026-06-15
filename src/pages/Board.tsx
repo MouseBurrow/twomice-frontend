@@ -15,7 +15,7 @@ import BoardTag from "../components/shared/BoardTag";
 import { boardColorFromName } from "../utils/hash";
 import { useShowLoading } from "../utils/useShowLoading";
 import { FORCE_SKELETON } from "../debug";
-import "../assets/Board.scss";
+import "./board.scss";
 
 export default function Board() {
     const { board } = useParams<{ board: string }>();
@@ -151,7 +151,7 @@ export default function Board() {
 
             {boardData && (
             <>
-            <div className="board-hero" style={{ borderTop: `3px solid ${heroColor}` }}>
+            <div className="board-hero card-stripe" style={{ '--card-stripe-clr': heroColor } as React.CSSProperties}>
                 <div className="board-hero-body">
                     <div className="board-hero-row">
                         {showLoading ? (
@@ -241,7 +241,7 @@ export default function Board() {
                                 <div className="board-empty-action">Post the first one above ↑</div>
                             </div>
                         ) : (
-                            sortedPosts.map(post => <PostCard key={post.slug} board={boardData.name} post={post} />)
+                            sortedPosts.map(post => <PostCard key={post.slug} post={post} />)
                         )}
                     </div>
                 </div>

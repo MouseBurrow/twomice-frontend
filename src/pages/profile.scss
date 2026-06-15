@@ -83,15 +83,6 @@
 
 .profile-anon-note { font-size: 0.75rem; color: var(--text-faint); }
 
-.profile-member-since {
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--text-faint);
-}
-
-.profile-page[data-density="compact"] .profile-member-since     { font-size: 0.625rem; margin-bottom: 0.625rem; }
-.profile-page[data-density="comfortable"] .profile-member-since { font-size: 0.6875rem; margin-bottom: 1rem; }
-.profile-page[data-density="spacious"] .profile-member-since    { font-size: 0.75rem; margin-bottom: 1.375rem; }
-
 /* ── Stats ── */
 .profile-stats {
   display: flex;
@@ -153,18 +144,7 @@
 }
 .profile-tab:hover:not(.active) { border-color: var(--accent2); color: var(--accent2); }
 
-/* ── Posts note ── */
-.profile-posts-note {
-  font-size: 0.75rem; color: var(--text-muted);
-  background: var(--bg-elevated);
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border-soft);
-}
-
-.profile-page[data-density="compact"] .profile-posts-note     { padding: 0.4375rem 0.625rem; margin-bottom: 0.5rem; }
-.profile-page[data-density="comfortable"] .profile-posts-note { padding: 0.5625rem 0.875rem; margin-bottom: 0.875rem; }
-.profile-page[data-density="spacious"] .profile-posts-note    { padding: 0.6875rem 1rem; margin-bottom: 1.125rem; }
-
+/* ── Posts list ── */
 .profile-posts-list {
   display: flex; flex-direction: column;
 }

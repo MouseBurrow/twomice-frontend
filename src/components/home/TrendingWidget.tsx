@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api";
 import type { PostData } from "../../types";
+import UpArrow from "../../icons/UpArrow";
+import ReplyBubble from "../../icons/ReplyBubble";
 
 type Props = { limit?: number };
 
@@ -33,9 +35,17 @@ export default function TrendingWidget({ limit = 4 }: Props) {
               <div className="trending-board-name">b/{post.board_id}</div>
             )}
             <div className="trending-title">{post.title}</div>
-            <div className="trending-stats">
-              <span>▲ {post.vote_count ?? 0}</span>
-              <span>💬 {post.reply_count ?? 0}</span>
+            <div className="trending-footer">
+              <span className="trending-arrow">
+                <UpArrow />
+              </span>
+              <span className="trending-score">{post.vote_count ?? 0}</span>
+              {post.board_id && (
+                <span className="trending-reply">
+                  <ReplyBubble />
+                  {post.reply_count ?? 0}
+                </span>
+              )}
             </div>
           </div>
         ))}

@@ -22,17 +22,13 @@ html, body {
 body {
   background-color: var(--bg-primary);
   background-image:
-    radial-gradient(ellipse 55% 35% at 12% 30%,
-      color-mix(in srgb, var(--shadow) 55%, transparent) 0%, transparent 100%),
-    radial-gradient(ellipse 42% 52% at 82% 18%,
-      color-mix(in srgb, var(--shadow) 40%, transparent) 0%, transparent 100%),
     repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--border) 55%, transparent) 0,
-      color-mix(in srgb, var(--border) 55%, transparent) 1px,
+      color-mix(in srgb, var(--border) 50%, transparent) 0,
+      color-mix(in srgb, var(--border) 50%, transparent) 1px,
       transparent 0, transparent 11px),
     repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--border) 45%, transparent) 0,
-      color-mix(in srgb, var(--border) 45%, transparent) 1px,
+      color-mix(in srgb, var(--border) 40%, transparent) 0,
+      color-mix(in srgb, var(--border) 40%, transparent) 1px,
       transparent 0, transparent 11px);
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -73,8 +69,6 @@ input, textarea {
 
 /* ── Prototype utility classes ── */
 .btn-pill {
-  font-family: 'Fredoka One', cursive;
-  font-size: 0.875rem;
   padding: 0.4375rem 1.125rem;
   border-radius: 6.1875rem;
   border: none;
@@ -94,11 +88,9 @@ input, textarea {
 }
 
 .btn-ghost {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
   padding: 0.375rem 0.875rem;
   border-radius: 6.1875rem;
-  border: 0.0625rem solid var(--border);
+  border: 2px solid var(--border);
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
@@ -129,6 +121,11 @@ input, textarea {
   box-shadow: 0 0.25rem 0.75rem var(--shadow);
 }
 
+.icon-btn--active {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
 /* ── Header ── */
 .site-header {
   position: sticky; top: 0; z-index: 100;
@@ -138,17 +135,6 @@ input, textarea {
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* ── Tag chip ── */
-.tag-chip {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.625rem; font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.125rem 0.5rem;
-  border-radius: 0 0.375rem 0.375rem 0.375rem;
-  background: var(--accent-bg);
-  color: var(--accent2);
-  border: 0.0625rem solid var(--border);
-}
 
 /* ── Tag selector ── */
 .tag-selector {
@@ -163,7 +149,6 @@ input, textarea {
 }
 
 .tag-selector-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.5625rem;
   font-weight: 700;
   letter-spacing: .08em;
@@ -172,7 +157,6 @@ input, textarea {
 }
 
 .tag-selector-count {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.5rem;
   font-weight: 600;
   color: var(--text-faint);
@@ -190,7 +174,6 @@ input, textarea {
 }
 
 .nibble-tag-btn {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .05em;
@@ -212,6 +195,15 @@ input, textarea {
   &:hover:not(:disabled)[data-sel="true"] {
     opacity: 0.8;
   }
+}
+
+/* ── Shared card with top accent stripe ── */
+.card-stripe {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-top: 2px solid var(--card-stripe-clr, var(--accent));
+  border-radius: 0 1.25rem 1.25rem 1.25rem;
+  overflow: hidden;
 }
 
 /* ── Post card ── */
@@ -242,29 +234,20 @@ input, textarea {
   flex-wrap: wrap;
 }
 
-.post-card-date {
-  margin-left: auto;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.625rem;
-  color: var(--text-faint);
+.post-card-board-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem;
 }
 
+
 .post-card-hot-badge {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.5625rem;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  padding: 0.125rem 0.4375rem;
-  border-radius: 0 0.3125rem 0.3125rem 0.3125rem;
-  background: var(--accent);
-  color: var(--text-on-accent);
-  border: 0.0625rem solid transparent;
-  animation: hotpulse 2.2s ease-in-out infinite;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .post-card-title {
-  font-family: 'Fredoka One', cursive;
+  
   line-height: 1.18;
   color: var(--text-primary);
 }
@@ -279,69 +262,22 @@ input, textarea {
   overflow: hidden;
 }
 
-.post-card-footer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.post-card-replies {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.6875rem;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.post-card-open {
-  margin-left: auto;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--accent2);
-}
 
 /* Post card density variants */
 [data-density="compact"] .post-card-inner   { padding: 0.5rem 0.75rem; gap: 0.3125rem; }
 [data-density="comfortable"] .post-card-inner { padding: 1rem 1.25rem; gap: 0.625rem; }
-[data-density="spacious"] .post-card-inner  { padding: 1.5rem 1.75rem; gap: 0.875rem; }
 
 [data-density="compact"] .post-card-title    { font-size: 0.875rem; }
 [data-density="comfortable"] .post-card-title { font-size: 1.1875rem; }
-[data-density="spacious"] .post-card-title   { font-size: 1.375rem; }
 
 /* ── Form elements ── */
 .form-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.625rem; font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-.form-input,
-.form-select,
-.form-textarea {
-  width: 100%;
-  padding: 0.625rem 0.875rem;
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  outline: none;
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
-}
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 15%, transparent);
-}
-.form-textarea { min-height: 7.5rem; }
 
 @keyframes hotpulse {
   0%, 100% { opacity: 1; }
@@ -393,7 +329,7 @@ input, textarea {
 }
 
 .modal-title {
-  font-family: 'Fredoka One', cursive;
+  
   font-size: 1.25rem;
   color: var(--text-primary);
 }
@@ -417,27 +353,24 @@ input, textarea {
 
 /* ── Guest banner ── */
 .guest-banner {
-  background: var(--bg-elevated);
-  border: 0.0625rem solid var(--border);
-  border-radius: 0 0.75rem 0.75rem 0.75rem;
+  border-left: 1.5px dashed var(--border);
+  border-right: 1.5px dashed var(--border);
+  border-bottom: 1.5px dashed var(--border);
   padding: 0.75rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   flex-wrap: wrap;
-  position: relative;
-  overflow: hidden;
 }
 
-.guest-banner-stripe {
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 0.1875rem;
-  background: linear-gradient(90deg, var(--stripe-top), var(--stripe-bottom));
+
+.guest-banner-body {
+  padding-top: 0.125rem;
 }
 
 .guest-banner-title {
-  font-family: 'Fredoka One', cursive;
+  
   font-size: 0.9375rem;
   margin-bottom: 0.125rem;
   color: var(--text-primary);
@@ -450,25 +383,27 @@ input, textarea {
 
 /* ── Board chip ── */
 .board-chip {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.125rem 0.5rem;
   border-radius: 0 0.375rem 0.375rem 0.375rem;
-  background: var(--accent-bg);
-  color: var(--accent2);
-  border: 0.0625rem solid var(--border);
+  border: 0.0625rem solid;
   cursor: pointer;
   letter-spacing: .04em;
   flex-shrink: 0;
   transition: border-color 0.1s;
+  color: var(--chip-clr, var(--accent2));
+  border-color: color-mix(in srgb, var(--chip-clr, var(--accent2)) 28%, transparent);
+  background: color-mix(in srgb, var(--chip-clr, var(--accent2)) 12%, transparent);
 }
-.board-chip:hover { border-color: var(--accent2); }
+.board-chip:hover {
+  border-color: var(--chip-clr, var(--accent2));
+  background: color-mix(in srgb, var(--chip-clr, var(--accent2)) 22%, transparent);
+}
 
 /* ── Form fields ── */
 .field { margin: 0; }
 .field-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.625rem; font-weight: 700;
   letter-spacing: .08em; text-transform: uppercase;
   color: var(--text-muted);
@@ -484,7 +419,6 @@ input, textarea {
   border: 0.0625rem solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-body);
   font-size: 0.875rem;
   outline: none;
   transition: border-color 0.12s ease, box-shadow 0.12s ease;
@@ -507,7 +441,6 @@ input, textarea {
   font-size: 0.75rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  font-family: var(--font-body);
   transition: all .1s;
 }
 .modal-cancel:hover { border-color: var(--text-muted); }
@@ -519,7 +452,7 @@ input, textarea {
   font-size: 0.75rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
-  font-family: 'Fredoka One', cursive;
+  
   border: none;
   display: flex;
   align-items: center;
@@ -541,6 +474,40 @@ input, textarea {
 }
 
 /* ── Board search list ── */
+/* ── Board search modal ── */
+.modal-card--search {
+  max-width: 35rem;
+  max-height: 80vh;
+}
+
+.bsearch-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 0.0625rem solid var(--border);
+}
+
+.bsearch-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.bsearch-header-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.125rem;
+  color: var(--text-primary);
+}
+
+.bsearch-header-dot {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  border: 2px solid rgba(0,0,0,0.12);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25), 0 0 0 3px color-mix(in srgb, var(--bg-surface) 18%, transparent);
+}
+
 .board-search-input {
   width: 100%;
   padding: 0.625rem 0.875rem;
@@ -548,7 +515,6 @@ input, textarea {
   border: 0.0625rem solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-body);
   font-size: 0.875rem;
   outline: none;
 }
@@ -557,79 +523,110 @@ input, textarea {
   box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
-.board-search-list {
-  overflow-y: auto; flex: 1;
-  padding: 0.75rem 1.25rem 1.25rem;
+
+.bsearch-empty {
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
 
-.board-search-item {
+.bsearch-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 0.0625rem solid var(--border-subtle, var(--border));
+}
+
+.bsearch-create-btn {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.bsearch-create {
+  padding: 0 1.25rem 1rem;
+}
+
+.bsearch-create .field {
+  margin-bottom: 0.75rem;
+}
+
+.field-label-note {
+  color: var(--text-faint);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bsearch-slug-wrap {
+  position: relative;
+}
+
+.bsearch-slug-prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.bsearch-slug-input {
+  padding-left: 28px;
+}
+
+.bsearch-swatches {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5625rem 0.75rem;
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border-soft);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bsearch-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid transparent;
   cursor: pointer;
-  transition: all .1s;
-  margin-bottom: 0.375rem;
-}
-.board-search-item:hover {
-  background: var(--bg-primary);
-  border-color: var(--border);
+  transition: transform 0.12s, outline 0.12s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.22);
 }
 
-.board-search-item-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.75rem; font-weight: 700;
-  color: var(--accent2);
+.bsearch-swatch--active {
+  transform: scale(1.2);
+  outline: 3px solid var(--swatch-clr, currentColor);
+  outline-offset: 2px;
 }
 
-.board-search-item-desc {
-  font-size: 0.75rem; color: var(--text-muted);
-  margin-left: 0.625rem;
+.bsearch-create-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
 }
 
-/* ── Vote buttons ── */
-.vote-btn {
-  background: none; border: none;
-  cursor: pointer; padding: 0.0625rem 0.1875rem;
-  font-size: 0.75rem; line-height: 1;
-  transition: transform 0.12s, color 0.12s;
-}
-.vote-btn:disabled { cursor: default; opacity: 0.4; }
-.vote-btn--up { color: var(--text-faint); }
-.vote-btn--up.vote-btn--active { color: var(--accent); transform: scale(1.25); }
-.vote-btn--down { color: var(--text-faint); }
-.vote-btn--down.vote-btn--active { color: var(--danger); transform: scale(1.25); }
-
-.vote-score {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.6875rem; font-weight: 700;
-  min-width: 1.375rem; text-align: center;
-  color: var(--text-primary);
-}
 
 /* ── Anonymous badge ── */
 .anon-badge {
   display: inline-flex; align-items: center; gap: 0.25rem;
-  font-family: 'Space Grotesk', sans-serif;
+  padding: 0.125rem 0.4375rem;
   font-weight: 700; letter-spacing: .06em;
+  font-size: 0.75rem;
   text-transform: uppercase; flex-shrink: 0;
   border-radius: 0 0.375rem 0.375rem 0.375rem;
   border: 0.09375rem solid;
+  border-color: var(--badge-clr);
+  background: color-mix(in srgb, var(--badge-clr) 18%, var(--bg-surface));
+  color: color-mix(in srgb, var(--badge-clr) 65%, var(--text-primary));
 }
-.anon-badge--sm { padding: 0.125rem 0.4375rem; font-size: 0.5625rem; }
-.anon-badge:not(.anon-badge--sm) { padding: 0.1875rem 0.625rem; font-size: 0.625rem; }
 
 .anon-badge-dot {
   border-radius: 50%; display: inline-block; flex-shrink: 0;
+  width: 0.375rem; height: 0.375rem;
+  background: var(--badge-clr);
 }
-.anon-badge--sm .anon-badge-dot { width: 0.25rem; height: 0.25rem; }
-.anon-badge:not(.anon-badge--sm) .anon-badge-dot { width: 0.3125rem; height: 0.3125rem; }
 
 .anon-badge-tag {
   margin-left: 0.1875rem; font-weight: 900;
-  font-size: 0.5rem; letter-spacing: .04em;
+  font-size: 0.75rem; letter-spacing: .04em;
+  color: var(--badge-clr);
 }
 
 /* ── Sidebar widget card ── */
@@ -644,7 +641,7 @@ input, textarea {
 .widget-header {
   padding: 0.625rem 0.875rem;
   border-bottom: 0.0625rem solid var(--border);
-  font-family: 'Fredoka One', cursive;
+  
   font-size: 0.875rem;
   display: flex;
   align-items: center;
@@ -666,7 +663,6 @@ input, textarea {
 
 .followed-item-info { flex: 1; min-width: 0; }
 .followed-item-name {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.6875rem;
   font-weight: 700;
 }
@@ -681,8 +677,7 @@ input, textarea {
 
 /* ── Settings section heading ── */
 .settings-section-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.625rem; font-weight: 700;
+  font-weight: 700;
   letter-spacing: .09em; text-transform: uppercase;
   color: var(--text-faint);
   margin-bottom: 0.75rem;
@@ -700,7 +695,7 @@ input, textarea {
 }
 .drawer {
   position: relative; z-index: 1;
-  width: 20rem; max-width: 95vw;
+  width: 22rem; max-width: 95vw;
   height: 100%;
   background: var(--bg-surface);
   border-left: 0.0625rem solid var(--border);
@@ -719,7 +714,7 @@ input, textarea {
   display: flex; align-items: center; justify-content: space-between;
 }
 .drawer-title {
-  font-family: 'Fredoka One', cursive;
+  
   font-size: 1.25rem; color: var(--text-primary);
 }
 .drawer-close {
@@ -745,7 +740,6 @@ input, textarea {
   flex: 1;
   padding: 0.25rem 0.625rem;
   border-radius: 0 0.375rem 0.375rem 0.375rem;
-  font-size: 0.625rem; font-family: 'Space Grotesk', sans-serif;
   font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
   cursor: pointer;
   border: 0.0625rem solid var(--border);
@@ -757,7 +751,7 @@ input, textarea {
   color: var(--text-on-accent);
 }
 .set-desc {
-  font-size: 0.6875rem; color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 /* theme swatches */
@@ -777,8 +771,7 @@ input, textarea {
 .set-swatch-dots { display: flex; gap: 0.375rem; margin-bottom: 0.375rem; }
 .set-swatch-dot { width: 0.6875rem; height: 0.6875rem; border-radius: 50%; }
 .set-swatch-label {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.6875rem; font-weight: 700;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -786,25 +779,20 @@ input, textarea {
 .set-font-list { display: flex; flex-direction: column; gap: 0.5rem; }
 .set-font-option {
   display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.625rem 0.875rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 0 0.625rem 0.625rem 0.625rem;
   border: 0.09375rem solid var(--border);
   cursor: pointer; background: transparent;
   transition: all .1s; text-align: left; width: 100%;
 }
 .set-font-option--active { border-color: var(--accent); background: var(--accent-bg); }
-.set-font-preview { font-size: 0.875rem; color: var(--text-primary); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.set-font-sample { color: var(--text-primary); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .set-font-label {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.5625rem; font-weight: 700;
+  font-size: 0.75rem; font-weight: 700;
   text-transform: uppercase; color: var(--text-muted);
+  flex-shrink: 0;
 }
-.set-font-desc {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.5625rem; text-transform: uppercase;
-  color: var(--text-faint);
-}
-.set-font-check { color: var(--accent); font-size: 1rem; }
+
 
 /* content toggles */
 .set-toggle-row {
@@ -813,7 +801,7 @@ input, textarea {
   border-bottom: 0.0625rem solid var(--border-soft);
 }
 .set-toggle-row:last-child { border-bottom: none; }
-.set-toggle-label { font-size: 0.75rem; color: var(--text-primary); }
+.set-toggle-label { color: var(--text-primary); }
 .set-toggle-track {
   width: 2rem; height: 1rem;
   border-radius: 0.5rem;
@@ -834,7 +822,6 @@ input, textarea {
   margin-bottom: 1.25rem;
 }
 .followed-bar-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.625rem; font-weight: 700;
   letter-spacing: .09em; text-transform: uppercase;
   color: var(--text-faint);
@@ -857,7 +844,6 @@ input, textarea {
   box-shadow: 0 0.25rem 1rem var(--shadow);
 }
 .followed-board-name {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.6875rem; font-weight: 700;
   color: var(--accent2);
 }
@@ -872,8 +858,6 @@ input, textarea {
 .mini-btn {
   padding: 0.25rem 0.625rem;
   border-radius: 0 0.375rem 0.375rem 0.375rem;
-  font-size: 0.625rem;
-  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -973,7 +957,6 @@ input, textarea {
 .mod-actions-dropdown-header {
   padding: 0.375rem 0.75rem;
   font-size: 0.5625rem;
-  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -991,7 +974,6 @@ input, textarea {
   font-size: 0.75rem;
   cursor: pointer;
   color: var(--text-primary);
-  font-family: var(--font-body);
   transition: background .1s;
 }
 .mod-actions-item:hover { background: var(--bg-primary); }
@@ -999,7 +981,6 @@ input, textarea {
 
 /* ── Locked badge ── */
 .locked-badge {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.5625rem;
   font-weight: 700;
   letter-spacing: .06em;
@@ -1011,55 +992,8 @@ input, textarea {
   white-space: nowrap;
 }
 
-/* ── 3-column home grid ── */
-.home-layout--three-col {
-  max-width: 75rem;
-  display: grid;
-  grid-template-columns: 13.75rem 1fr 16.25rem;
-  gap: 1.25rem;
-  align-items: start;
-}
-
-.home-left-col {
-  min-width: 0;
-}
-
-.followed-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.followed-sidebar-label {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 0.25rem;
-}
-.followed-sidebar-chip {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--accent2);
-  cursor: pointer;
-  padding: 0.4375rem 0.625rem;
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border-soft);
-  background: transparent;
-  transition: border-color .1s, background .1s;
-  display: block;
-  width: 100%;
-  text-align: left;
-}
-.followed-sidebar-chip:hover {
-  border-color: var(--accent2);
-  background: var(--accent-bg);
-}
 
 @media (max-width: 48.75rem) {
   .hide-sidebar { display: none !important; }
   .hide-sm      { display: none !important; }
-  .home-layout--three-col { grid-template-columns: 1fr !important; }
 }

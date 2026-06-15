@@ -1,7 +1,7 @@
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
-import { api } from "../api.ts";
+import { api } from "../api";
 
-import type { AuthState } from "../types.ts";
+import type { AuthState } from "../types";
 
 type AuthContextValue = {
     auth: AuthState;

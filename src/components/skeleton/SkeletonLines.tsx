@@ -1,4 +1,4 @@
-import "../../assets/Skeleton.scss";
+import "./skeleton.scss";
 
 type Props = {
     lines: number;

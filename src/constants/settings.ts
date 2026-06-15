@@ -18,7 +18,6 @@ export const THEMES: { value: Theme; label: string; preview: [string, string, st
 export const DENSITY_OPTIONS: { value: Density; label: string; desc: string }[] = [
     { value: "compact",     label: "Compact",     desc: "Reduced spacing" },
     { value: "comfortable", label: "Comfortable", desc: "Balanced (default)" },
-    { value: "spacious",    label: "Spacious",    desc: "Extra breathing room" },
 ];
 
 export const FONT_OPTIONS: { id: string; label: string; desc: string }[] = [

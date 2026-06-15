@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { api } from "../api";
 import type { ApiError } from "../apiError";
 
@@ -20,7 +20,7 @@ export function useCreateNibble({ board, onSuccess, contentRequired = false }: O
 
   const canSubmit = title.trim() !== "" && (!contentRequired || content.trim() !== "");
 
-  const submit = useCallback(async (): Promise<boolean> => {
+  async function submit(): Promise<boolean> {
     if (!canSubmit || loading) return false;
     setError(undefined);
     setLoading(true);
@@ -34,7 +34,7 @@ export function useCreateNibble({ board, onSuccess, contentRequired = false }: O
     } finally {
       setLoading(false);
     }
-  }, [board, title, content, tags]);
+  }
 
   function reset() {
     setTitle("");

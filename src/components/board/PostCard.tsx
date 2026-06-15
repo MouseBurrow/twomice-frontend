@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { PostData } from "../../types";
 import VoteButtons from "../shared/VoteButtons";
 import AnonBadge from "../shared/AnonBadge";
-import BoardChip from "../shared/BoardChip";
+import BoardChip from "../board/BoardChip";
 import ModActions from "../shared/ModActions";
 import PushPin from "../shared/PushPin";
 import BoardTag from "../shared/BoardTag";
@@ -67,24 +67,22 @@ export default function PostCard({ board, post }: Props) {
                 <div className="post-card-inner">
                     <div className="post-card-meta-row">
                         {!board && post.board_id && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                <span className="board-dot-sm" style={{ background: bc }} />
+                            <div className="post-card-board-chip">
+                                <span className="board-dot-sm" style={{ '--dot-clr': bc } as React.CSSProperties} />
                                 <BoardChip
                                     boardName={post.board_id}
                                     onClick={() => navigate(`/b/${post.board_id}`)}
                                 />
                             </div>
                         )}
-                        {post.is_hot && <span style={{ fontSize: 9, lineHeight: 1 }}>🔥</span>}
+                        {post.is_hot && <span className="post-card-hot-badge">🔥</span>}
                         {post.anon_token && (
-                            <AnonBadge token={post.anon_token} isMe={post.is_mine} sm />
+                            <AnonBadge token={post.anon_token} isMe={post.is_mine} />
                         )}
                         {locked && (
                             <span className="locked-badge">🔒 locked</span>
                         )}
-                        <span className="post-card-date">
-                            {relTime}
-                        </span>
+                        <span className="meta-time">{relTime}</span>
                     </div>
 
                     <div className="post-card-title">{post.title}</div>
@@ -118,7 +116,7 @@ export default function PostCard({ board, post }: Props) {
                                 onRemove={() => setRemoved(true)}
                             />
                             {canNavigate && (
-                                <span className="pcard-peek" style={{ color: `color-mix(in srgb, ${bc} 50%, transparent)` }}>
+                                <span className="pcard-peek" style={{ '--peek-clr': bc } as React.CSSProperties}>
                                     peek in →
                                 </span>
                             )}

@@ -110,26 +110,6 @@
   margin-bottom: 0.25rem;
 }
 
-.settings-group-btn {
-  flex: 1;
-  padding: 0.4375rem 0.625rem;
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border);
-  background: var(--bg-primary);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.12s ease;
-
-  &.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--text-on-accent);
-  }
-
-  &:hover:not(.active) { border-color: var(--accent2); color: var(--accent); }
-}
 
 /* ── Font picker ── */
 .settings-font-list {
@@ -185,45 +165,4 @@
   margin-top: 0.0625rem;
 }
 
-/* ── Handle section ── */
-.settings-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
 
-  label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    flex-shrink: 0;
-  }
-}
-
-.settings-input {
-  padding: 0.375rem 0.625rem;
-  border-radius: 0 0.5rem 0.5rem 0.5rem;
-  border: 0.0625rem solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 0.75rem;
-  font-family: var(--font-body);
-  flex: 1;
-
-  &:focus { outline: none; border-color: var(--accent); }
-}
-
-.settings-save {
-  padding: 0.375rem 1rem;
-  background: var(--accent);
-  color: var(--text-on-accent);
-  border: none;
-  border-radius: 6.1875rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.12s ease;
-
-  &:hover { background: var(--accent2); }
-}

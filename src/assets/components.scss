@@ -25,16 +25,11 @@
 }
 
 .post-op-card {
-  border-radius: 0 1rem 1rem 1rem;
   transform: rotate(0.8deg);
   transform-origin: 50% 0;
   box-shadow: -3px 8px 20px rgba(0,0,0,.10);
   margin-bottom: 0;
-  overflow: hidden;
   transition: background-color .2s, border-color .2s;
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--bc);
-  background: var(--bg-surface);
 }
 
 .post-op-meta {
@@ -52,7 +47,7 @@
 }
 
 .post-op-title {
-  font-family: 'Fredoka One', cursive;
+  
   line-height: 1.15;
   color: var(--text-primary);
 }
@@ -102,7 +97,7 @@
 }
 
 .post-board-name {
-  font-family: 'Fredoka One', cursive;
+  
   color: var(--accent2);
 }
 
@@ -120,12 +115,11 @@
 }
 
 .comment-feed-count {
-  font-family: 'Fredoka One', cursive;
+  
   color: var(--text-primary);
 }
 
 .comment-feed-sort-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: .07em;
@@ -136,7 +130,6 @@
 
 /* ── Related threads ── */
 .related-header {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.5625rem;
   font-weight: 700;
   letter-spacing: .1em;
@@ -165,7 +158,6 @@
 }
 
 .related-stats {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.5625rem;
   color: var(--text-faint);
   display: flex;
@@ -174,12 +166,14 @@
 
 /* ── Board-colored tag ── */
 .bc-tag {
-  font-size: 0.5625rem;
-  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: .05em;
   border-radius: 0 0.25rem 0.25rem 0.25rem;
   padding: 0.125rem 0.4375rem;
+  color: var(--tag-clr);
+  background: color-mix(in srgb, var(--tag-clr) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tag-clr) 28%, transparent);
 }
 
 /* ── Board dot (small, used in meta rows) ── */
@@ -191,6 +185,7 @@
   flex-shrink: 0;
   border: 1.5px solid rgba(0,0,0,0.12);
   box-shadow: 0 1px 3px rgba(0,0,0,0.22), inset 0 1px 2px rgba(255,255,255,.32);
+  background: var(--dot-clr, var(--accent));
 }
 
 /* ── PostCard scrapbook outer ── */
@@ -204,12 +199,26 @@
   margin-top: 1.375rem;
 }
 
+/* ── Vote wrap ── */
+.vote-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+[data-density="compact"] .vote-wrap {
+  gap: 0.3125rem;
+}
+
 /* ── Vote pill ── */
 .vote-pill {
   display: inline-flex;
   align-items: center;
   border-radius: 6.1875rem;
   transition: border-color 0.15s, background 0.15s;
+  color: var(--vote-clr, var(--accent));
+  background: color-mix(in srgb, var(--vote-clr, var(--accent)) 10%, var(--bg-surface));
+  border: 1.5px solid color-mix(in srgb, var(--vote-clr, var(--accent)) 28%, transparent);
 }
 
 .vote-pill-half {
@@ -225,14 +234,15 @@
   width: 0.0625rem;
   height: 0.875rem;
   flex-shrink: 0;
+  background: color-mix(in srgb, var(--vote-clr, var(--accent)) 28%, transparent);
 }
 
 .vote-pill-score {
   font-size: 0.6875rem;
-  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   line-height: 1;
   transition: color 0.15s;
+  color: var(--vote-clr, var(--accent));
 }
 
 /* ── Reply count pill ── */
@@ -240,11 +250,11 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  color: var(--text-faint);
 }
 
 .reply-count-label {
   font-size: 0.6875rem;
-  font-family: 'Space Grotesk', sans-serif;
   color: var(--text-faint);
 }
 
@@ -267,12 +277,12 @@
 }
 
 .pcard-peek {
-  font-size: 0.625rem;
-  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
   font-weight: 700;
   border-left: 1px dashed var(--border);
   padding-left: 0.5rem;
   margin-left: 0.25rem;
+  color: color-mix(in srgb, var(--peek-clr, var(--accent)) 50%, transparent);
 }
 
 /* ── Sidebar scrapbook items ── */

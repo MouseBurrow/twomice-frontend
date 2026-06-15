@@ -166,17 +166,6 @@
   border: 0.0625rem solid;
 }
 
-.admin-report-status--pending {
-  color: var(--danger);
-  background: color-mix(in srgb, var(--danger) 15%, transparent);
-  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
-}
-
-.admin-report-status--resolved {
-  color: var(--text-faint);
-  background: var(--bg-primary);
-  border-color: var(--border);
-}
 
 .admin-report-count {
   font-family: 'Space Grotesk', sans-serif;

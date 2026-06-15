@@ -12,6 +12,7 @@ import MiniBtn from "../components/shared/MiniBtn";
 import ModActions from "../components/shared/ModActions";
 import GuestBanner from "../components/shared/GuestBanner";
 import PushPin from "../components/shared/PushPin";
+import ArrowLeft from "../icons/ArrowLeft";
 import BoardTag from "../components/shared/BoardTag";
 import SkeletonLines from "../components/skeleton/SkeletonLines";
 import type { CommentData, PostData } from "../types";
@@ -19,7 +20,7 @@ import { useFormatRelativeTime } from "../utils/date";
 import { boardColorFromName } from "../utils/hash";
 import { dv } from "../utils/density";
 import { useOffsetPagination } from "../hooks/useOffsetPagination";
-import "../assets/Post.scss";
+import "./post.scss";
 import "../assets/components.scss";
 import { FORCE_SKELETON } from "../debug";
 import { useShowLoading } from "../utils/useShowLoading";
@@ -78,7 +79,7 @@ export default function Post() {
             }
         })();
         return () => { cancelled = true; };
-    }, [board, post, reloadVersion]);
+    }, [board, post, reloadVersion, commentSort]);
 
     useEffect(() => {
         if (!postData) return;
@@ -149,13 +150,14 @@ export default function Post() {
                     <div className="post-breadcrumb">
                         <button className="btn-ghost"
                             style={{
-                                padding: dv(density, '3px 8px', '4px 10px', '5px 12px'),
-                                fontSize: dv(density, 11, 12, 13),
-                                background: `color-mix(in srgb, ${bc} 12%, transparent)`,
-                                borderColor: `color-mix(in srgb, ${bc} 28%, transparent)`,
+                                fontSize: dv(density, 12, 13, 14),
+                                background: 'var(--bg-surface)',
+                                padding: dv(density, '4px 12px', '5px 12px', '6px 12px'),
+                                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
                             }}
                             onClick={() => navigate(`/b/${board}`)}>
-                            ← b/{board}
+                            <ArrowLeft />
+                            b/{board}
                         </button>
                         {!showLoading && postData?.is_locked && <span className="locked-badge">🔒 locked</span>}
                     </div>
@@ -163,7 +165,7 @@ export default function Post() {
                     {showLoading ? (
                         <>
                             <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
-                                <div className="post-op-card" style={{ '--bc': bc } as React.CSSProperties}>
+                                <div className="post-op-card card-stripe" style={{ '--card-stripe-clr': bc } as React.CSSProperties}>
                                     <SkeletonLines lines={5} style={{ marginBottom: "0.75rem" }} />
                                 </div>
                             </div>
@@ -191,13 +193,13 @@ export default function Post() {
                         <>
                             <div className="post-op-wrap" style={{ marginTop: dv(density, 16, 20, 24) }}>
                                 <PushPin color={bc} glow={!!postData.is_hot} />
-                                <div className="post-op-card" style={{ '--bc': bc } as React.CSSProperties}>
+                                <div className="post-op-card card-stripe" style={{ '--card-stripe-clr': bc } as React.CSSProperties}>
                                     <div className="post-detail-inner" style={{ padding: cardPad }}>
                                         <div className="post-op-meta" style={{ marginBottom: dv(density, 8, 10, 12) }}>
                                             {postData.anon_token && (
                                                 <AnonBadge token={postData.anon_token} isOp isMe={postData.is_mine} />
                                             )}
-                                            <span className="post-detail-time">{formattedTime}</span>
+                                            <span className="meta-time">{formattedTime}</span>
                                             <div className="post-op-meta-end">
                                                 <ModActions show={isAdmin} type="post" locked={locked}
                                                     onLock={() => setLocked(p => !p)}
@@ -213,7 +215,7 @@ export default function Post() {
                                             {postData.content}
                                         </div>
 
-                                        <div className="post-op-footer" style={{ paddingTop: 8, marginTop: dv(density, 8, 10, 12) }}>
+                                        <div className="post-op-footer" style={{ paddingTop: dv(density, 6, 8, 10), marginTop: dv(density, 8, 10, 12) }}>
                                             <VoteButtons votes={postData.vote_count ?? 0} disabled={isGuest} bc={bc} replies={pagination.items.length} />
                                             {postData.tags?.map(t => <BoardTag key={t} tag={t} bc={bc} />)}
                                         </div>
@@ -228,7 +230,7 @@ export default function Post() {
                                 </div>
                                 <div className="post-board-widget-body" style={{ padding: infoPad }}>
                                     {postData.tags && postData.tags.length > 0 && (
-                                        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
+                                        <div style={{ display: 'flex', gap: dv(density, 3, 5, 7), flexWrap: 'wrap', marginBottom: dv(density, 6, 10, 14) }}>
                                             {postData.tags.map(tag => <BoardTag key={tag} tag={tag} bc={bc} />)}
                                         </div>
                                     )}
@@ -246,7 +248,7 @@ export default function Post() {
                                                     <div className="related-title" style={{ fontSize: dv(density, 11, 12, 12) }}>
                                                         {rp.title}
                                                     </div>
-                                                    <div className="related-stats" style={{ marginTop: 2 }}>
+                                                    <div className="related-stats" style={{ marginTop: dv(density, 1, 2, 4) }}>
                                                         <span>▲ {rp.vote_count ?? 0}</span>
                                                         <span>💬 {rp.reply_count ?? 0}</span>
                                                     </div>

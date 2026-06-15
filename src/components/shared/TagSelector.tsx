@@ -14,6 +14,7 @@ export default function TagSelector({ board, bc, selected, onChange }: Props) {
   const [allowed, setAllowed] = useState<string[]>([]);
 
   useEffect(() => {
+    if (!board) return;
     let cancelled = false;
     api.getBoardTags(board)
       .then((tags: string[]) => { if (!cancelled) setAllowed(tags); })

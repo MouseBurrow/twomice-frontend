@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useDensity } from "../../contexts/DensityContext";
-import "../../assets/Skeleton.scss";
+import "./skeleton.scss";
 
 const ROTS = [2, -1.5, 0.5, -0.8, 1.2, -2.5, 0, 1.8, -1, 0.3];
 const CORNERS = [12, 20, 8, 16];

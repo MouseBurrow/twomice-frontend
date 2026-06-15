@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useDensity } from "../../contexts/DensityContext";
-import BoardSearchModal from "../shared/BoardSearchModal";
-import ComposeModal from "../shared/ComposeModal";
-import Logo from "../shared/Logo";
+import Search from "../../icons/Search";
+import Settings from "../../icons/Settings";
+import User from "../../icons/User";
+import BoardSearchModal from "./BoardSearchModal";
+import ComposeModal from "./ComposeModal";
+import Logo from "../../icons/Logo";
 import SettingsDrawer from "./SettingsDrawer";
 import "./NavBar.scss";
 
 export default function NavBar() {
     const { auth, logout, isGuest } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const { density } = useDensity();
     const [boardSearch, setBoardSearch] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
@@ -28,7 +32,7 @@ export default function NavBar() {
                 <div className="site-header-stripe" />
                 <div className="header-inner" data-density={density}>
                     <Link className="header-logo" to="/">
-                        <Logo size={density === "compact" ? 28 : density === "spacious" ? 38 : 34} />
+                        <Logo size={density === "compact" ? 28 : 34} />
                         TwoMice
                     </Link>
 
@@ -38,10 +42,7 @@ export default function NavBar() {
                             role="button"
                             onClick={() => setBoardSearch(true)}
                         >
-                            <svg className="header-search-icon" width="13" height="13" viewBox="0 0 14 14" fill="none">
-                                <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.4"/>
-                                <path d="M9.5 9.5l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                            </svg>
+                            <Search className="header-search-icon" />
                             <span className="header-search-text">Sniff around the burrow…</span>
                             <kbd className="header-search-kbd">⌘K</kbd>
                         </div>
@@ -49,13 +50,10 @@ export default function NavBar() {
 
                     <div className="header-actions">
                         <button className="icon-btn" title="Settings" onClick={() => setSettingsOpen(true)}>
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <circle cx="7" cy="7" r="2" stroke="currentColor" strokeWidth="1.3"/>
-                                <path d="M7 1v1.2M7 11.8V13M1 7h1.2M11.8 7H13M2.9 2.9l.85.85M10.25 10.25l.85.85M2.9 11.1l.85-.85M10.25 3.75l.85-.85" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                            </svg>
+                            <Settings />
                         </button>
                         {isAdmin && (
-                            <button className="icon-btn" title="Mod Panel" onClick={() => navigate("/admin")} style={window.location.pathname === "/admin" ? { color: "var(--accent)", borderColor: "var(--accent)" } : undefined}>
+                            <button className={`icon-btn${location.pathname === "/admin" ? " icon-btn--active" : ""}`} title="Mod Panel" onClick={() => navigate("/admin")}>
                                 ⚑
                             </button>
                         )}
@@ -72,10 +70,7 @@ export default function NavBar() {
                                         onClick={() => setUserMenuOpen(v => !v)}
                                         title={`Profile · ${username}`}
                                     >
-                                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                                            <circle cx="6" cy="4" r="2.5" stroke="currentColor" strokeWidth="1.3"/>
-                                            <path d="M1.5 10.5c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
-                                        </svg>
+                                        <User />
                                         {username}
                                     </button>
                                     {userMenuOpen && (

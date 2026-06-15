@@ -5,7 +5,7 @@ import { autoResize } from "../../utils/autoResize";
 import { boardColorFromName } from "../../utils/hash";
 import type { BoardData } from "../../types";
 import ErrorMessage from "../ErrorMessage";
-import TagSelector from "./TagSelector";
+import TagSelector from "../shared/TagSelector";
 
 interface Props {
   onClose: () => void;
@@ -45,7 +45,7 @@ export default function ComposeModal({ onClose, defaultBoard }: Props) {
           <div className="modal-title">New Nibble</div>
         </div>
 
-        <form className="modal-body" onSubmit={e => { e.preventDefault(); submit(); }}>
+        <form className="modal-body">
           <div className="field">
             <label className="field-label">Board</label>
             <select className="field-select" value={board} onChange={e => setBoard(e.target.value)}>

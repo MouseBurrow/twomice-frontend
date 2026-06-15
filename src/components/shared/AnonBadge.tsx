@@ -1,24 +1,16 @@
 import { hashColor } from "../../utils/hash";
 
-type Props = { token: string; isOp?: boolean; isMe?: boolean; sm?: boolean };
+type Props = { token: string; isOp?: boolean; isMe?: boolean };
 
-export default function AnonBadge({ token, isOp, isMe, sm }: Props) {
+export default function AnonBadge({ token, isOp, isMe }: Props) {
     const shortId = token.slice(0, 6);
-    const c = hashColor(shortId);
 
     return (
-        <span
-            className={`anon-badge${sm ? " anon-badge--sm" : ""}`}
-            style={{
-                borderColor: c.dot,
-                background: `color-mix(in srgb, ${c.dot} 18%, var(--bg-surface))`,
-                color: `color-mix(in srgb, ${c.dot} 65%, var(--text-primary))`,
-            }}
-        >
-            <span className="anon-badge-dot" style={{ background: c.dot }} />
+        <span className="anon-badge" style={{ '--badge-clr': hashColor(shortId).dot } as React.CSSProperties}>
+            <span className="anon-badge-dot" />
             {shortId}
-            {isOp && !isMe && <span className="anon-badge-tag" style={{ color: c.dot }}>OP</span>}
-            {isMe && <span className="anon-badge-tag" style={{ color: c.dot }}>YOU</span>}
+            {isOp && !isMe && <span className="anon-badge-tag">OP</span>}
+            {isMe && <span className="anon-badge-tag">YOU</span>}
         </span>
     );
 }

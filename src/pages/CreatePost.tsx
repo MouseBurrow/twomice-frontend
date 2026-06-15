@@ -2,14 +2,16 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCreateNibble } from "../hooks/useCreateNibble";
 import { autoResize } from "../utils/autoResize";
 import { useAuth } from "../contexts/AuthContext";
+import { useDensity } from "../contexts/DensityContext";
 import { boardColorFromName } from "../utils/hash";
 import ErrorMessage from "../components/ErrorMessage";
 import TagSelector from "../components/shared/TagSelector";
-import "../assets/CreatePost.scss";
+import "./create-post.scss";
 
 export default function CreatePost() {
     const { board } = useParams<{ board: string }>();
     const { isGuest } = useAuth();
+    const { density } = useDensity();
     const navigate = useNavigate();
     const bc = boardColorFromName(board ?? "");
 
@@ -20,7 +22,7 @@ export default function CreatePost() {
 
     if (isGuest) {
         return (
-            <div className="create-post-page">
+            <div className="create-post-page" data-density={density}>
                 <div className="create-post-board">
                     <div className="create-post-guest">
                         <p>You must be signed in to create a post.</p>
@@ -34,7 +36,7 @@ export default function CreatePost() {
     if (!board) return null;
 
     return (
-        <div className="create-post-page">
+        <div className="create-post-page" data-density={density}>
             <div className="create-post-board">
                 <div className="create-post-header">
                     <h1>New Nibble</h1>

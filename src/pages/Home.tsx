@@ -7,7 +7,7 @@ import type { FollowedBoardInfo } from "../types";
 import PostFeed from "../components/home/PostFeed";
 import HomeSidebar from "../components/home/HomeSidebar";
 import GuestBanner from "../components/shared/GuestBanner";
-import "../assets/Home.scss";
+import "./home.scss";
 
 export default function Home() {
     const { auth, isGuest } = useAuth();

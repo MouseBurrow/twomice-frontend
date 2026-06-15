@@ -4,7 +4,7 @@ import { availableModesFor } from "../../utils/themes";
 import { useDensity } from "../../contexts/DensityContext";
 import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DATE_FORMAT_OPTIONS, DEFAULT_FONT, applyFont } from "../../constants/settings";
 import MiniBtn from "../shared/MiniBtn";
-import Toggle from "../shared/Toggle";
+import Toggle from "./Toggle";
 import { notifyDateFormatChange } from "../../utils/date";
 
 interface Props { onClose: () => void; }
@@ -80,13 +80,8 @@ export default function SettingsDrawer({ onClose }: Props) {
               {FONT_OPTIONS.map(f => (
                 <button key={f.id} className={`set-font-option${font === f.id ? " set-font-option--active" : ""}`}
                   onClick={() => setFont(f.id)}>
-                  <span className="set-font-preview" style={{ fontFamily: `'${f.id}', sans-serif` }}>The quick brown fox</span>
-                  <div style={{ flex: 1 }} />
-                  <div style={{ textAlign: "right" }}>
-                    <div className="set-font-label">{f.label}</div>
-                    <div className="set-font-desc">{f.desc}</div>
-                  </div>
-                  {font === f.id && <span className="set-font-check">✓</span>}
+                  <span className="set-font-sample" style={{ fontFamily: `'${f.id}', sans-serif` }}>The quick brown fox</span>
+                  <span className="set-font-label">{f.label}</span>
                 </button>
               ))}
             </div>

@@ -1,15 +1,15 @@
 /* ── Page layout ── */
 .post-page[data-density="compact"]     { padding: 0; }
 .post-page[data-density="comfortable"] { padding: 0; }
-.post-page[data-density="spacious"]    { padding: 0; }
 
 /* ── Post detail card (used in OP left panel) ── */
 .post-detail-inner {
   transition: background-color .2s;
 }
 
-.post-detail-time {
-  font-size: 0.6875rem;
+.meta-time {
+  margin-left: auto;
+  font-size: 0.75rem;
   color: var(--text-faint);
 }
 
@@ -40,7 +40,6 @@
 }
 
 .create-card-header-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .11em;
@@ -61,7 +60,6 @@
   box-sizing: border-box;
   resize: none;
   color: var(--text-primary);
-  font-family: var(--font-body);
   line-height: 1.6;
   outline: none;
   background: transparent;
@@ -90,7 +88,7 @@
   border-radius: 6.1875rem;
   background: var(--card-accent);
   color: #fff;
-  font-family: 'Fredoka One', cursive;
+  
   font-size: var(--card-submit-fs);
   padding: var(--card-submit-pad);
   cursor: pointer;
@@ -119,7 +117,7 @@
   .comment-auth-icon { font-size: 1.75rem; display: block; margin-bottom: 0.375rem; }
 
   p {
-    font-family: 'Fredoka One', cursive;
+    
     font-size: 0.875rem;
     color: var(--accent);
     margin: 0 0 0.25rem;
@@ -151,10 +149,14 @@
   gap: 0.75rem;
 }
 
+[data-density="compact"] .comment-grid { gap: 0.5rem; }
+
 /* ── Comment ── */
 .comment-outer {
   padding: 0.5rem;
 }
+
+[data-density="compact"] .comment-outer { padding: 0.25rem; }
 
 .comment-card {
   padding: 0.75rem;
@@ -162,6 +164,7 @@
   transition: background 0.1s ease;
 }
 .comment-card:hover { background: var(--bg-primary); }
+[data-density="compact"] .comment-card { padding: 0.5rem; }
 
 .comment-header {
   display: flex;
@@ -169,12 +172,6 @@
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   flex-wrap: wrap;
-}
-
-.comment-time {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.625rem;
-  color: var(--text-faint);
 }
 
 
@@ -190,7 +187,6 @@
   border: none;
   cursor: pointer;
   font-size: 0.625rem;
-  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   color: var(--text-faint);
   padding: 0 0.125rem;
@@ -223,7 +219,6 @@
   cursor: pointer;
   font-size: 0.625rem;
   color: var(--text-muted);
-  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   padding: 0.125rem 0.5rem;
   line-height: 1.4;
@@ -232,7 +227,6 @@
 .reply-chip:hover { border-color: var(--accent2); color: var(--accent2); }
 
 .comment-loading {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: .06em;
@@ -321,7 +315,6 @@
 .reply-card-inline-meta {
   font-size: 0.625rem;
   color: var(--text-faint);
-  font-family: 'Space Grotesk', sans-serif;
 }
 
 /* ── Reply row ── */
@@ -343,7 +336,6 @@
   background: var(--bg-surface);
   color: var(--text-primary);
   font-size: 0.75rem;
-  font-family: var(--font-body);
   resize: none;
   min-height: 2.5rem;
   margin-bottom: 0.375rem;
@@ -388,7 +380,6 @@
 .reply-create-context {
     font-size: 0.625rem;
     color: var(--text-muted);
-    font-family: 'Space Grotesk', sans-serif;
 }
 
 .reply-auth-cta {
@@ -403,7 +394,6 @@
     cursor: pointer;
     text-decoration: underline;
     padding: 0;
-    font-family: var(--font-body);
   }
 }
 
@@ -464,7 +454,6 @@
   padding: 0.375rem 0.5rem;
   background: none;
   border: none;
-  font-family: var(--font-body);
   transition: opacity 0.15s;
 }
 .load-more-nested:hover {

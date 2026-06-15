@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useDensity } from "../contexts/DensityContext";
+import { dv } from "../utils/density";
 import { api } from "../api";
 import type { PostData, UserStats, FollowedBoardInfo } from "../types";
 import PostCard from "../components/board/PostCard";
 import SkeletonPostCard from "../components/skeleton/SkeletonPostCard";
 import BallPin from "../components/shared/BallPin";
 import { useFormatRelativeTime } from "../utils/date";
-import "../assets/Profile.scss";
+import "./profile.scss";
 import { FORCE_SKELETON } from "../debug";
 import { useShowLoading } from "../utils/useShowLoading";
 
@@ -183,7 +184,7 @@ export default function Profile() {
                                     <div className="profile-board-card-name">b/{b.name}</div>
                                     <div className="profile-board-card-desc">{b.description}</div>
                                     <div className="profile-board-card-count">{b.post_count.toLocaleString()} posts</div>
-                                    <button className="btn-ghost" style={{ fontSize: "0.6875rem", padding: "0.25rem 0.625rem", marginTop: "0.5rem" }}
+                                    <button className="btn-ghost" style={{ fontSize: dv(density, 10, 11, 12), padding: dv(density, '3px 10px', '4px 12px', '5px 14px'), marginTop: dv(density, 6, 8, 10) }}
                                         disabled={unfollowingIds.has(b.id)}
                                         onClick={e => { e.stopPropagation(); handleUnfollow(b.id); }}>{unfollowingIds.has(b.id) ? "…" : "Unfollow"}</button>
                                 </div>

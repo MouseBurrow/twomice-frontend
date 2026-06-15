@@ -90,9 +90,9 @@ export default function CommentCard({ topic, post, comment, opToken, bc }: Props
             <div className="comment-card">
                 <div className="comment-header">
                     {comment.anon_token && (
-                        <AnonBadge token={comment.anon_token} isOp={isOp} isMe={isMe} sm />
+                        <AnonBadge token={comment.anon_token} isOp={isOp} isMe={isMe} />
                     )}
-                    <span className="comment-time">{commentTime}</span>
+                    <span className="meta-time">{commentTime}</span>
                     <div className="comment-header-end">
                         <ModActions show={isAdmin} type="comment" onRemove={() => setRemoved(true)} />
                         {replyPagination.items.length > 0 && (

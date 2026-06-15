@@ -7,9 +7,10 @@ function toRem(px: number): string {
     return `${s}rem`;
 }
 
-/** Density-aware value picker: returns compact, comfortable (default), or spacious value.
+/** Density-aware value picker: returns compact or comfortable value.
  *  Numeric inputs are treated as px and converted to rem strings. */
-export function dv(density: Density, compact: number | string, comfortable: number | string, spacious: number | string): string {
-    const v = density === "compact" ? compact : density === "spacious" ? spacious : comfortable;
+export function dv(density: Density, compact: number | string, comfortable: number | string, spacious?: number | string): string {
+    const d = density as string;
+    const v = d === "compact" ? compact : d === "spacious" && spacious !== undefined ? spacious : comfortable;
     return typeof v === "number" ? toRem(v) : v;
 }

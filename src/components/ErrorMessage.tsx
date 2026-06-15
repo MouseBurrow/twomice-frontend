@@ -1,5 +1,5 @@
-import "../assets/ErrorMessage.scss";
-import type { ApiError } from "../apiError.ts";
+import "./error-message.scss";
+import type { ApiError } from "../apiError";
 
 const ERROR_MESSAGES: Record<string, Record<string, string>> = {
     "/login": {

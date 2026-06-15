@@ -4,7 +4,7 @@ import { availableModesFor } from "../utils/themes";
 import { useDensity } from "../contexts/DensityContext";
 import { THEMES, DENSITY_OPTIONS, FONT_OPTIONS, DEFAULT_FONT, applyFont } from "../constants/settings";
 import MiniBtn from "../components/shared/MiniBtn";
-import "../assets/Settings.scss";
+import "./settings.scss";
 
 export default function Settings() {
     const { theme, mode, setTheme, setMode } = useTheme();
@@ -22,7 +22,7 @@ export default function Settings() {
     const availModes = availableModesFor(theme);
 
     return (
-        <div className="settings-page">
+        <div className="settings-page" data-density={density}>
             <div className="settings-board">
                 <div className="settings-header">
                     <h1>Settings</h1>

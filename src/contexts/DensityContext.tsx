@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-export type Density = "compact" | "comfortable" | "spacious";
+export type Density = "compact" | "comfortable";
 
 type DensityContextValue = {
     density: Density;
@@ -10,9 +10,11 @@ type DensityContextValue = {
 const DensityContext = createContext<DensityContextValue | null>(null);
 
 export function DensityProvider({ children }: { children: ReactNode }) {
-    const [density, setDensityState] = useState<Density>(
-        () => (localStorage.getItem("twomice_density") as Density) ?? "comfortable"
-    );
+    const [density, setDensityState] = useState<Density>(() => {
+        const stored = localStorage.getItem("twomice_density");
+        if (stored === "spacious") return "comfortable";
+        return (stored as Density) ?? "comfortable";
+    });
 
     function setDensity(d: Density) {
         setDensityState(d);

@@ -60,21 +60,22 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
         if (!replyContent.trim() || replyBusy) return;
         setReplyBusy(true);
         setReplyError(undefined);
+        const optimistic: ReplyData = {
+            hash: 'opt_' + Date.now(),
+            content: replyContent,
+            created_at: new Date().toISOString(),
+            deleted: false,
+            is_mine: true,
+            children: [],
+        };
         try {
-            const optimistic: ReplyData = {
-                hash: 'opt_' + Date.now(),
-                content: replyContent,
-                created_at: new Date().toISOString(),
-                deleted: false,
-                is_mine: true,
-                children: [],
-            };
             nestedPagination.setItems(prev => [...prev, optimistic]);
             setShowNested(true);
             await api.createReply(topic, post, commentHash, { content: replyContent, reply_hash: reply.hash });
             setReplyContent("");
             setReplyOpen(false);
         } catch (e) {
+            nestedPagination.setItems(prev => prev.filter(r => r.hash !== optimistic.hash));
             setReplyError(e as ApiError);
         } finally {
             setReplyBusy(false);
@@ -105,7 +106,7 @@ export default function ReplyRow({ reply, topic, post, commentHash, bc, connecto
             <div className="reply-row">
                 <div className="reply-card">
                     <div className="comment-header">
-                        {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} isMe={!!reply.is_mine} sm />}
+                        {reply.anon_token && !reply.deleted && <AnonBadge token={reply.anon_token} isMe={!!reply.is_mine} />}
                         <span className="reply-card-inline-meta">{replyTime}</span>
                         <div className="comment-header-end">
                             {hasNested && (

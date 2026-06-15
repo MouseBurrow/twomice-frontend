@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import UpArrow from "../../icons/UpArrow";
+import DownArrow from "../../icons/DownArrow";
+import ReplyBubble from "../../icons/ReplyBubble";
 import "../../assets/components.scss";
 
 type Props = {
@@ -16,22 +19,20 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
     const [userVote, setUserVote] = useState<1 | -1 | null>(null);
     const [prevVotes, setPrevVotes] = useState(votes);
 
-    if (prevVotes !== votes) {
-        setPrevVotes(votes);
-        setUserVote(null);
-    }
+    useEffect(() => {
+        if (prevVotes !== votes) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setPrevVotes(votes);
+             
+            setUserVote(null);
+        }
+    }, [votes, prevVotes]);
 
     const score = votes + (userVote ?? 0);
     const up = userVote === 1;
     const dn = userVote === -1;
     const boardColor = bc || 'var(--accent)';
-
-    const pillBg = `color-mix(in srgb, ${boardColor} 10%, var(--bg-surface))`;
-    const pillBorder = `color-mix(in srgb, ${boardColor} 28%, transparent)`;
-    const dividerCol = `color-mix(in srgb, ${boardColor} 28%, transparent)`;
-    const upArrow = boardColor;
-    const dnArrow = dn ? '#c0392b' : 'var(--text-faint)';
-    const countColor = dn ? '#c0392b' : boardColor;
+    const voteClr = dn ? '#c0392b' : boardColor;
 
     const vote = (e: React.MouseEvent, dir: 0 | 1 | -1) => {
         e.stopPropagation();
@@ -40,10 +41,10 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
     };
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="vote-wrap">
             <div
                 className="vote-pill"
-                style={{ background: pillBg, border: `1.5px solid ${pillBorder}` }}
+                style={{ '--vote-clr': voteClr } as React.CSSProperties}
             >
                 <button
                     className="vote-pill-half"
@@ -54,15 +55,11 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
                         if (!disabled) vote(e, up ? 0 : 1);
                     }}
                 >
-                    <svg width="10" height="7" viewBox="0 0 10 7" fill="none">
-                        <path d="M1 6L5 1.5L9 6" stroke={upArrow} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span className="vote-pill-score" style={{ color: countColor }}>
-                        {fmt(score)}
-                    </span>
+                    <UpArrow color={boardColor} />
+                    <span className="vote-pill-score">{fmt(score)}</span>
                 </button>
 
-                <div className="vote-pill-divider" style={{ background: dividerCol }} />
+                <div className="vote-pill-divider" />
 
                 <button
                     className="vote-pill-half"
@@ -73,19 +70,13 @@ export default function VoteButtons({ votes, disabled = false, bc, replies }: Pr
                         if (!disabled) vote(e, dn ? 0 : -1);
                     }}
                 >
-                    <svg width="10" height="7" viewBox="0 0 10 7" fill="none">
-                        <path d="M1 1.5L5 6L9 1.5" stroke={dnArrow} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <DownArrow />
                 </button>
             </div>
 
             {replies != null && (
                 <div className="reply-count-wrap">
-                    <svg width="11" height="10" viewBox="0 0 12 11" fill="none">
-                        <path d="M1.5 1.5h9v6H7L5.5 9 4 7.5H1.5V1.5z"
-                            stroke="var(--text-faint)"
-                            strokeWidth="1.2" strokeLinejoin="round"/>
-                    </svg>
+                    <ReplyBubble />
                     <span className="reply-count-label">{replies}</span>
                 </div>
             )}

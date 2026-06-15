@@ -1,7 +1,7 @@
 // ToastContainer.tsx
 import { AnimatePresence, motion } from "framer-motion";
 import type { Toast } from "../contexts/ToastContext";
-import "../assets/ToastContainer.scss"
+import "./toast-container.scss"
 
 export const ToastContainer = ({
                                    toasts,

@@ -22,35 +22,27 @@
 
 .header-inner[data-density="compact"]     { height: 2.75rem; }
 .header-inner[data-density="comfortable"] { height: 3.25rem; }
-.header-inner[data-density="spacious"]    { height: 4rem; }
 
 .header-inner[data-density="compact"] .header-logo     { font-size: 1.0625rem; }
 .header-inner[data-density="comfortable"] .header-logo { font-size: 1.25rem; }
-.header-inner[data-density="spacious"] .header-logo    { font-size: 1.4375rem; }
 
 .header-inner[data-density="compact"] .header-search     { padding: 0.3125rem 0.75rem; max-width: 23.75rem; }
 .header-inner[data-density="comfortable"] .header-search { padding: 0.4375rem 1rem; max-width: 27.5rem; }
-.header-inner[data-density="spacious"] .header-search    { padding: 0.625rem 1.25rem; max-width: 32.5rem; }
 
 .header-inner[data-density="compact"] .header-search-text     { font-size: 0.75rem; }
 .header-inner[data-density="comfortable"] .header-search-text { font-size: 0.8125rem; }
-.header-inner[data-density="spacious"] .header-search-text    { font-size: 0.875rem; }
 
 .header-inner[data-density="compact"] .header-actions     { gap: 0.375rem; }
 .header-inner[data-density="comfortable"] .header-actions { gap: 0.5rem; }
-.header-inner[data-density="spacious"] .header-actions    { gap: 0.625rem; }
 
 .header-inner[data-density="compact"] .icon-btn     { width: 1.875rem; height: 1.875rem; }
 .header-inner[data-density="comfortable"] .icon-btn { width: 2.125rem; height: 2.125rem; }
-.header-inner[data-density="spacious"] .icon-btn    { width: 2.5rem; height: 2.5rem; }
 
 .header-inner[data-density="compact"] .header-user-btn     { height: 1.875rem; }
 .header-inner[data-density="comfortable"] .header-user-btn { height: 2.125rem; }
-.header-inner[data-density="spacious"] .header-user-btn    { height: 2.5rem; }
 
 .header-inner[data-density="compact"] .btn-pill.header-compose-btn     { font-size: 0.75rem; }
 .header-inner[data-density="comfortable"] .btn-pill.header-compose-btn { font-size: 0.8125rem; }
-.header-inner[data-density="spacious"] .btn-pill.header-compose-btn    { font-size: 0.875rem; }
 
 .header-logo {
   flex-shrink: 0;

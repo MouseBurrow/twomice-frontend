@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../contexts/AuthContext";
 import { useDensity } from "../contexts/DensityContext";
+import { dv } from "../utils/density";
 import { autoResize } from "../utils/autoResize";
 import type { BoardData, ModLogEntry, ReportData } from "../types";
 import MiniBtn from "../components/shared/MiniBtn";
-import "../assets/Admin.scss";
+import "./admin.scss";
 
 type Tab = "reports" | "log" | "boards";
 
@@ -127,9 +128,9 @@ export default function Admin() {
                             <div className="admin-report-reason">Reason: {r.reason}</div>
                             {r.status === "pending" && (
                                 <div className="admin-report-actions">
-                                    <button className="btn-pill" style={{ fontSize: "0.75rem", padding: "0.3125rem 0.875rem", background: "#2ecc71" }} onClick={() => resolve(r.id)}>Resolve</button>
-                                    <button className="btn-ghost" style={{ fontSize: "0.75rem", padding: "0.3125rem 0.875rem" }} onClick={() => navigate(`/b/${r.board_id}/nib/${r.post_slug}`)}>View post</button>
-                                    <button className="btn-ghost" style={{ fontSize: "0.75rem", padding: "0.3125rem 0.875rem", color: "var(--danger)", borderColor: "var(--danger)" }} onClick={() => dismiss(r.id)}>Dismiss</button>
+                                    <button className="btn-pill" style={{ fontSize: dv(density, 11, 12, 13), padding: dv(density, '4px 12px', '5px 14px', '6px 16px'), background: "#2ecc71" }} onClick={() => resolve(r.id)}>Resolve</button>
+                                    <button className="btn-ghost" style={{ fontSize: dv(density, 11, 12, 13), padding: dv(density, '4px 12px', '5px 14px', '6px 16px') }} onClick={() => navigate(`/b/${r.board_id}/nib/${r.post_slug}`)}>View post</button>
+                                    <button className="btn-ghost" style={{ fontSize: dv(density, 11, 12, 13), padding: dv(density, '4px 12px', '5px 14px', '6px 16px'), color: "var(--danger)", borderColor: "var(--danger)" }} onClick={() => dismiss(r.id)}>Dismiss</button>
                                 </div>
                             )}
                         </div>
@@ -166,11 +167,11 @@ export default function Admin() {
                                     </div>
                                     <div className="field">
                                         <label className="field-label">Description</label>
-                                        <textarea className="field-textarea" style={{ minHeight: "3.5rem" }} onInput={autoResize} value={editForm.description ?? ""} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
+                                        <textarea className="field-textarea" style={{ minHeight: dv(density, '2.5rem', '3.5rem', '4.5rem') }} onInput={autoResize} value={editForm.description ?? ""} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))} />
                                     </div>
                                     <div className="admin-board-edit-actions">
-                                        <button className="btn-pill" style={{ fontSize: "0.75rem", padding: "0.3125rem 1rem" }} onClick={saveEdit}>Save changes</button>
-                                        <button className="btn-ghost" style={{ fontSize: "0.75rem" }} onClick={() => setEditingId(null)}>Cancel</button>
+                                        <button className="btn-pill" style={{ fontSize: dv(density, 11, 12, 13), padding: dv(density, '4px 12px', '5px 14px', '6px 16px') }} onClick={saveEdit}>Save changes</button>
+                                        <button className="btn-ghost" style={{ fontSize: dv(density, 11, 12, 13) }} onClick={() => setEditingId(null)}>Cancel</button>
                                     </div>
                                 </div>
                             ) : (
@@ -181,8 +182,8 @@ export default function Admin() {
                                         <div className="admin-board-meta">{b.created_at ? new Date(b.created_at).toLocaleDateString() : ""}</div>
                                     </div>
                                     <div className="admin-board-actions">
-                                        <button className="btn-ghost" style={{ fontSize: "0.6875rem", padding: "0.25rem 0.75rem" }} onClick={() => startEdit(b)}>Edit</button>
-                                        <button className="btn-ghost" style={{ fontSize: "0.6875rem", padding: "0.25rem 0.75rem" }} onClick={() => navigate(`/b/${b.name}`)}>View</button>
+                                        <button className="btn-ghost" style={{ fontSize: dv(density, 10, 11, 12), padding: dv(density, '3px 10px', '4px 12px', '5px 14px') }} onClick={() => startEdit(b)}>Edit</button>
+                                        <button className="btn-ghost" style={{ fontSize: dv(density, 10, 11, 12), padding: dv(density, '3px 10px', '4px 12px', '5px 14px') }} onClick={() => navigate(`/b/${b.name}`)}>View</button>
                                     </div>
                                 </div>
                             )}

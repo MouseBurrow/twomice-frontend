@@ -72,16 +72,15 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" style={{ maxWidth: "35rem", maxHeight: "80vh" }} onClick={e => e.stopPropagation()}>
+      <div className="modal-card modal-card--search" onClick={e => e.stopPropagation()}>
         <div className="modal-stripe" style={creating ? { background: `linear-gradient(90deg, ${newColor}, color-mix(in srgb, ${newColor} 60%, #fff))` } : undefined} />
-        <div className="modal-header" style={{ padding: "1rem 1.25rem" }}>
-          <div className="modal-title" style={{ fontSize: "1.125rem", marginBottom: "0.75rem" }}>
-            {creating ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 14, height: 14, borderRadius: '50%', background: newColor, display: 'inline-block', border: '2px solid rgba(0,0,0,0.12)', boxShadow: `0 1px 4px rgba(0,0,0,0.25), 0 0 0 3px color-mix(in srgb,${newColor} 18%,transparent)`, flexShrink: 0 }} />
-                New Board
-              </div>
-            ) : "Browse Boards"}
+
+        <div className="bsearch-header">
+          <div className="bsearch-header-row">
+            {creating && (
+              <span className="bsearch-header-dot" style={{ background: newColor }} />
+            )}
+            <span className="bsearch-header-title">{creating ? "New Board" : "Browse Boards"}</span>
           </div>
           {!creating && (
             <input className="board-search-input" type="text" placeholder="Search boards…" autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
@@ -89,8 +88,8 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
         </div>
 
         {creating ? (
-          <form onSubmit={handleCreate} style={{ padding: "0 1.25rem 1rem" }}>
-            <div className="field" style={{ marginBottom: "0.75rem" }}>
+          <form className="bsearch-create" onSubmit={handleCreate}>
+            <div className="field">
               <label className="field-label">Board name</label>
               <input
                 className="field-input"
@@ -106,25 +105,20 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
                 style={{ borderColor: newName ? newColor : undefined }}
               />
             </div>
-            <div className="field" style={{ marginBottom: "0.75rem" }}>
+            <div className="field">
               <label className="field-label">Slug — URL: b/{newSlug || 'yourboard'}</label>
-              <div style={{ position: 'relative' }}>
-                <span style={{
-                    position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
-                    fontSize: 13, color: 'var(--text-faint)',
-                    fontFamily: "'Space Grotesk', sans-serif", pointerEvents: 'none',
-                }}>b/</span>
+              <div className="bsearch-slug-wrap">
+                <span className="bsearch-slug-prefix">b/</span>
                 <input
-                    className="field-input"
-                    style={{ paddingLeft: 28, borderColor: newSlug ? newColor : undefined }}
+                    className="field-input bsearch-slug-input"
                     placeholder="yourboard"
                     value={newSlug}
                     onChange={e => { setSlugTouched(true); setNewSlug(toSlug(e.target.value)); }}
                 />
               </div>
             </div>
-            <div className="field" style={{ marginBottom: "0.75rem" }}>
-              <label className="field-label">Description <span style={{ color: 'var(--text-faint)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+            <div className="field">
+              <label className="field-label">Description <span className="field-label-note">(optional)</span></label>
               <textarea
                 className="field-textarea"
                 placeholder="What's this board about?"
@@ -135,30 +129,23 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
                 style={{ borderColor: newDesc ? newColor : undefined }}
               />
             </div>
-            <div className="field" style={{ marginBottom: "0.75rem" }}>
+            <div className="field">
               <label className="field-label">Board Colour</label>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              <div className="bsearch-swatches">
                 {SWATCH_COLORS.map(c => (
                     <button
                         key={c} type="button"
+                        className={`bsearch-swatch${newColor === c ? " bsearch-swatch--active" : ""}`}
                         onClick={() => setNewColor(c)}
-                        style={{
-                            width: 24, height: 24, borderRadius: '50%',
-                            background: c, border: 'none', cursor: 'pointer',
-                            outline: newColor === c ? `3px solid ${c}` : '3px solid transparent',
-                            outlineOffset: 2,
-                            transform: newColor === c ? 'scale(1.2)' : 'scale(1)',
-                            transition: 'transform 0.12s, outline 0.12s',
-                            boxShadow: '0 1px 4px rgba(0,0,0,0.22)',
-                        }}
+                        style={{ background: c }}
                     />
                 ))}
               </div>
             </div>
             {createError && (
-              <div className="field-error" style={{ marginBottom: "0.75rem" }}>{createError}</div>
+              <div className="field-error">{createError}</div>
             )}
-            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
+            <div className="bsearch-create-actions">
               <button type="button" className="modal-cancel" onClick={() => { setCreating(false); setCreateError(null); }}>Back</button>
               <button type="submit" className="modal-submit" disabled={!newName.trim() || !newSlug.trim() || createBusy} style={newName.trim() ? { background: newColor } : undefined}>
                 {createBusy ? "Creating…" : "Create board"}
@@ -167,29 +154,22 @@ export default function BoardSearchModal({ onClose, navigate }: Props) {
           </form>
         ) : (
           <>
-            <div className="board-search-list">
+            <div className="bsearch-list">
               {loading ? (
-                <div style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Loading…</div>
+                <div className="bsearch-empty">Loading…</div>
               ) : filtered.length === 0 ? (
-                <div style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>No boards match</div>
+                <div className="bsearch-empty">No boards match</div>
               ) : (
                 filtered.map(b => (
-                  <div key={b.name} className="board-search-item" onClick={() => handleBoardClick(b.name)}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                      <span className="board-search-item-name">b/{b.name}</span>
-                      <span className="board-search-item-desc">{b.description}</span>
-                    </div>
+                  <div key={b.name} className="bsearch-item" onClick={() => handleBoardClick(b.name)}>
+                    <span className="bsearch-item-name">b/{b.name}</span>
+                    <span className="bsearch-item-desc">{b.description}</span>
                   </div>
                 ))
               )}
             </div>
-            <div style={{ padding: "0.75rem 1.25rem", borderTop: "1px solid var(--border-subtle)" }}>
-              <button
-                type="button"
-                className="btn-ghost"
-                style={{ width: "100%", padding: "0.5rem", fontSize: "0.875rem" }}
-                onClick={() => setCreating(true)}
-              >
+            <div className="bsearch-footer">
+              <button type="button" className="btn-ghost bsearch-create-btn" onClick={() => setCreating(true)}>
                 + Start a new board
               </button>
             </div>

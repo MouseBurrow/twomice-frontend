@@ -1,9 +1,9 @@
-import { ApiError, type ApiErrorPayload } from "./apiError.ts";
+import { ApiError, type ApiErrorPayload } from "./apiError";
 import type {
     AccountData, CommentData, PostData, ReplyData, OffsetPage,
     BoardData, BoardSummary, UserStats, FollowedBoardInfo,
     ReportData, ModLogEntry,
-} from "./types.ts";
+} from "./types";
 
 export const API_BASE = "/api";
 

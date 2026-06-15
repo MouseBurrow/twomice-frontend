@@ -11,12 +11,7 @@ export default function BoardChip({ boardName, onClick }: Props) {
     <Element
       className="board-chip"
       onClick={onClick ? handleClick : undefined}
-      style={{
-        cursor: onClick ? "pointer" : "default",
-        color: bc,
-        borderColor: `color-mix(in srgb, ${bc} 28%, transparent)`,
-        background: `color-mix(in srgb, ${bc} 12%, transparent)`,
-      }}
+      style={{ '--chip-clr': bc } as React.CSSProperties}
     >
       b/{boardName}
     </Element>
